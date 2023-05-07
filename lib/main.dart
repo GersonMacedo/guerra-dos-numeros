@@ -36,77 +36,155 @@ class MainPage extends StatelessWidget  {
           children: [
             const Text(
               "Guerra dos números, Robôs e coisas matemáticas",
-              style: const TextStyle(fontSize: 22, color: Colors.white)
+              style: TextStyle(fontSize: 29, color: Colors.white)
             ),
             const SizedBox(height: 15),
             Image.asset('assets/images/main.png'),
             const SizedBox(height: 15),
-            SizedBox(
-              width: 150,
-              child: ElevatedButton(
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const PlayPage()));
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child: Row(
-                  children: const [
-                    Icon(Icons.play_circle),
-                    Text(" Jogar")
-                  ],
-                )
-              ),
-            ),
-            const SizedBox(height: 19),
-            SizedBox(
-              width: 150,
-              child: ElevatedButton(
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AchievementsPage()));
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child: Row(
-                  children: const [
-                    Icon(Icons.emoji_events),
-                    Text(" Conquistas")
-                  ],
-                )
-              ),
-            ),
-            const SizedBox(height: 15),
-            SizedBox(
-              width: 150,
-              child: ElevatedButton(
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child: Row(
-                  children: const [
-                    Icon(Icons.settings),
-                    Text(" Configurações")
-                  ],
-                )
-              ),
-            ),
-            const SizedBox(height: 15),
-            SizedBox(
-              width: 150,
-              child: ElevatedButton(
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AboutPage()));
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child: Row(
-                  children: const [
-                    Icon(Icons.info_outline),
-                    Text(" Sobre")
-                  ],
-                )
-              ),
-            )
+            MediaQuery.of(context).size.width > 1.1 * MediaQuery.of(context).size.height ? horizontal(context) : vertical(context)
           ],
         )
       )
+    );
+  }
+
+  Widget horizontal(BuildContext context){
+    return Row(
+      children: [
+        SizedBox(
+          width: 155,
+          child: ElevatedButton(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const PlayPage()));
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: Row(
+                children: const [
+                  Icon(Icons.play_circle),
+                  Text(" Jogar", style: TextStyle(fontSize: 14, color: Colors.white))
+                ],
+              )
+          ),
+        ),
+        const SizedBox(width: 10),
+        SizedBox(
+          width: 155,
+          child: ElevatedButton(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const AchievementsPage()));
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: Row(
+                children: const [
+                  Icon(Icons.emoji_events),
+                  Text(" Conquistas", style: TextStyle(fontSize: 14, color: Colors.white))
+                ],
+              )
+          ),
+        ),
+        const SizedBox(width: 10),
+        SizedBox(
+          width: 155,
+          child: ElevatedButton(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: Row(
+                children: const [
+                  Icon(Icons.settings),
+                  Text(" Configurações", style: TextStyle(fontSize: 14, color: Colors.white))
+                ],
+              )
+          ),
+        ),
+        const SizedBox(width: 10),
+        SizedBox(
+          width: 155,
+          child: ElevatedButton(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AboutPage()));
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: Row(
+                children: const [
+                  Icon(Icons.info_outline),
+                  Text(" Sobre", style: TextStyle(fontSize: 14, color: Colors.white))
+                ],
+              )
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget vertical(BuildContext context){
+    return Column(
+      children: [
+        SizedBox(
+          width: 300,
+          child: ElevatedButton(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const PlayPage()));
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: Row(
+                children: const [
+                  Icon(Icons.play_circle),
+                  Text(" Jogar", style: TextStyle(fontSize: 30, color: Colors.white))
+                ],
+              )
+          ),
+        ),
+        const SizedBox(height: 19),
+        SizedBox(
+          width: 300,
+          child: ElevatedButton(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const AchievementsPage()));
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: Row(
+                children: const [
+                  Icon(Icons.emoji_events),
+                  Text(" Conquistas", style: TextStyle(fontSize: 30, color: Colors.white))
+                ],
+              )
+          ),
+        ),
+        const SizedBox(height: 15),
+        SizedBox(
+          width: 300,
+          child: ElevatedButton(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: Row(
+                children: const [
+                  Icon(Icons.settings),
+                  Text(" Configurações", style: TextStyle(fontSize: 30, color: Colors.white))
+                ],
+              )
+          ),
+        ),
+        const SizedBox(height: 15),
+        SizedBox(
+          width: 300,
+          child: ElevatedButton(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AboutPage()));
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: Row(
+                children: const [
+                  Icon(Icons.info_outline),
+                  Text(" Sobre", style: TextStyle(fontSize: 30, color: Colors.white))
+                ],
+              )
+          ),
+        )
+      ],
     );
   }
 }
