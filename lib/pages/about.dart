@@ -1,0 +1,23 @@
+import 'package:flutter/material.dart';
+import 'package:guerra_dos_numeros/utils.dart';
+
+class About extends StatelessWidget {
+  const About({super.key, required this.changePage, required this.vertical});
+  final void Function(Widget?) changePage;
+  final bool vertical;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            backButton(changePage),
+            const SizedBox(height: 15),
+            const Text("TODO: tela de sobre")
+          ],
+        )
+    );
+  }
+}
