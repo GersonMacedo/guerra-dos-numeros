@@ -1,10 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:guerra_dos_numeros/utils.dart';
+import 'package:flutter/rendering.dart';
 
 //TODO: Adicionar mais questões
 //TODO: Pegar as questões de um arquivo separado
-List<String> addQuestions = ["Mariazinha tinha | reais guardado, no seu aniversário ela ganhou mais | reais do seu pai. Quantos reais ela tem hoje?\n!"];
+List<String> addQuestions = ["Mariazinha tinha | reais guardado, no seu aniversário ela ganhou mais | reais do seu pai. Quantos reais ela tem hoje?"];
 List<String> subQuestions = [];
 List<String> mulQuestions = [];
 List<String> divQuestions = [];
@@ -38,6 +38,10 @@ class _GameState extends State<Game>{
   int maxSize = 0;
   String levelQuestion = "";
   int carry = 0;
+  int result = 0;
+  List<List<String>> grid = [];
+  List<List<int>> acceptDrag = [];
+  List<bool> dragElement = [true, true];
 
   firstFrame(){
     print("Call!!!");
@@ -45,15 +49,39 @@ class _GameState extends State<Game>{
       _runTimer();
     });
 
-    for(int i = widget.number1; i != 0; i ~/= 10){
+    for(int i = max(widget.number1, widget.number2); i != 0; i ~/= 10){
       numbers1.add(i % 10);
     }
 
-    for(int i = widget.number2; i != 0; i ~/= 10){
+    for(int i = min(widget.number1, widget.number2); i != 0; i ~/= 10){
       numbers2.add(i % 10);
     }
 
     maxSize = max(numbers1.length, numbers2.length);
+    List<String> gridLine = [];
+    List<int> acceptList = [];
+    for(int i = 0; i <= maxSize; i++){
+      gridLine.add("");
+      acceptList.add(0);
+    }
+
+    grid = [
+      gridLine.sublist(0),
+      gridLine.sublist(0),
+      gridLine.sublist(0),
+      gridLine.sublist(0)
+    ];
+    acceptDrag = [
+      acceptList.sublist(0),
+      acceptList.sublist(0),
+      acceptList.sublist(0),
+      acceptList.sublist(0)
+    ];
+
+    for(int i = 1; i <= maxSize; i++){
+      acceptDrag[1][i] = 3;
+      acceptDrag[2][i] = 3;
+    }
 
     List<String> questionPieces = [];
     if(widget.operation == "+"){
@@ -76,39 +104,60 @@ class _GameState extends State<Game>{
       }else{
         question = "Resposta errada!";
       }
+
     });
 
-    Future.delayed(Duration(seconds: 2), (){
+    Future.delayed(Duration(seconds: 1), (){
       setState((){
-        if(stage + 1 == total){
-          question = "Parabéns! Você terminou o calculo";
-          questions = [];
-          stage++;
-          return;
-        }
-
         responded = false;
+        dragElement = [true, true];
         if(stage % 2 == 0){
           if(stage == 0){
+            grid[2][0] = widget.operation;
             questions = [widget.number1.toString(), widget.number2.toString()];
           }else{
-            int a = numbers1[stage ~/ 2 - 1] + numbers2[stage ~/ 2 - 1] + carry;
-            print(a);
-            if(a > 10){
-              carry = a ~/ 10;
-              questions = [(carry).toString(), (a % 10).toString()];
+            print(result);
+            if(result >= 10){
+              carry = result ~/ 10;
+              questions = [(carry).toString(), (result % 10).toString()];
+              acceptDrag[stage + 2 < total ? 0 : 3][maxSize - stage ~/ 2] = 1;
+              acceptDrag[3][maxSize - stage ~/ 2 + 1] = 2;
             }else{
               carry = 0;
-              questions = [(a % 10).toString()];
+              questions = [(result % 10).toString()];
+              acceptDrag[3][maxSize - stage ~/ 2 + 1] = 1;
             }
           }
           question = "Mova os numeros para a posição correta";
         }else{
+          if(stage == 1){
+            if(!right){
+              for(int i = 0; i < maxSize; i++){
+                grid[1][maxSize - i] = numbers1[i].toString();
+                grid[2][maxSize - i] = numbers2[i].toString();
+              }
+            }
+          }else{
+            if(carry != 0){
+              grid[stage + 1 < total ? 0 : 3][maxSize - (stage ~/ 2)] = carry.toString();
+            }
+            grid[3][maxSize - (stage ~/ 2) + 1] = (result % 10).toString();
+          }
+
+          if(stage + 1 == total){
+            question = "Parabéns! Você terminou o calculo";
+            questions = [];
+            stage++;
+            return;
+          }
+
           question = "Quanto é ${numbers1[stage ~/ 2]} + ${numbers2[stage ~/ 2]}";
           if(carry != 0){
             question += " + ${carry}";
           }
           question += " ?";
+
+          result = numbers1[stage ~/ 2] + numbers2[stage ~/ 2] + carry;
           questions = [];
           for(int i = 0; i < 6; i++){
             questions.add((numbers1[stage ~/ 2] + numbers2[stage ~/ 2] + carry + i).toString());
@@ -119,6 +168,27 @@ class _GameState extends State<Game>{
         timeLeft = totalTime;
         _runTimer();
       });
+    });
+  }
+
+  void successDrag(int i, int j, int element){
+    setState(() {
+      print("Success ${i}, ${j}, ${element}");
+      dragElement[element] = false;
+      if(stage == 1){
+        for(int k = 1; k <= maxSize; k++){
+          acceptDrag[i][k] = 0;
+          if(k - 1 < questions[element].length){
+            grid[i][k] = questions[element][k - 1];
+          }
+        }
+      }else{
+        acceptDrag[i][j] = 0;
+        grid[i][j] = questions[element];
+      }
+      if(dragElement[0] == false && (questions.length == 1 || dragElement[1] == false)){
+        _respond(true);
+      }
     });
   }
 
@@ -295,10 +365,24 @@ class _GameState extends State<Game>{
   }
 
   Widget buildDrag(BuildContext context){
+    List<Widget> row = [dragElement[0] ? Draggable<int>(
+      data: 0,
+      feedback: Text(questions[0], style: const TextStyle(fontSize: 25, color: Colors.yellow)),
+      childWhenDragging: Text(questions[0], style: const TextStyle(fontSize: 25, color: Color(0xFF54436B))),
+      child: Text(questions[0], style: const TextStyle(fontSize: 25, color: Colors.yellow)),
+    ) : Text(questions[0], style: const TextStyle(fontSize: 25, color: Color(0xFF54436B)))];
 
+    if(questions.length > 1){
+      row.add(dragElement[1] ? Draggable<int>(
+        data: 1,
+        feedback: Text(questions[1], style: const TextStyle(fontSize: 25, color: Colors.yellow)),
+        childWhenDragging: Text(questions[1], style: const TextStyle(fontSize: 25, color: Color(0xFF54436B))),
+        child: Text(questions[1], style: const TextStyle(fontSize: 25, color: Colors.yellow)),
+      ) : Text(questions[1], style: const TextStyle(fontSize: 25, color: Color(0xFF54436B))));
+    }
     var dragWidget = Row(
       mainAxisAlignment: questions[0].length > 1 ? MainAxisAlignment.spaceEvenly: MainAxisAlignment.center,
-      children: questions.map((e) => Text(e, style: TextStyle(fontSize: 20, color: Colors.yellow))).toList(),
+      children: row
     );
 
     return Container(
@@ -323,38 +407,83 @@ class _GameState extends State<Game>{
   }
 
   Widget buildNumbers(BuildContext context){
-    List<Widget> smallNumbers = [], bigNumbers = [];
-    for(int i = 0; i < 20; i++){
-      smallNumbers.add(SizedBox(height: 10, width: 5, child: Container(color: Colors.yellow, child: Text('4', style: TextStyle(fontSize: 10, color: Colors.black),),)));
-      smallNumbers.add(SizedBox(height: 10, width: 5, child: Container(color: Colors.red, child: Text('4', style: TextStyle(fontSize: 10, color: Colors.black),),)));
-      bigNumbers.add(SizedBox(height: 20, width: 10, child: Container(color: Colors.green, child: Text('4', style: TextStyle(fontSize: 16, color: Colors.black),),)));
+    List<Widget> gridWidget = [];
+    List<Widget> lineWidget = [];
+
+    for(int j = 0; j <= maxSize; j++){
+      Widget container = Container(
+          height: 10,
+          width: 5,
+          color: 0 == j % 2 ? const Color(0xFF54436B + 0x00060606) : const Color(0xFF54436B - 0x00060606),
+          child: Text(grid[0][j], style: TextStyle(fontSize: 10, color: stage % 2 == 0 && stage != total && maxSize - j == (stage ~/ 2 - 1) ? Colors.blue : Colors.black))
+      );
+
+      lineWidget.add(DragTarget<int>(
+        builder: (context, data, rejectedData){
+          return container;
+        },
+        onAccept: (data){
+          if((acceptDrag[0][j] & (1 << data)) != 0){
+            successDrag(0, j, data);
+          }
+        },
+      ));
+
+      if(j != maxSize){
+        lineWidget.add(const SizedBox(height: 10, width: 5));
+      }
     }
-    Widget grid = Column(
-      children: [
-        Row(children: smallNumbers),
-        Row(children: bigNumbers),
-        Row(children: bigNumbers),
-        Divider(
-            height: 5,
-            color: Colors.black
-        ),
-        Row(children: smallNumbers),
-        Row(children: bigNumbers),
-        Row(children: bigNumbers),
-        Row(children: bigNumbers),
-        Row(children: bigNumbers),
-        Divider(
-            height: 5,
-            color: Colors.black
-        ),
-        Row(children: bigNumbers),
-      ],
-    );
+
+    gridWidget.add(Row(mainAxisAlignment: MainAxisAlignment.start, children: lineWidget));
+
+    for(int i = 1; i < 4; i++){
+      lineWidget = [];
+      for(int j = 0; j <= maxSize; j++){
+        Widget container = Container(
+            height: 20,
+            width: 10,
+            color: i % 2 == j % 2 ? const Color(0xFF54436B + 0x00060606) : const Color(0xFF54436B - 0x00060606),
+            child: Text(grid[i][j], style: TextStyle(fontSize: 16, color: stage % 2 == 0 && stage != total && maxSize - j == (stage ~/ 2 - 1) ? Colors.blue : Colors.black))
+        );
+
+        lineWidget.add(DragTarget<int>(
+          builder: (context, data, rejectedData){
+            return container;
+          },
+          onAccept: (data){
+            if((acceptDrag[i][j] & (1 << data)) != 0) {
+              successDrag(i, j, data);
+            }
+          },
+        ));
+      }
+
+      gridWidget.add(Row(mainAxisAlignment: MainAxisAlignment.start, children: lineWidget));
+
+      if(i == 2){
+        gridWidget.add(Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SizedBox(width: 10),
+            SizedBox(
+                width: 10.0 * maxSize,
+                child: const Divider(
+                    height: 5,
+                    color: Colors.black
+                )
+            ),
+          ],
+        ));
+      }
+    }
     return SizedBox(
         height: 260,
         width: 510,
         child: FittedBox(
-          child: grid,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: gridWidget
+          ),
         )
     );
   }
