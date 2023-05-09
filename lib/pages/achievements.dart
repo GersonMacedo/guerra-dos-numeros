@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:guerra_dos_numeros/utils.dart';
 
 class Achievements extends StatelessWidget {
-  const Achievements({super.key, required this.changePage, required this.vertical});
+  const Achievements({super.key, required this.changePage});
   final void Function(Widget?) changePage;
-  final bool vertical;
 
   @override
   Widget build(BuildContext context) {

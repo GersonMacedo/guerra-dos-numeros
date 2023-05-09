@@ -1,23 +1,16 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
-//TODO: Adicionar mais questões
-//TODO: Pegar as questões de um arquivo separado
-List<String> addQuestions = ["Mariazinha tinha | reais guardado, no seu aniversário ela ganhou mais | reais do seu pai. Quantos reais ela tem hoje?"];
-List<String> subQuestions = [];
-List<String> mulQuestions = [];
-List<String> divQuestions = [];
+import 'package:guerra_dos_numeros/utils.dart';
 
 class Game extends StatefulWidget {
-  const Game({super.key, required this.operation, required this.questionNumber, required this.number1, required this.number2, required this.changePage, required this.vertical});
+  const Game({super.key, required this.operation, required this.questionNumber, required this.question, required this.numbers, required this.changePage});
   final void Function(Widget?) changePage;
-  final bool vertical;
 
-  final String operation;
+  final int operation;
   final int questionNumber;
-  final int number1;
-  final int number2;
+  final String question;
+  final List<int> numbers;
 
   @override
   State<Game> createState() => _GameState();
@@ -42,6 +35,7 @@ class _GameState extends State<Game>{
   List<List<String>> grid = [];
   List<List<int>> acceptDrag = [];
   List<bool> dragElement = [true, true];
+  String operation = "";
 
   firstFrame(){
     print("Call!!!");
@@ -49,11 +43,13 @@ class _GameState extends State<Game>{
       _runTimer();
     });
 
-    for(int i = max(widget.number1, widget.number2); i != 0; i ~/= 10){
+    operation = ["+", "-", "x", "/"][widget.operation];
+
+    for(int i = max(widget.numbers[0], widget.numbers[1]); i != 0; i ~/= 10){
       numbers1.add(i % 10);
     }
 
-    for(int i = min(widget.number1, widget.number2); i != 0; i ~/= 10){
+    for(int i = min(widget.numbers[0], widget.numbers[1]); i != 0; i ~/= 10){
       numbers2.add(i % 10);
     }
 
@@ -84,13 +80,19 @@ class _GameState extends State<Game>{
     }
 
     List<String> questionPieces = [];
-    if(widget.operation == "+"){
-      questionPieces = addQuestions[widget.questionNumber].split("|");
-      total = 2 * maxSize + 2;
+    if(widget.question == ""){
+      levelQuestion = "Quanto é ${widget.numbers[0]} ${operation} ${widget.numbers[1]} ?";
+      question = "Mova os numeros para a posição correta";
+      questions = widget.numbers.map((e) => e.toString()).toList();
+      stage = 1;
     }else{
-      questionPieces = ["Operação '${widget.operation}' não definida ainda, numeros:", " e ", ""];
+      questionPieces = widget.question.split("|");
+      levelQuestion = "${questionPieces[0]}${widget.numbers[0]}${questionPieces[1]}${widget.numbers[1]}${questionPieces[2]}";
     }
-    levelQuestion = "${questionPieces[0]}${widget.number1}${questionPieces[1]}${widget.number2}${questionPieces[2]}";
+
+    if(operation == "+"){
+      total = 2 * maxSize + 2;
+    }
   }
 
   @override
@@ -113,8 +115,8 @@ class _GameState extends State<Game>{
         dragElement = [true, true];
         if(stage % 2 == 0){
           if(stage == 0){
-            grid[2][0] = widget.operation;
-            questions = [widget.number1.toString(), widget.number2.toString()];
+            grid[2][0] = operation;
+            questions = widget.numbers.map((e) => e.toString()).toList();
           }else{
             print(result);
             if(result >= 10){
@@ -158,11 +160,12 @@ class _GameState extends State<Game>{
           question += " ?";
 
           result = numbers1[stage ~/ 2] + numbers2[stage ~/ 2] + carry;
+          Random random = Random();
+          correct = random.nextInt(min(result, 6));
           questions = [];
           for(int i = 0; i < 6; i++){
-            questions.add((numbers1[stage ~/ 2] + numbers2[stage ~/ 2] + carry + i).toString());
+            questions.add((numbers1[stage ~/ 2] + numbers2[stage ~/ 2] + carry + i - correct).toString());
           }
-          correct = 0;
         }
         stage++;
         timeLeft = totalTime;
@@ -214,6 +217,7 @@ class _GameState extends State<Game>{
 
   @override
   Widget build(BuildContext context) {
+    bool vertical = onVertical(context);
     if(frame++ == 0){
       firstFrame();
     }
@@ -225,7 +229,8 @@ class _GameState extends State<Game>{
               Container(
                 padding: const EdgeInsets.all(10),
                 color: const Color(0xFF828DF4),
-                height: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 145 : 190,
+                height: vertical ? 190 : 145,
+                width: vertical ? 540 : 960,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -240,12 +245,13 @@ class _GameState extends State<Game>{
                     ),
                     const SizedBox(height: 5),
                     Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                            color: Color(0xFF54436B),
-                            borderRadius: BorderRadius.all(Radius.circular(30))
-                        ),
-                        child: Text(levelQuestion, style: const TextStyle(fontSize: 20, color: Colors.white))
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(10),
+                      decoration: const BoxDecoration(
+                          color: Color(0xFF54436B),
+                          borderRadius: BorderRadius.all(Radius.circular(30))
+                      ),
+                      child: Text(levelQuestion, style: const TextStyle(fontSize: 20, color: Colors.white))
                     ),
                   ],
                 ),

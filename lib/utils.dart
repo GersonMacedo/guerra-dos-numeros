@@ -34,3 +34,7 @@ Widget backButton(void Function(Widget?) changePage){
     )
   );
 }
+
+bool onVertical(BuildContext context){
+  return MediaQuery.of(context).size.height > MediaQuery.of(context).size.width;
+}

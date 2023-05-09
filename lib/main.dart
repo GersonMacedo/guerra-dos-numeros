@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:guerra_dos_numeros/pages/menu.dart';
+import 'package:guerra_dos_numeros/utils.dart';
 
 void main() {
   runApp(const MyApp());
@@ -46,8 +47,7 @@ class _HomeState extends State<Home>{
 
   @override
   Widget build(BuildContext context) {
-    bool vertical = MediaQuery.of(context).size.height > MediaQuery.of(context).size.width;
-
+    bool vertical = onVertical(context);
     return Container(
       color: Colors.black,
       child: FittedBox(
@@ -60,7 +60,7 @@ class _HomeState extends State<Home>{
                   color: Color(0xFF54436B),
                   borderRadius: BorderRadius.all(Radius.circular(20))
               ),
-              child: menu ? Menu(changePage: changePage, vertical: vertical) : selected,
+              child: menu ? Menu(changePage: changePage) : selected,
             )
         ),
       ),
