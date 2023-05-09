@@ -31,8 +31,8 @@ class _LevelSelectorState extends State<LevelSelector>{
   int operator = 0;
   bool interpretation = true;
   int digits = 2;
-  int number1 = -1;
-  int number2 = -1;
+  int time = 0;
+  List<int> timeList = [90, 30, 10, 5];
   Color disabled = const Color(0xFF101010);
 
   int getRandomNumber(){
@@ -74,13 +74,11 @@ class _LevelSelectorState extends State<LevelSelector>{
             const SizedBox(height: 15),
             buildDigits(),
             const SizedBox(height: 15),
-            const Text("Numero 1: Aleatório", style: TextStyle(fontSize: 22, color: Colors.black)),
-            const SizedBox(height: 15),
-            const Text("Numero 2: Aleatório", style: TextStyle(fontSize: 22, color: Colors.black)),
-            const SizedBox(height: 15),
+            buildTime(),
+            const SizedBox(height: 30),
             customIconButton(context, operator == 0 ? Colors.green : disabled, const Icon(Icons.play_circle), " Jogar", 22, Colors.white, 120, 50,(){
               if(operator == 0){
-                widget.changePage(Game(operation: operator, questionNumber: 0, question: getQuestion(),numbers: getNumberList(2), changePage: widget.changePage));
+                widget.changePage(Game(operation: operator, questionNumber: 0, question: getQuestion(),numbers: getNumberList(2), time: timeList[time], changePage: widget.changePage));
               }
             }),
           ],
@@ -188,6 +186,39 @@ class _LevelSelectorState extends State<LevelSelector>{
           ),
         ),
       ],
+    );
+  }
+
+
+  Widget buildTime(){
+    List<String> options = ["Fácil", "Médio", "Difícil", "Extremo"];
+    List<Widget> row = [
+      const Text("Tempo:", style: TextStyle(color: Colors.black))
+    ];
+
+    for(int i = 0; i < options.length; i++){
+      row.add(const SizedBox(width: 15));
+      row.add(
+          SizedBox(
+            width: 70,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: time == i ? Colors.green : const Color(0xFF828DF4),
+                padding: EdgeInsets.all(0)
+              ),
+              onPressed: (){
+                setState(() {
+                  time = i;
+                });
+              },
+              child: Text(options[i], style: const TextStyle(fontSize: 15)),
+            ),
+          )
+      );
+    }
+
+    return Row(
+        children: row
     );
   }
 }

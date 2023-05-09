@@ -1,16 +1,18 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:guerra_dos_numeros/utils.dart';
 
 class Game extends StatefulWidget {
-  const Game({super.key, required this.operation, required this.questionNumber, required this.question, required this.numbers, required this.changePage});
+  const Game({super.key, required this.operation, required this.questionNumber, required this.question, required this.numbers, required this.changePage, required this.time});
   final void Function(Widget?) changePage;
 
   final int operation;
   final int questionNumber;
   final String question;
   final List<int> numbers;
+  final int time;
 
   @override
   State<Game> createState() => _GameState();
@@ -23,9 +25,7 @@ class _GameState extends State<Game>{
   List<String> questions = ["+", "-", "x", "/"];
   bool responded = false;
   int correct = 0;
-  int timeLeft = 15;
-  int totalTime = 15;
-  int frame = 0;
+  int timeLeft = 90;
   List<int> numbers1 = [];
   List<int> numbers2 = [];
   int maxSize = 0;
@@ -36,13 +36,45 @@ class _GameState extends State<Game>{
   List<List<int>> acceptDrag = [];
   List<bool> dragElement = [true, true];
   String operation = "";
+  int frame = 0;
+  int fps = 10;
+  int startFrame = 0;
+  late Timer _timer;
+
+  @override
+  void dispose(){
+    _timer.cancel();
+    super.dispose();
+  }
+
+  _GameState(){
+    _timer = Timer.periodic(
+      Duration(microseconds: 1000000 ~/ fps),
+      (timer) {
+      setState(() {
+          frame++;
+          if(frame % fps == 0){
+            if(timeLeft != 0 && !responded){
+              timeLeft--;
+              if(timeLeft == 0){
+                _respond(false);
+              }
+            }
+          }
+        });
+      }
+    );
+  }
+
+  void clearDrag(){
+    for(int i = 0; i < acceptDrag.length; i++){
+      for(int j = 0; j < acceptDrag[i].length; j++){
+        acceptDrag[i][j] = 0;
+      }
+    }
+  }
 
   firstFrame(){
-    print("Call!!!");
-    Future.delayed(Duration(seconds: 1), (){
-      _runTimer();
-    });
-
     operation = ["+", "-", "x", "/"][widget.operation];
 
     for(int i = max(widget.numbers[0], widget.numbers[1]); i != 0; i ~/= 10){
@@ -85,6 +117,7 @@ class _GameState extends State<Game>{
       question = "Mova os numeros para a posição correta";
       questions = widget.numbers.map((e) => e.toString()).toList();
       stage = 1;
+      grid[2][0] = operation;
     }else{
       questionPieces = widget.question.split("|");
       levelQuestion = "${questionPieces[0]}${widget.numbers[0]}${questionPieces[1]}${widget.numbers[1]}${questionPieces[2]}";
@@ -103,13 +136,26 @@ class _GameState extends State<Game>{
         question = "Resposta correta!";
       } else if (timeLeft == 0){
         question = "Acabou o tempo!";
+        if(stage == 1){
+          for(int i = 0; i < maxSize; i++){
+            grid[1][maxSize - i] = numbers1[i].toString();
+            grid[2][maxSize - i] = numbers2[i].toString();
+          }
+          clearDrag();
+        }else if(stage % 2 == 1){
+          if(carry != 0){
+            grid[stage + 1 < total ? 0 : 3][maxSize - (stage ~/ 2)] = carry.toString();
+          }
+          grid[3][maxSize - (stage ~/ 2) + 1] = (result % 10).toString();
+          clearDrag();
+        }
+        dragElement = [false, false];
       }else{
         question = "Resposta errada!";
       }
-
     });
 
-    Future.delayed(Duration(seconds: 1), (){
+    Future.delayed(Duration(seconds: 2), (){
       setState((){
         responded = false;
         dragElement = [true, true];
@@ -132,14 +178,7 @@ class _GameState extends State<Game>{
           }
           question = "Mova os numeros para a posição correta";
         }else{
-          if(stage == 1){
-            if(!right){
-              for(int i = 0; i < maxSize; i++){
-                grid[1][maxSize - i] = numbers1[i].toString();
-                grid[2][maxSize - i] = numbers2[i].toString();
-              }
-            }
-          }else{
+          if(stage != 1){
             if(carry != 0){
               grid[stage + 1 < total ? 0 : 3][maxSize - (stage ~/ 2)] = carry.toString();
             }
@@ -150,6 +189,7 @@ class _GameState extends State<Game>{
             question = "Parabéns! Você terminou o calculo";
             questions = [];
             stage++;
+            responded = true;
             return;
           }
 
@@ -168,8 +208,8 @@ class _GameState extends State<Game>{
           }
         }
         stage++;
-        timeLeft = totalTime;
-        _runTimer();
+        timeLeft = widget.time;
+        startFrame = frame;
       });
     });
   }
@@ -195,30 +235,10 @@ class _GameState extends State<Game>{
     });
   }
 
-  void _runTimer(){
-    if(responded){
-      return;
-    }
-
-    if(timeLeft > 0){
-      setState((){
-        timeLeft--;
-        if(timeLeft == 0){
-          _respond(false);
-          return;
-        }
-      });
-    }
-
-    Future.delayed(Duration(seconds: 1), (){
-      _runTimer();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     bool vertical = onVertical(context);
-    if(frame++ == 0){
+    if(frame == 0){
       firstFrame();
     }
 
@@ -373,18 +393,18 @@ class _GameState extends State<Game>{
   Widget buildDrag(BuildContext context){
     List<Widget> row = [dragElement[0] ? Draggable<int>(
       data: 0,
-      feedback: Text(questions[0], style: const TextStyle(fontSize: 25, color: Colors.yellow)),
-      childWhenDragging: Text(questions[0], style: const TextStyle(fontSize: 25, color: Color(0xFF54436B))),
-      child: Text(questions[0], style: const TextStyle(fontSize: 25, color: Colors.yellow)),
-    ) : Text(questions[0], style: const TextStyle(fontSize: 25, color: Color(0xFF54436B)))];
+      feedback: Text(questions[0], style: const TextStyle(fontSize: 30, color: Colors.yellow)),
+      childWhenDragging: Text(questions[0], style: const TextStyle(fontSize: 30, color: Color(0xFF54436B))),
+      child: Text(questions[0], style: const TextStyle(fontSize: 30, color: Colors.yellow)),
+    ) : Text(questions[0], style: const TextStyle(fontSize: 30, color: Color(0xFF54436B)))];
 
     if(questions.length > 1){
       row.add(dragElement[1] ? Draggable<int>(
         data: 1,
-        feedback: Text(questions[1], style: const TextStyle(fontSize: 25, color: Colors.yellow)),
-        childWhenDragging: Text(questions[1], style: const TextStyle(fontSize: 25, color: Color(0xFF54436B))),
-        child: Text(questions[1], style: const TextStyle(fontSize: 25, color: Colors.yellow)),
-      ) : Text(questions[1], style: const TextStyle(fontSize: 25, color: Color(0xFF54436B))));
+        feedback: Text(questions[1], style: const TextStyle(fontSize: 30, color: Colors.yellow)),
+        childWhenDragging: Text(questions[1], style: const TextStyle(fontSize: 30, color: Color(0xFF54436B))),
+        child: Text(questions[1], style: const TextStyle(fontSize: 30, color: Colors.yellow)),
+      ) : Text(questions[1], style: const TextStyle(fontSize: 30, color: Color(0xFF54436B))));
     }
     var dragWidget = Row(
       mainAxisAlignment: questions[0].length > 1 ? MainAxisAlignment.spaceEvenly: MainAxisAlignment.center,
