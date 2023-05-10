@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:guerra_dos_numeros/pages/game.dart';
+import 'package:guerra_dos_numeros/pages/game/game.dart';
 import 'package:guerra_dos_numeros/utils.dart';
 
 //TODO: Adicionar mais questões
@@ -33,6 +33,7 @@ class _LevelSelectorState extends State<LevelSelector>{
   int digits = 2;
   int time = 0;
   List<int> timeList = [90, 30, 10, 5];
+  List<String> operators = ["+", "-", "x", "/"];
   Color disabled = const Color(0xFF101010);
 
   int getRandomNumber(){
@@ -78,7 +79,7 @@ class _LevelSelectorState extends State<LevelSelector>{
             const SizedBox(height: 30),
             customIconButton(context, operator == 0 ? Colors.green : disabled, const Icon(Icons.play_circle), " Jogar", 22, Colors.white, 120, 50,(){
               if(operator == 0){
-                widget.changePage(Game(operation: operator, questionNumber: 0, question: getQuestion(),numbers: getNumberList(2), time: timeList[time], changePage: widget.changePage));
+                widget.changePage(Game(operation: operators[operator], question: getQuestion(),numbers: getNumberList(2), time: timeList[time], changePage: widget.changePage));
               }
             }),
           ],
@@ -119,7 +120,6 @@ class _LevelSelectorState extends State<LevelSelector>{
   }
 
   Widget buildOperators(){
-    List<String> operators = ["+", "-", "x", "/"];
     List<Widget> row = [
       const Text("Operação:", style: TextStyle(color: Colors.black, fontSize: 30))
     ];
