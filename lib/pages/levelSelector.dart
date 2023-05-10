@@ -101,7 +101,7 @@ class _LevelSelectorState extends State<LevelSelector>{
   Widget buildInterpretation(){
     return Row(
       children: [
-        const Text("Interpretação: ", style: TextStyle(color: Colors.black)),
+        const Text("Interpretação: ", style: TextStyle(color: Colors.black, fontSize: 30)),
         Material(
           color: const Color(0xFF54436B),
           child: Checkbox(
@@ -121,7 +121,7 @@ class _LevelSelectorState extends State<LevelSelector>{
   Widget buildOperators(){
     List<String> operators = ["+", "-", "x", "/"];
     List<Widget> row = [
-      const Text("Operação:", style: TextStyle(color: Colors.black))
+      const Text("Operação:", style: TextStyle(color: Colors.black, fontSize: 30))
     ];
 
     for(int i = 0; i < operators.length; i++){
@@ -152,7 +152,7 @@ class _LevelSelectorState extends State<LevelSelector>{
   Widget buildDigits(){
     return Row(
       children: [
-        const Text("Digitos:", style: TextStyle(color: Colors.black)),
+        const Text("Digitos:", style: TextStyle(color: Colors.black, fontSize: 30)),
         const SizedBox(width: 15),
         SizedBox(
           width: 50,
@@ -169,7 +169,7 @@ class _LevelSelectorState extends State<LevelSelector>{
           ),
         ),
         const SizedBox(width: 15),
-        Text("$digits", style: const TextStyle(color: Colors.black)),
+        Text("$digits", style: const TextStyle(color: Colors.black, fontSize: 30)),
         const SizedBox(width: 15),
         SizedBox(
           width: 50,
@@ -193,7 +193,7 @@ class _LevelSelectorState extends State<LevelSelector>{
   Widget buildTime(){
     List<String> options = ["Fácil", "Médio", "Difícil", "Extremo"];
     List<Widget> row = [
-      const Text("Tempo:", style: TextStyle(color: Colors.black))
+      const Text("Tempo:", style: TextStyle(color: Colors.black, fontSize: 30))
     ];
 
     for(int i = 0; i < options.length; i++){
