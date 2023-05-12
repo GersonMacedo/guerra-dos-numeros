@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:guerra_dos_numeros/pages/game/frames/dragQuestionFrame.dart';
 import 'package:guerra_dos_numeros/pages/game/frames/fightFrame.dart';
 import 'package:guerra_dos_numeros/pages/game/frames/mathQuestionFrame.dart';
+import 'package:guerra_dos_numeros/pages/game/frames/numbersGridFrame.dart';
 import 'package:guerra_dos_numeros/pages/game/frames/topFrame.dart';
-import 'package:guerra_dos_numeros/utils.dart';
 
 class Game extends StatefulWidget {
   const Game({super.key, required this.operation, required this.question, required this.numbers, required this.changePage, required this.time});
@@ -40,6 +40,10 @@ class _GameState extends State<Game>{
   int fps = 10;
   int startFrame = 0;
   int wrongAnswers = 0;
+  int nextStage = -100;
+  int hamburgerAttack = -100;
+  int robotAttack = -100;
+  int attackType = 0;
   late Timer _timer;
 
   @override
@@ -58,13 +62,81 @@ class _GameState extends State<Game>{
             if(timeLeft != 0 && !responded){
               timeLeft--;
               if(timeLeft == 0){
-                _respond(false);
+                respond(false);
               }
             }
+          }
+
+          if(frame == nextStage){
+            updateStage();
           }
         });
       }
     );
+  }
+
+  void updateStage(){
+    setState((){
+      responded = false;
+      dragElement = [true, true];
+      timeLeft = widget.time;
+      if(stage % 2 == 0){
+        timeLeft = max(timeLeft, 10);
+
+        if(stage == 0){
+          grid[2][0] = widget.operation;
+          questions = widget.numbers.map((e) => e.toString()).toList();
+        }else{
+          if(result >= 10){
+            carry = result ~/ 10;
+            questions = [(carry).toString(), (result % 10).toString()];
+            acceptDrag[stage + 2 < total ? 0 : 3][maxSize - stage ~/ 2] = 1;
+            acceptDrag[3][maxSize - stage ~/ 2 + 1] = 2;
+          }else{
+            carry = 0;
+            questions = [(result % 10).toString()];
+            acceptDrag[3][maxSize - stage ~/ 2 + 1] = 1;
+          }
+        }
+        question = "Mova os numeros para a posição correta";
+      }else{
+        if(stage != 1){
+          if(carry != 0){
+            grid[stage + 1 < total ? 0 : 3][maxSize - (stage ~/ 2)] = carry.toString();
+          }
+          grid[3][maxSize - (stage ~/ 2) + 1] = (result % 10).toString();
+        }
+
+        if(stage + 1 == total){
+          question = "Fim do calculo! ";
+          questions = [];
+          stage++;
+          responded = true;
+          if(wrongAnswers == 0){
+            question += "Você terminou sem errar nada, parabéns!";
+          }else{
+            question += "você errou $wrongAnswers das $total questões (${(wrongAnswers * 1000 ~/ total) / 10}%)";
+          }
+          return;
+        }
+
+        question = "Quanto é ${numbers1[stage ~/ 2]} + ${numbers2[stage ~/ 2]}";
+        if(carry != 0){
+          question += " + ${carry}";
+        }
+        question += " ?";
+
+        result = numbers1[stage ~/ 2] + numbers2[stage ~/ 2] + carry;
+        Random random = Random();
+        correct = random.nextInt(min(result + 1, 6));
+        questions = [];
+        for(int i = 0; i < 6; i++){
+          questions.add((numbers1[stage ~/ 2] + numbers2[stage ~/ 2] + carry + i - correct).toString());
+        }
+      }
+      stage++;
+      startFrame = frame;
+    });
   }
 
   void clearDrag(){
@@ -123,13 +195,19 @@ class _GameState extends State<Game>{
   }
 
   @override
-  void _respond(bool right){
+  void respond(bool right){
     setState(() {
       responded = true;
       if (right) {
+        hamburgerAttack = frame + 10 - frame % 10;
+        nextStage = frame + 30 - frame % 10;
+        Random random = Random();
+        attackType = random.nextInt(3);
         question = "Resposta correta!";
       } else if (timeLeft == 0){
         wrongAnswers++;
+        robotAttack = frame;
+        nextStage = frame + 20;
         question = "Acabou o tempo!";
         if(stage == 1){
           for(int i = 0; i < maxSize; i++){
@@ -146,73 +224,13 @@ class _GameState extends State<Game>{
         }
         dragElement = [false, false];
       }else{
+        robotAttack = frame + 10 - frame % 10;
+        nextStage = frame + 30 - frame % 10;
         wrongAnswers++;
         question = "Resposta errada!";
       }
     });
 
-    Future.delayed(Duration(seconds: 2), (){
-      setState((){
-        responded = false;
-        dragElement = [true, true];
-        if(stage % 2 == 0){
-          if(stage == 0){
-            grid[2][0] = widget.operation;
-            questions = widget.numbers.map((e) => e.toString()).toList();
-          }else{
-            print(result);
-            if(result >= 10){
-              carry = result ~/ 10;
-              questions = [(carry).toString(), (result % 10).toString()];
-              acceptDrag[stage + 2 < total ? 0 : 3][maxSize - stage ~/ 2] = 1;
-              acceptDrag[3][maxSize - stage ~/ 2 + 1] = 2;
-            }else{
-              carry = 0;
-              questions = [(result % 10).toString()];
-              acceptDrag[3][maxSize - stage ~/ 2 + 1] = 1;
-            }
-          }
-          question = "Mova os numeros para a posição correta";
-        }else{
-          if(stage != 1){
-            if(carry != 0){
-              grid[stage + 1 < total ? 0 : 3][maxSize - (stage ~/ 2)] = carry.toString();
-            }
-            grid[3][maxSize - (stage ~/ 2) + 1] = (result % 10).toString();
-          }
-
-          if(stage + 1 == total){
-            question = "Fim do calculo! ";
-            questions = [];
-            stage++;
-            responded = true;
-            if(wrongAnswers == 0){
-              question += "Você terminou sem errar nada, parabéns!";
-            }else{
-              question += "você errou $wrongAnswers das $total questões (${(wrongAnswers * 1000 ~/ total) / 10}%)";
-            }
-            return;
-          }
-
-          question = "Quanto é ${numbers1[stage ~/ 2]} + ${numbers2[stage ~/ 2]}";
-          if(carry != 0){
-            question += " + ${carry}";
-          }
-          question += " ?";
-
-          result = numbers1[stage ~/ 2] + numbers2[stage ~/ 2] + carry;
-          Random random = Random();
-          correct = random.nextInt(min(result + 1, 6));
-          questions = [];
-          for(int i = 0; i < 6; i++){
-            questions.add((numbers1[stage ~/ 2] + numbers2[stage ~/ 2] + carry + i - correct).toString());
-          }
-        }
-        stage++;
-        timeLeft = widget.time;
-        startFrame = frame;
-      });
-    });
   }
 
   void successDrag(int i, int j, int element){
@@ -231,7 +249,7 @@ class _GameState extends State<Game>{
         grid[i][j] = questions[element];
       }
       if(dragElement[0] == false && (questions.length == 1 || dragElement[1] == false)){
-        _respond(true);
+        respond(true);
       }
     });
   }
@@ -243,15 +261,15 @@ class _GameState extends State<Game>{
     }
 
     return Container(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           TopGameFrame(changePage: widget.changePage, question: widget.question, numbers: widget.numbers, operation: widget.operation, stage: stage, total: total),
           stage % 2 == 0 ?
-            MathQuestionFrame(question: question, correct: correct, questions: questions, respond: _respond, responded: responded) :
+            MathQuestionFrame(question: question, correct: correct, questions: questions, respond: respond, responded: responded) :
             DragQuestionFrame(question: question, questions: questions, dragElement: dragElement),
-          SizedBox(height: 5)
+          const SizedBox(height: 5)
         ] + buildBottom(context)
       )
     );
@@ -268,12 +286,12 @@ class _GameState extends State<Game>{
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FightFrame(),
+                  FightFrame(frame :frame, hamburgerAttack: hamburgerAttack, robotAttack: robotAttack, attackType: attackType),
                   buildTimer(context)
                 ],
               ),
               const SizedBox(width: 10),
-              buildNumbers(context),
+              NumbersGridFrame(grid: grid, acceptDrag: acceptDrag, successDrag: successDrag, stage: stage, total: total),
               const SizedBox(width: 10)
             ]
           ),
@@ -282,92 +300,12 @@ class _GameState extends State<Game>{
     }
 
     return [
-      buildNumbers(context),
+      NumbersGridFrame(grid: grid, acceptDrag: acceptDrag, successDrag: successDrag, stage: stage, total: total),
       const SizedBox(height: 10),
-      FightFrame(),
+      FightFrame(frame: frame, hamburgerAttack: hamburgerAttack, robotAttack: robotAttack, attackType: attackType),
       const SizedBox(height: 10),
       buildTimer(context)
     ];
-  }
-
-  Widget buildNumbers(BuildContext context){
-    List<Widget> gridWidget = [];
-    List<Widget> lineWidget = [];
-
-    for(int j = 0; j <= maxSize; j++){
-      Widget container = Container(
-          height: 10,
-          width: 5,
-          color: 0 == j % 2 ? const Color(0xFF54436B + 0x00060606) : const Color(0xFF54436B - 0x00060606),
-          child: Text(grid[0][j], style: TextStyle(fontSize: 10, color: stage % 2 == 0 && stage != total && maxSize - j == (stage ~/ 2 - 1) ? Colors.blue : Colors.black))
-      );
-
-      lineWidget.add(DragTarget<int>(
-        builder: (context, data, rejectedData){
-          return container;
-        },
-        onAccept: (data){
-          if((acceptDrag[0][j] & (1 << data)) != 0){
-            successDrag(0, j, data);
-          }
-        },
-      ));
-
-      if(j != maxSize){
-        lineWidget.add(const SizedBox(height: 10, width: 5));
-      }
-    }
-
-    gridWidget.add(Row(mainAxisAlignment: MainAxisAlignment.start, children: lineWidget));
-
-    for(int i = 1; i < 4; i++){
-      lineWidget = [];
-      for(int j = 0; j <= maxSize; j++){
-        Widget container = Container(
-            height: 20,
-            width: 10,
-            color: i % 2 == j % 2 ? const Color(0xFF54436B + 0x00060606) : const Color(0xFF54436B - 0x00060606),
-            child: Text(grid[i][j], style: TextStyle(fontSize: 16, color: stage % 2 == 0 && stage != total && maxSize - j == (stage ~/ 2 - 1) ? Colors.blue : Colors.black))
-        );
-
-        lineWidget.add(DragTarget<int>(
-          builder: (context, data, rejectedData){
-            return container;
-          },
-          onAccept: (data){
-            if((acceptDrag[i][j] & (1 << data)) != 0) {
-              successDrag(i, j, data);
-            }
-          },
-        ));
-      }
-
-      gridWidget.add(Row(mainAxisAlignment: MainAxisAlignment.start, children: lineWidget));
-
-      if(i == 2){
-        gridWidget.add(Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(width: 10),
-            SizedBox(
-                width: 10.0 * maxSize,
-                child: const Divider(
-                    height: 5,
-                    color: Colors.black
-                )
-            ),
-          ],
-        ));
-      }
-    }
-    return Expanded(
-      child: FittedBox(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: gridWidget
-        ),
-      )
-    );
   }
 
   Widget buildTimer(BuildContext context){

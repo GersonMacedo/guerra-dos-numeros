@@ -12,8 +12,8 @@ class DragQuestionFrame extends StatelessWidget {
     List<Widget> row = [];
 
     for(int i = 0; i < questions.length; i++){
-      Widget yellowText = Text(" ${questions[i]} ", style: const TextStyle(fontSize: 30, color: Colors.yellow));
-      Widget hidedText = Text(" ${questions[i]} ", style: const TextStyle(fontSize: 30, color: Color(0xFF54436B)));
+      Widget yellowText = Text(" ${questions[i]} ", style: const TextStyle(fontSize: 40, color: Colors.yellow, decoration: TextDecoration.none));
+      Widget hidedText = Text(" ${questions[i]} ", style: const TextStyle(fontSize: 40, color: Color(0xFF54436B)));
       if(!dragElement[i]){
         row.add(hidedText);
         continue;
