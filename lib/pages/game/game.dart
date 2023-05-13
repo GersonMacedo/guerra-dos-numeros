@@ -8,13 +8,15 @@ import 'package:guerra_dos_numeros/pages/game/frames/numbersGridFrame.dart';
 import 'package:guerra_dos_numeros/pages/game/frames/topFrame.dart';
 
 class Game extends StatefulWidget {
-  const Game({super.key, required this.operation, required this.question, required this.numbers, required this.changePage, required this.time});
+  const Game(this.operation, this.question, this.numbers, this.changePage, this.time, this.frame, this.fps, {super.key});
 
   final void Function(Widget?) changePage;
   final String operation;
   final String question;
   final List<int> numbers;
   final int time;
+  final int frame;
+  final int fps;
 
   @override
   State<Game> createState() => _GameState();
@@ -53,6 +55,7 @@ class _GameState extends State<Game>{
   }
 
   _GameState(){
+    print("@!");
     _timer = Timer.periodic(
       Duration(microseconds: 1000000 ~/ fps),
       (timer) {

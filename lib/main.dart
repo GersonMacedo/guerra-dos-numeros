@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:guerra_dos_numeros/pages/about.dart';
+import 'package:guerra_dos_numeros/pages/achievements.dart';
 import 'package:guerra_dos_numeros/pages/menu.dart';
+import 'package:guerra_dos_numeros/pages/settings.dart';
 import 'package:guerra_dos_numeros/utils.dart';
 
 void main() {
@@ -32,18 +37,34 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home>{
-  bool menu = true;
-  Widget selected = Container();
-  Widget back = Container();
+  _HomeState(){
+    selected = Menu(changePage, frame, fps, key: UniqueKey());
+    _timer = Timer.periodic(
+      Duration(microseconds: 1000000 ~/ fps), (timer) {
+        setState(() {
+          frame++;
+        });
+      }
+    );
+  }
 
-  void changePage(Widget? page){
+  late Timer _timer;
+  int frame = 0;
+  int fps = 10;
+  bool bottomButtons = true;
+  bool backButton = false;
+  late Widget selected;
+
+  void changePage(Widget? page, {bool bottom = true, bool back = false}){
     setState(() {
       if(page == null){
-        menu = true;
+        selected = Menu(changePage, frame, fps, key: const ValueKey("Menu"));
       }else{
-        menu = false;
         selected = page;
       }
+
+      bottomButtons = bottom;
+      backButton = back;
     });
   }
 
@@ -53,6 +74,7 @@ class _HomeState extends State<Home>{
     bool vertical = onVertical(context);
     double width = vertical ? 540 : 960;
     double height = vertical ? 960 : 540;
+
     if(MediaQuery.of(context).size.width / width < MediaQuery.of(context).size.height / height){
       height = MediaQuery.of(context).size.height * width / MediaQuery.of(context).size.width;
     }else{
@@ -61,13 +83,11 @@ class _HomeState extends State<Home>{
 
     return WillPopScope(
       onWillPop: (){
-        if(menu){
+        if(selected.key == const ValueKey("Menu")){
           return Future(() => true);
         }
 
-        setState(() {
-          menu = true;
-        });
+        changePage(null);
         return Future(() => false);
       },
       child: Material(
@@ -75,18 +95,92 @@ class _HomeState extends State<Home>{
           color: Colors.black,
           child: FittedBox(
             alignment: Alignment.topCenter,
-            child: SizedBox(
+            child: Container(
                 width: width,
                 height: height,
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF54436B),
-                  ),
-                  child: menu ? Menu(changePage: changePage) : selected
+                color: const Color(0xFF54436B),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildBackButton(),
+                    Expanded(child: selected),
+                    buildBottomButtons()
+                  ],
                 )
             )
           )
         )
+      )
+    );
+  }
+
+  Widget buildBackButton(){
+    if(!backButton){
+      return Container();
+    }
+
+    return Container(
+        height: 60,
+        width: 100,
+        padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+        child: ElevatedButton(
+            onPressed: (){changePage(null);},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              shape: RoundedRectangleBorder()
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: const [
+                Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
+                Text("  Voltar  ", style: TextStyle(color: Colors.black, fontSize: 18))
+              ]
+            )
+        )
+    );
+  }
+
+  Widget buildBottomButtons(){
+    if(!bottomButtons){
+      return Container();
+    }
+
+    return Container(
+      height: 50,
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          TextButton(
+            onPressed: (){changePage(Achievements(), back: true);},
+            child: Row(
+              children: [
+                Image.asset('assets/images/medal.png'),
+                const Text("Conquistas", style: TextStyle(color: Colors.white, fontSize: 25))
+              ],
+            )
+          ),
+          TextButton(
+              onPressed: (){changePage(About(), back: true);},
+              child: Row(
+                children: const [
+                  Icon(Icons.info_outline, color: Colors.white, size: 40),
+                  Text(" Sobre", style: TextStyle(color: Colors.white, fontSize: 25))
+                ],
+              )
+          ),
+          TextButton(
+              onPressed: (){changePage(Settings(), back: true);},
+              child: Row(
+                children: const [
+                  Icon(Icons.emoji_events_outlined, color: Colors.white, size: 40),
+                  Text(" Ranking", style: TextStyle(color: Colors.white, fontSize: 25))
+                ],
+              )
+          )
+        ]
       )
     );
   }

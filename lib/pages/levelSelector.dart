@@ -20,8 +20,10 @@ List<List<String>> questionsMatrix = [
 ];
 
 class LevelSelector extends StatefulWidget {
-  const LevelSelector({super.key, required this.changePage});
-  final void Function(Widget?) changePage;
+  const LevelSelector(this.changePage, this.frame, this.fps, {super.key});
+  final void Function(Widget?, {bool bottom, bool back}) changePage;
+  final int frame;
+  final int fps;
 
   @override
   State<LevelSelector> createState() => _LevelSelectorState();
@@ -67,7 +69,6 @@ class _LevelSelectorState extends State<LevelSelector>{
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            backButton(widget.changePage),
             const SizedBox(height: 15),
             buildInterpretation(),
             const SizedBox(height: 15),
@@ -79,7 +80,11 @@ class _LevelSelectorState extends State<LevelSelector>{
             const SizedBox(height: 30),
             customIconButton(context, operator == 0 ? Colors.green : disabled, const Icon(Icons.play_circle), " Jogar", 22, Colors.white, 120, 50,(){
               if(operator == 0){
-                widget.changePage(Game(operation: operators[operator], question: getQuestion(),numbers: getNumberList(2), time: timeList[time], changePage: widget.changePage));
+                widget.changePage(
+                  Game(operators[operator], getQuestion(), getNumberList(2), widget.changePage, timeList[time], widget.frame, widget.fps),
+                  back: false,
+                  bottom: false
+                );
               }
             }),
           ],

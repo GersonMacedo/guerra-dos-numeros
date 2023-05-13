@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:guerra_dos_numeros/utils.dart';
 
 class About extends StatelessWidget {
-  const About({super.key, required this.changePage});
-  final void Function(Widget?) changePage;
+  const About({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +10,6 @@ class About extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            backButton(changePage),
             const SizedBox(height: 15),
             const Text("TODO: tela de sobre")
           ],
