@@ -204,8 +204,7 @@ class _GameState extends State<Game>{
       if (right) {
         hamburgerAttack = frame + 10 - frame % 10;
         nextStage = frame + 30 - frame % 10;
-        Random random = Random();
-        attackType = random.nextInt(3);
+        attackType = frame % 3;
         question = "Resposta correta!";
       } else if (timeLeft == 0){
         wrongAnswers++;
