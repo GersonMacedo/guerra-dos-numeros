@@ -12,7 +12,7 @@ class Settings extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
             SizedBox(height: 15),
-            Text("TODO: tela de configurações")
+            Text("TODO: tela de ranking")
           ],
         )
     );

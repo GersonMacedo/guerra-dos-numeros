@@ -156,27 +156,30 @@ class _HomeState extends State<Home>{
           TextButton(
             onPressed: (){changePage(Achievements(), back: true);},
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset('assets/images/medal.png'),
-                const Text("Conquistas", style: TextStyle(color: Colors.white, fontSize: 25))
+                const Text("Conquistas", style: TextStyle(color: Colors.white, fontSize: 22))
               ],
             )
           ),
           TextButton(
               onPressed: (){changePage(About(), back: true);},
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: const [
-                  Icon(Icons.info_outline, color: Colors.white, size: 40),
-                  Text(" Sobre", style: TextStyle(color: Colors.white, fontSize: 25))
+                  Icon(Icons.info_outline, color: Colors.white, size: 30),
+                  Text(" Sobre", style: TextStyle(color: Colors.white, fontSize: 22))
                 ],
               )
           ),
           TextButton(
               onPressed: (){changePage(Settings(), back: true);},
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: const [
-                  Icon(Icons.emoji_events_outlined, color: Colors.white, size: 40),
-                  Text(" Ranking", style: TextStyle(color: Colors.white, fontSize: 25))
+                  Icon(Icons.emoji_events_outlined, color: Colors.white, size: 30),
+                  Text(" Ranking", style: TextStyle(color: Colors.white, fontSize: 20))
                 ],
               )
           )
