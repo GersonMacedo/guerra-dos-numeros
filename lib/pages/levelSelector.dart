@@ -84,7 +84,7 @@ class _LevelSelectorState extends State<LevelSelector>{
             customIconButton(context, operator == 0 ? Colors.green : disabled, const Icon(Icons.play_circle), " Jogar", 22, Colors.white, 120, 50,(){
               if(operator == 0){
                 widget.changePage(
-                  Game(operators[operator], getQuestion(), getNumberList(2), widget.changePage, timeList[time], widget.frame, widget.fps),
+                  Game(operators[operator], getQuestion(), getNumberList(2), widget.changePage, timeList[time]),
                   back: false,
                   bottom: false
                 );

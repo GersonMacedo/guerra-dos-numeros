@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-
-//TODO: carregar as imagens antes do build para evitar as piscadas
+import 'package:guerra_dos_numeros/imagesLoader.dart';
 
 class FightFrame extends StatelessWidget {
-  FightFrame({super.key, required this.frame, required this.hamburgerAttack, required this.robotAttack, required this.attackType});
+  FightFrame({super.key, required this.frame, required this.hamburgerAttack, required this.robotAttack, required this.attackType, required this.images});
   final int frame;
   final int hamburgerAttack;
   final int robotAttack;
   final int attackType;
-  List<double> heights = [0, 3, 5, 3, 0];
-  List<String> attackPath = ["pinkBananaAttack", "appleBananaAttack", "throwBananaAttack"];
-  List<int> attackDelay = [4, 5, 6];
-  List<int> attackFrames = [8, 8, 6];
+  final ImagesLoader images;
 
   bool nobodyAttacks(){
     return (frame < hamburgerAttack || hamburgerAttack + 20 < frame) && (frame < robotAttack + 10 || robotAttack + 20 < frame);
@@ -50,7 +46,7 @@ class FightFrame extends StatelessWidget {
           ),
           Positioned(
               left: height * 9 / 10,
-              top: (frame % 10  < 5 && nobodyAttacks() ? height / 10 - heights[frame % 10] * height / 50 : height / 10),
+              top: (frame % 10  < 5 && nobodyAttacks() ? height / 10 - images.heights[frame % 10] * height / 50 : height / 10),
               width: height / 2,
               height: height / 2,
               child: getBanana()
@@ -69,47 +65,47 @@ class FightFrame extends StatelessWidget {
 
   Widget getHamburger(){
     if(frame >= hamburgerAttack && frame < hamburgerAttack + 20){
-      return Image.asset('assets/images/hamburgerJumping/0.png');
+      return images.hamburger[0];
     }
 
     if(frame >= robotAttack + 10 && frame < robotAttack + 20){
       int diff = frame - robotAttack - 10;
-      return diff % 2 == 0 ? Image.asset('assets/images/hittingHamburger/${diff ~/ 2}.png') : Container();
+      return diff % 2 == 0 ? images.hittingHamburger[diff ~/ 2] : Container();
     }
 
-    return Image.asset('assets/images/hamburgerJumping/${frame % 10  < 5 ? frame % 10 : 0}.png');
+    return images.hamburger[frame % 10  < 5 ? frame % 10 : 0];
   }
 
   Widget getRobot(){
     if(frame >= hamburgerAttack + 10 && frame < hamburgerAttack + 20){
       int diff = frame - hamburgerAttack - 10;
-      return diff % 2 == 0 ? Image.asset('assets/images/hittingRobot/${diff ~/ 2}.png') : Container();
+      return diff % 2 == 0 ? images.hittingRobot[diff ~/ 2] : Container();
     }
 
     if(frame >= robotAttack && frame < robotAttack + 20){
-      return Image.asset('assets/images/movingRobot/0.png');
+      return images.robot[0];
     }
 
-    return Image.asset('assets/images/movingRobot/${(frame % 10  > 1) && (frame % 10 < 7) ? frame % 10 - 2 : 0}.png');
+    return images.robot[(frame % 10  > 1) && (frame % 10 < 7) ? frame % 10 - 2 : 0];
   }
 
   Widget getBanana(){
-    int start = hamburgerAttack + attackDelay[attackType];
-    int end = start + attackFrames[attackType];
+    int start = hamburgerAttack + images.attackDelay[attackType];
+    int end = start + images.attackFrames[attackType];
     if(frame >= start && frame < end){
-      return Image.asset('assets/images/${attackPath[attackType]}/${frame - start}.png');
+      return images.hamburgerAttacks[attackType][frame - start];
     }
 
     if(frame >= robotAttack + 10 && frame < robotAttack + 20 && (frame - robotAttack) % 2 == 1 ){
       return Container();
     }
 
-    return Image.asset('assets/images/banana.png');
+    return images.banana;
   }
 
   Widget getLaser(){
     if(frame >= robotAttack + 3 && frame < robotAttack + 10){
-      return Image.asset('assets/images/laser/${frame - robotAttack - 3}.png');
+      return images.robotAttack[frame - robotAttack - 3];
     }
 
     return Container();

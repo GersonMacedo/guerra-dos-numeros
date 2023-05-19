@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:guerra_dos_numeros/imagesLoader.dart';
 import 'package:guerra_dos_numeros/pages/game/frames/dragQuestionFrame.dart';
 import 'package:guerra_dos_numeros/pages/game/frames/fightFrame.dart';
 import 'package:guerra_dos_numeros/pages/game/frames/mathQuestionFrame.dart';
@@ -17,15 +18,13 @@ import 'package:guerra_dos_numeros/pages/game/frames/topFrame.dart';
 //TODO: Modo de resolver expressões
 
 class Game extends StatefulWidget {
-  const Game(this.operation, this.question, this.numbers, this.changePage, this.time, this.frame, this.fps, {super.key});
+  const Game(this.operation, this.question, this.numbers, this.changePage, this.time, {super.key});
 
   final void Function(Widget?) changePage;
   final String operation;
   final String question;
   final List<int> numbers;
   final int time;
-  final int frame;
-  final int fps;
 
   @override
   State<Game> createState() => _GameState();
@@ -55,6 +54,7 @@ class _GameState extends State<Game>{
   int hamburgerAttack = -100;
   int robotAttack = -100;
   int attackType = 0;
+  ImagesLoader images = ImagesLoader(false, true);
   late Timer _timer;
 
   @override
@@ -85,6 +85,13 @@ class _GameState extends State<Game>{
         });
       }
     );
+  }
+
+  @override
+  void didChangeDependencies(){
+    images.cacheImages(context);
+
+    super.didChangeDependencies();
   }
 
   void updateStage(){
@@ -194,7 +201,7 @@ class _GameState extends State<Game>{
       acceptDrag[2][i] = 3;
     }
 
-    if(question == ""){
+    if(widget.question == ""){
       question = "Mova os numeros para a posição correta";
       questions = widget.numbers.map((e) => e.toString()).toList();
       stage = 1;
@@ -213,7 +220,7 @@ class _GameState extends State<Game>{
       if (right) {
         hamburgerAttack = frame + 10 - frame % 10;
         nextStage = frame + 30 - frame % 10;
-        attackType = frame % 3;
+        attackType = frame % images.attackPath.length;
         question = "Resposta correta!";
       } else if (timeLeft == 0){
         wrongAnswers++;
@@ -297,7 +304,7 @@ class _GameState extends State<Game>{
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FightFrame(frame :frame, hamburgerAttack: hamburgerAttack, robotAttack: robotAttack, attackType: attackType),
+                  FightFrame(frame :frame, hamburgerAttack: hamburgerAttack, robotAttack: robotAttack, attackType: attackType, images: images),
                   buildTimer(context)
                 ],
               ),
@@ -313,7 +320,7 @@ class _GameState extends State<Game>{
     return [
       NumbersGridFrame(grid: grid, acceptDrag: acceptDrag, successDrag: successDrag, stage: stage, total: total),
       const SizedBox(height: 10),
-      FightFrame(frame: frame, hamburgerAttack: hamburgerAttack, robotAttack: robotAttack, attackType: attackType),
+      FightFrame(frame: frame, hamburgerAttack: hamburgerAttack, robotAttack: robotAttack, attackType: attackType, images: images),
       const SizedBox(height: 10),
       buildTimer(context)
     ];

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:guerra_dos_numeros/imagesLoader.dart';
 import 'package:guerra_dos_numeros/pages/levelSelector.dart';
 
 class Menu extends StatefulWidget {
@@ -25,34 +26,11 @@ class _MenuState extends State<Menu>{
   @override
   void initState(){
     super.initState();
-
-    for(int i = 0; i < 16; i++){
-      clouds.add(Image.asset('assets/images/clouds/${15 - i}.png', repeat: ImageRepeat.repeatX, scale: 0.2));
-    }
-
-    for(int i = 0; i < 5; i++){
-      hamburger.add(Image.asset('assets/images/hamburgerJumping/$i.png', scale: 0.2));
-    }
-
-    for(int i = 0; i < 5; i++){
-      robot.add(Image.asset('assets/images/movingRobot/$i.png', scale: 0.2));
-    }
-
-    banana = Image.asset('assets/images/banana.png', scale: 0.2);
   }
 
   @override
   void didChangeDependencies(){
-    for(var element in clouds){
-      precacheImage(element.image, context);
-    }
-    for(var element in hamburger){
-      precacheImage(element.image, context);
-    }
-    for(var element in robot){
-      precacheImage(element.image, context);
-    }
-    precacheImage(banana.image, context);
+    images.cacheImages(context);
 
     super.didChangeDependencies();
   }
@@ -66,11 +44,7 @@ class _MenuState extends State<Menu>{
   late Timer _timer;
   int frame = 0;
   int fps = 10;
-  List<Image> clouds = [];
-  List<Image> hamburger = [];
-  List<Image> robot = [];
-  List<double> heights = [0, 3, 5, 3, 0];
-  late Image banana;
+  ImagesLoader images = ImagesLoader(true, false);
 
   @override
   Widget build(BuildContext context){
@@ -103,27 +77,27 @@ class _MenuState extends State<Menu>{
             ),
             child: Stack(
               children: [
-                Positioned.fill(child: clouds[frame % 16]),
+                Positioned.fill(child: images.clouds[frame % 16]),
                 Positioned(
                     left: width / 2 - 150,
                     top: 107,
                     width: 50,
                     height: 50,
-                    child: hamburger[frame % 8  < 5 ? frame % 8 : 0]
+                    child: images.hamburger[frame % 8  < 5 ? frame % 8 : 0]
                 ),
                 Positioned(
                     left: width / 2 + 100,
                     top: 107,
                     width: 50,
                     height: 50,
-                    child: robot[frame % 8  > 2 ? frame % 8 - 3 : 0]
+                    child: images.robot[frame % 8  > 2 ? frame % 8 - 3 : 0]
                 ),
                 Positioned(
                     left: width / 2 - 105,
-                    top: frame % 8  < 5 ? 112 - heights[frame % 8] : 112,
+                    top: frame % 8  < 5 ? 112 - images.heights[frame % 8] : 112,
                     width: 25,
                     height: 25,
-                    child: banana
+                    child: images.banana
                 )
               ],
             )
