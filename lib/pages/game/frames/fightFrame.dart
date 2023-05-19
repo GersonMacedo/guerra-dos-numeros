@@ -1,6 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+
+//TODO: carregar as imagens antes do build para evitar as piscadas
 
 class FightFrame extends StatelessWidget {
   FightFrame({super.key, required this.frame, required this.hamburgerAttack, required this.robotAttack, required this.attackType});

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:guerra_dos_numeros/utils.dart';
+
+//TODO: toda a pagina de configurações
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
@@ -12,7 +13,7 @@ class Settings extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
             SizedBox(height: 15),
-            Text("TODO: tela de ranking")
+            Text("TODO: tela de configurações")
           ],
         )
     );

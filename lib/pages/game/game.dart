@@ -7,6 +7,15 @@ import 'package:guerra_dos_numeros/pages/game/frames/mathQuestionFrame.dart';
 import 'package:guerra_dos_numeros/pages/game/frames/numbersGridFrame.dart';
 import 'package:guerra_dos_numeros/pages/game/frames/topFrame.dart';
 
+//TODO: Tela de fim do jogo
+//TODO: Melhorar design
+//TODO: Mecânica de perder o jogo
+//TODO: Pilha de estado que controla a operação atual
+//  Possibilitará reutilizar código de soma e subtração para multiplicação e divisão, além de tornar expressões possiveis
+//TODO: Extrair toda logica relacionada a soma para outro arquivo
+//TODO: operações de vezes, subtração e multiplicação
+//TODO: Modo de resolver expressões
+
 class Game extends StatefulWidget {
   const Game(this.operation, this.question, this.numbers, this.changePage, this.time, this.frame, this.fps, {super.key});
 

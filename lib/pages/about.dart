@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+//TODO: toda a pagina de sobre
+
 class About extends StatelessWidget {
   const About({super.key});
 

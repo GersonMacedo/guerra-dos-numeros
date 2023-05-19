@@ -1,14 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:guerra_dos_numeros/pages/levelSelector.dart';
 
 class Menu extends StatefulWidget {
-  const Menu(this.changePage, this.frame, this.fps, {super.key});
+  const Menu(this.changePage, {super.key});
 
   final void Function(Widget?, {bool bottom, bool back}) changePage;
-  final int frame;
-  final int fps;
 
   @override
   State<Menu> createState() => _MenuState();

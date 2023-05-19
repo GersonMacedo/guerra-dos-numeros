@@ -1,15 +1,16 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:guerra_dos_numeros/pages/about.dart';
 import 'package:guerra_dos_numeros/pages/achievements.dart';
 import 'package:guerra_dos_numeros/pages/menu.dart';
-import 'package:guerra_dos_numeros/pages/settings.dart';
+import 'package:guerra_dos_numeros/pages/ranking.dart';
 import 'package:guerra_dos_numeros/utils.dart';
 
-void main() {
+//TODO: adicionar sons ao jogo
+//TODO: adicionar conquistas
 
+void main() {
   runApp(const MyApp());
 }
 
@@ -38,19 +39,9 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home>{
   _HomeState(){
-    selected = Menu(changePage, frame, fps, key: UniqueKey());
-    _timer = Timer.periodic(
-      Duration(microseconds: 1000000 ~/ fps), (timer) {
-        setState(() {
-          frame++;
-        });
-      }
-    );
+    selected = Menu(changePage, key: UniqueKey());
   }
 
-  late Timer _timer;
-  int frame = 0;
-  int fps = 10;
   bool bottomButtons = true;
   bool backButton = false;
   late Widget selected;
@@ -58,7 +49,7 @@ class _HomeState extends State<Home>{
   void changePage(Widget? page, {bool bottom = true, bool back = false}){
     setState(() {
       if(page == null){
-        selected = Menu(changePage, frame, fps, key: const ValueKey("Menu"));
+        selected = Menu(changePage, key: const ValueKey("Menu"));
       }else{
         selected = page;
       }
@@ -174,7 +165,7 @@ class _HomeState extends State<Home>{
               )
           ),
           TextButton(
-              onPressed: (){changePage(Settings(), back: true);},
+              onPressed: (){changePage(Ranking(), back: true);},
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: const [

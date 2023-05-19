@@ -5,6 +5,9 @@ import 'package:guerra_dos_numeros/utils.dart';
 
 //TODO: Adicionar mais questões
 //TODO: Pegar as questões de um arquivo separado
+//TODO: Quando interpretação estiver ativo, deixar escolher uma ou mais operações para um sorteio
+//TODO: Melhorar o visual da tela
+//TODO: Aba "personalizado" para escolher numeros e até uma expressão numérica
 //0: adição
 //1: subtração
 //2: multiplicação
