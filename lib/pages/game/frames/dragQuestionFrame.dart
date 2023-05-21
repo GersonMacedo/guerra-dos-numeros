@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 
-class DragQuestionFrame extends StatelessWidget {
-  const DragQuestionFrame({super.key, required this.question, required this.questions, required this.dragElement});
+class DragQuestionFrame extends StatefulWidget{
+  const DragQuestionFrame(this.state, {super.key});
 
-  final String question;
-  final List<String> questions;
-  final List<bool> dragElement;
+  final DragQuestionState state;
+
+  State<DragQuestionFrame> createState() => state;
+}
+
+class DragQuestionState extends State<DragQuestionFrame>{
+  String question = "Mova os numeros para as posições corretas";
+  List<String> questions = [""];
+  List<bool> dragElement = [true, true];
+
+  void update(List<String> options){
+    questions = options;
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {

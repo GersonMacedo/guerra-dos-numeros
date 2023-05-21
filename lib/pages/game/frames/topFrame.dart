@@ -1,23 +1,36 @@
 import 'package:flutter/material.dart';
 
-class TopGameFrame extends StatelessWidget {
-  TopGameFrame({super.key, required this.changePage, required this.question, required this.numbers, required this.operation, required this.stage, required this.total}){
-    List<String> questionPieces = [];
-    if(question == ""){
-      builtQuestion = "Quanto é ${numbers[0]} ${operation} ${numbers[1]} ?";
-    }else{
-      questionPieces = question.split("|");
-      builtQuestion = "${questionPieces[0]}${numbers[0]}${questionPieces[1]}${numbers[1]}${questionPieces[2]}";
-    }
+class TopGameFrame extends StatefulWidget {
+  const TopGameFrame(this.state, this.question, this.numbers, this.initialState,this.totalStages, this.changePage, {super.key});
+
+  final TopGameState state;
+  final String question;
+  final List<int> numbers;
+  final int initialState;
+  final int totalStages;
+  final void Function(Widget?) changePage;
+
+  @override
+  State<TopGameFrame> createState() => state;
+}
+
+class TopGameState extends State<TopGameFrame>{
+  @override
+  void initState() {
+    List<String> questionPieces = widget.question.split("|");
+    builtQuestion = "${questionPieces[0]}${widget.numbers[0]}${questionPieces[1]}${widget.numbers[1]}${questionPieces[2]}";
+
+    super.initState();
   }
 
-  final void Function(Widget?) changePage;
-  final String question;
-  List<int> numbers;
-  final String operation;
-  final int stage;
-  final int total;
   late String builtQuestion;
+  int stage = 0;
+
+  void updateStage(int newStage){
+    setState(() {
+      stage = newStage;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +62,7 @@ class TopGameFrame extends StatelessWidget {
         height: 30,
         child: FloatingActionButton(
           backgroundColor: Colors.red,
-          onPressed: (){changePage(null);},
+          onPressed: (){widget.changePage(null);},
           child: const Icon(Icons.close, size: 15),
         )
       )
@@ -73,11 +86,11 @@ class TopGameFrame extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            flex: stage,
+            flex: stage - widget.initialState,
             child: Container(color: Colors.green)
           ),
           Expanded(
-            flex: total - stage,
+            flex: widget.totalStages - stage - widget.initialState,
             child: Container(color: Colors.white)
           )
         ]

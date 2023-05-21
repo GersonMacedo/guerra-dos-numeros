@@ -1,29 +1,72 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
-class MathQuestionFrame extends StatelessWidget {
-  const MathQuestionFrame({super.key, required this.question, required this.respond, required this.responded, required this.questions, required this.correct});
+class MathQuestionFrame extends StatefulWidget {
+  const MathQuestionFrame(this.state, this.respond, {super.key});
 
-  final String question;
+  final MathQuestionState state;
   final void Function(bool) respond;
-  final bool responded;
-  final List<String> questions;
-  final int correct;
 
   @override
-  Widget build(BuildContext context) {
+  State<MathQuestionFrame> createState() => state;
+}
+
+class MathQuestionState extends State<MathQuestionFrame>{
+  String question = "";
+  List<String> options = [];
+  int correct = 0;
+  bool responded = false;
+  Random random = Random();
+
+  void buildOperationQuestion(String answer){
+    question = "Qual operação você precisa fazer?";
+    options = ["+", "-", "x", "/"];
+    responded = false;
+
+    for(int i = 0; i < options.length; i++){
+      if(options[i] == answer){
+        correct = i;
+        break;
+      }
+    }
+  }
+
+  void buildMathQuestion(String newQuestion, int answer){
+    question = newQuestion;
+    correct = random.nextInt(min(answer + 1, 6));
+    responded = false;
+
+    options = [];
+    for(int i = 0; i < 6; i++){
+      options.add((answer - correct + i).toString());
+    }
+
+    setState(() {});
+  }
+
+  void respond(String message){
+    question = message;
+    responded = true;
+
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context){
     Size size = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size;
     double buttonsWidth = 140;
     double buttonsHeight = 50;
     List<Widget> buttons = [];
 
-    for(int i = 0; i < questions.length; i++){
+    for(int i = 0; i < options.length; i++){
       if(i == correct){
-        buttons.add(buildCorrectButton(questions[i], buttonsWidth, buttonsHeight));
+        buttons.add(buildCorrectButton(options[i], buttonsWidth, buttonsHeight));
       }else{
-        buttons.add(buildWrongButton(questions[i], buttonsWidth, buttonsHeight));
+        buttons.add(buildWrongButton(options[i], buttonsWidth, buttonsHeight));
       }
 
-      if(i + 1 != questions.length){
+      if(i + 1 != options.length){
         buttons.add(const SizedBox(width: 10));
       }
     }
@@ -78,9 +121,7 @@ class MathQuestionFrame extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(backgroundColor: responded ? Colors.green : const Color(0xFF828DF4)),
         onPressed: (){
-          if(!responded){
-            respond(true);
-          }
+          widget.respond(true);
         },
         child: Text(text, style: const TextStyle(fontSize: 30))
       ),
@@ -94,9 +135,7 @@ class MathQuestionFrame extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF828DF4)),
         onPressed: (){
-          if(!responded) {
-            respond(false);
-          }
+          widget.respond(false);
         },
         child: Text(text, style: const TextStyle(fontSize: 30))
       ),
