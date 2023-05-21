@@ -51,6 +51,13 @@ class _LevelSelectorState extends State<LevelSelector>{
     for(int i = 0; i < size; i++){
       list.add(getRandomNumber());
     }
+
+    if(operator == 1){
+      list.sort((int a, int b) => b - a);
+    }else if(operator == 3){
+      list[0] *= list[1];
+    }
+
     return list;
   }
 
@@ -66,9 +73,9 @@ class _LevelSelectorState extends State<LevelSelector>{
 
   @override
   Widget build(BuildContext context){
-    Random random = Random();
+    var mathStack = [MathStack(operators[operator], 0, 0, getNumberList(2).map((e) => e.toString()).toList(), interpretation ? 0 : 1)];
     return Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -81,14 +88,12 @@ class _LevelSelectorState extends State<LevelSelector>{
             const SizedBox(height: 15),
             buildTime(),
             const SizedBox(height: 30),
-            customIconButton(context, operator == 0 ? Colors.green : disabled, const Icon(Icons.play_circle), " Jogar", 22, Colors.white, 120, 50,(){
-              if(operator == 0){
-                widget.changePage(
-                  Game(operators[operator], getQuestion(), getNumberList(2), widget.changePage, timeList[time]),
-                  back: false,
-                  bottom: false
-                );
-              }
+            customIconButton(context, Colors.green, const Icon(Icons.play_circle), " Jogar", 22, Colors.white, 120, 50,(){
+              widget.changePage(
+                Game(getQuestion(), mathStack, widget.changePage, timeList[time]),
+                back: false,
+                bottom: false
+              );
             }),
           ],
         )

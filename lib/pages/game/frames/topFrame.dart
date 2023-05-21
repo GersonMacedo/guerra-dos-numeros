@@ -5,7 +5,7 @@ class TopGameFrame extends StatefulWidget {
 
   final TopGameState state;
   final String question;
-  final List<int> numbers;
+  final List<String> numbers;
   final int initialState;
   final int totalStages;
   final void Function(Widget?) changePage;

@@ -36,7 +36,7 @@ class NumbersGridState extends State<NumbersGridFrame>{
     }
   }
 
-  void updateGrid(int stage){
+  void updateGrid(int stage, int step, int iteration){
     gridWidget = [];
     int maxSize = grid[0].length;
     List<Widget> lineWidget = [];
@@ -50,7 +50,7 @@ class NumbersGridState extends State<NumbersGridFrame>{
           grid[0][j],
           style: TextStyle(
             fontSize: 10,
-            color: stage % 2 == 0 && stage != widget.totalStages && maxSize - j - 1 == (stage ~/ 2 - 1) ? Colors.blue : Colors.black
+            color: stage != 0 && step == 0 && stage != widget.totalStages && maxSize - j == stage ? Colors.blue : Colors.black
           )
         )
       );
@@ -84,7 +84,7 @@ class NumbersGridState extends State<NumbersGridFrame>{
             grid[i][j],
             style: TextStyle(
               fontSize: 16,
-              color: stage % 2 == 0 && stage != widget.totalStages && maxSize - j - 1 == (stage ~/ 2 - 1) ? Colors.blue : Colors.black
+              color: stage != 0 && step == 0 && stage != widget.totalStages && maxSize - j == stage ? Colors.blue : Colors.black
             )
           )
         );
