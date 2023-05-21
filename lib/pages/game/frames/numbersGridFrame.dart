@@ -3,11 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class NumbersGridFrame extends StatefulWidget {
-  const NumbersGridFrame(this.state, this.successDrag, this.totalStages, this.operation, this.x, this.y, this.r, this.maxSize, {super.key});
+  const NumbersGridFrame(this.state, this.successDrag, this.operation, this.x, this.y, this.r, this.maxSize, {super.key});
 
   final NumbersGridState state;
   final void Function(int, int, int) successDrag;
-  final int totalStages;
   final String operation;
   final int x;
   final int y;
@@ -27,7 +26,9 @@ class NumbersGridState extends State<NumbersGridFrame>{
   late int x;
   late int y;
   late int r;
+  late int initialR;
   List<bool> addLine = [];
+  List<bool> carryLine = [];
   late int maxSize;
 
   @override
@@ -36,8 +37,10 @@ class NumbersGridState extends State<NumbersGridFrame>{
     x = widget.x;
     y = widget.y;
     r = widget.r;
+    initialR = r;
     for(int i = 0; i <= r; i++){
       addLine.add(i + 1 == r);
+      carryLine.add(i == 0);
     }
     maxSize = widget.maxSize;
 
@@ -64,11 +67,36 @@ class NumbersGridState extends State<NumbersGridFrame>{
     operation = newOperation;
     x = newX;
     y = newY;
-    for(int i = r + 1; i <= newR; i++){
-      addLine.add(i + 1 == newR);
+
+    grid.add([]);
+    acceptDrag.add([]);
+    for(int i = initialR; i < newR; i++){
+      while(grid[i].length <= newMaxSize){
+        grid[i].insert(0, "");
+        acceptDrag[i].add(0);
+      }
     }
+
+    List<String> newCarryLine = [];
+    List<int> newAcceptDrag = [];
+    for(int i = 0; i <= newMaxSize; i++){
+      newCarryLine.add("");
+      newAcceptDrag.add(0);
+    }
+    grid.insert(initialR, newCarryLine);
+    acceptDrag.insert(initialR, newAcceptDrag);
+    carryLine[initialR] = true;
+
+
+    addLine.add(true);
+    addLine.add(false);
+    carryLine.add(false);
+    carryLine.add(false);
+
     r = newR;
+    initialR = r;
     maxSize = newMaxSize;
+    grid[r-1][0] = operation;
   }
 
   void updateHighlight(int stage, int step, int iteration, String operation){
@@ -99,49 +127,17 @@ class NumbersGridState extends State<NumbersGridFrame>{
     List<Widget> lineWidget = [];
     updateHighlight(stage, step, iteration, operation);
 
-    for (int j = 0; j < grid[0].length; j++) {
-      Widget container = Container(
-        height: 10,
-        width: 5,
-        color: getColor(0, j),
-        child: Text(
-          grid[0][j],
-          style: TextStyle(
-            fontSize: 9,
-            color: highlight[0][j] ? Colors.blue : Colors.black
-          )
-        )
-      );
-
-      lineWidget.add(DragTarget<int>(
-        builder: (context, data, rejectedData) {
-          return container;
-        },
-        onAccept: (data) {
-          if ((acceptDrag[0][j] & (1 << data)) != 0) {
-            widget.successDrag(0, j, data);
-          }
-        },
-      ));
-
-      if (j != grid[0].length) {
-        lineWidget.add(const SizedBox(height: 10, width: 5));
-      }
-    }
-
-    gridWidget.add(Row(mainAxisAlignment: MainAxisAlignment.start, children: lineWidget));
-
-    for (int i = 1; i < grid.length; i++) {
+    for (int i = 0; i < grid.length; i++) {
       lineWidget = [];
       for (int j = 0; j < grid[i].length; j++) {
         Widget container = Container(
-          height: 20,
-          width: 10,
+          height: carryLine[i] ? 10 : 20,
+          width: carryLine[i] ? 5 : 10,
           color: getColor(i, j),
           child: Text(
             grid[i][j],
             style: TextStyle(
-              fontSize: 16,
+              fontSize: carryLine[i] ? 9 : 16,
               color: highlight[i][j] ? Colors.blue : Colors.black
             )
           )
@@ -157,6 +153,10 @@ class NumbersGridState extends State<NumbersGridFrame>{
             }
           },
         ));
+
+        if(carryLine[i]){
+          lineWidget.add(const SizedBox(height: 10, width: 5));
+        }
       }
 
       gridWidget.add(Row(mainAxisAlignment: MainAxisAlignment.start, children: lineWidget));

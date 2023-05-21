@@ -37,7 +37,7 @@ class _LevelSelectorState extends State<LevelSelector>{
   bool interpretation = true;
   int digits = 2;
   int time = 0;
-  List<int> timeList = [90, 30, 10, 5];
+  List<int> timeList = [90, 30, 10, 2];
   List<String> operators = ["+", "-", "x", "/"];
   Color disabled = const Color(0xFF101010);
 
@@ -148,7 +148,9 @@ class _LevelSelectorState extends State<LevelSelector>{
             ),
             onPressed: (){
               setState(() {
-                operator = i;
+                if(i == 0 || i == 2){
+                  operator = i;
+                }
               });
             },
             child: Text(operators[i]),

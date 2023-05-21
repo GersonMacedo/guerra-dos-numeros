@@ -108,7 +108,6 @@ class GameState extends State<Game>{
 
   @override
   void initState() {
-    print("INIT");
     stack = widget.stack;
     loadStack();
 
@@ -120,7 +119,7 @@ class GameState extends State<Game>{
     String mainQuestion = widget.question == "" ? "Quanto é | $operation | ?" : widget.question;
     topGameFrame = TopGameFrame(TopGameState(), mainQuestion, numbers, widget.question == "" ? 1 : 0, totalStages, widget.changePage);
     fightFrame = FightFrame(FightState(), images);
-    numbersGridFrame = NumbersGridFrame(NumbersGridState(), successDrag, totalStages, operation, x, y, r, maxSize);
+    numbersGridFrame = NumbersGridFrame(NumbersGridState(), successDrag, operation, x, y, r, maxSize);
     mathQuestionFrame = MathQuestionFrame(MathQuestionState(), respond);
     dragQuestionFrame = DragQuestionFrame(DragQuestionState());
 
@@ -177,12 +176,12 @@ class GameState extends State<Game>{
       numbersGridFrame.state.grid[r - 1][y] = operation;
     }else{
       dragQuestionFrame.state.dragElement = [true, true];
-      timeLeft = max(timeLeft, 10);
+      //timeLeft = max(timeLeft, 10);
 
       if(result >= 10){
         carry = result ~/ 10;
         dragQuestionFrame.state.update([(carry).toString(), (result % 10).toString()]);
-        numbersGridFrame.state.acceptDrag[stage != totalStages && iteration + 1 != maxSize ? x : r][maxSize - (operation == "x" ? 1 : stage) - iteration] = 1;
+        numbersGridFrame.state.acceptDrag[(operation == "+" ? stage + 1 != totalStages : iteration + 1 != maxSize) ? x : r][maxSize - (operation == "x" ? 1 : stage) - iteration] = 1;
         numbersGridFrame.state.acceptDrag[r][numbersGridFrame.state.acceptDrag[r].length - stage - iteration] = 2;
       }else{
         carry = 0;
@@ -199,19 +198,29 @@ class GameState extends State<Game>{
       step++;
       if(step == totalSteps){
         step = 0;
-        if(operation == "x" && stage != 0 && numbersGridFrame.state.grid[1][maxSize - iteration - 1] != ""){
+        if(operation == "x" && stage != 0 && numbersGridFrame.state.grid[x + 1][maxSize - iteration - 1] != ""){
           iteration++;
         }else{
           stage++;
           iteration = 0;
 
           if(stage == totalStages){
-            if(stack.isEmpty){
+            if(operation == "x"){
+              operation = "+";
+              stage = 1;
+              step = 0;
+              iteration = 0;
+              x += 3;
+              r += 2;
+              maxSize = numbers[0].length + numbers[1].length - (carry != 0 ? 0 : 1);
+              totalStages = maxSize + 1;
+              numbersGridFrame.state.updateOperation(operation, x, y, r, maxSize);
+            }else if(stack.isEmpty){
               topGameFrame.state.updateStage(stage);
               return;
+            }else{
+              loadStack();
             }
-
-            loadStack();
           }
 
           if(operation == "x" && stage != 1){
@@ -231,6 +240,7 @@ class GameState extends State<Game>{
             }
             carry = 0;
             numbersGridFrame.state.addLine.add(false);
+            numbersGridFrame.state.carryLine.add(false);
           }
 
           topGameFrame.state.updateStage(stage);
@@ -245,8 +255,8 @@ class GameState extends State<Game>{
       }else if(operation == "+"){
 
         List<int> digits = [];
-        for(int i = numbers.length; i >= 0; i--){
-          String d = numbersGridFrame.state.grid[x + i][y + maxSize - stage + 1];
+        for(int i = r - 1; i >= x; i--){
+          String d = numbersGridFrame.state.grid[i][y + maxSize - stage + 1];
           if(d != " " && d != ""){
             digits.add(int.parse(d));
           }
@@ -274,7 +284,6 @@ class GameState extends State<Game>{
 
       }else if(operation == "x"){
 
-        print("$stage $step $iteration $maxSize");
         int num1 = int.parse(numbersGridFrame.state.grid[x + 2][y + maxSize  - stage + 1]);
         int num2 = int.parse(numbersGridFrame.state.grid[x + 1][y + maxSize - iteration]);
 
@@ -282,6 +291,7 @@ class GameState extends State<Game>{
         if(carry != 0){
           question += " + ${carry}";
         }
+        question += " ?";
 
         result = num1 * num2 + carry;
         mathQuestionFrame.state.buildMathQuestion(question, result);
@@ -316,13 +326,13 @@ class GameState extends State<Game>{
 
           dragQuestionFrame.state.dragElement = [false, false];
           numbersGridFrame.state.clearDrag();
-        }else if(operation == "+"){
+        }else if(operation != "/"){
           if(step == 1){
             if(carry != 0){
-              numbersGridFrame.state.grid[stage + 1 != totalStages ? x : r][maxSize - stage] = carry.toString();
+              numbersGridFrame.state.grid[stage != totalStages && iteration + 1 != maxSize ? x : r][maxSize - (operation == "x" ? 1 : stage) - iteration] = carry.toString();
             }
 
-            numbersGridFrame.state.grid[r][maxSize - stage + 1] = (result % 10).toString();
+            numbersGridFrame.state.grid[r][numbersGridFrame.state.acceptDrag[r].length - stage - iteration] = (result % 10).toString();
             numbersGridFrame.state.clearDrag();
           }
 
