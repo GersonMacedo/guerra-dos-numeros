@@ -39,23 +39,32 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home>{
   _HomeState(){
-    selected = Menu(changePage, key: UniqueKey());
+    selected.add(Menu(changePage, key: UniqueKey()));
+    bottomButtons.add(true);
+    backButton.add(false);
   }
 
-  bool bottomButtons = true;
-  bool backButton = false;
-  late Widget selected;
+  List<Widget> selected = [];
+  List<bool> bottomButtons = [];
+  List<bool> backButton = [];
 
-  void changePage(Widget? page, {bool bottom = true, bool back = false}){
+  void changePage(Widget? page, {bool bottom = true, bool back = true, bool keep = false}){
     setState(() {
       if(page == null){
-        selected = Menu(changePage, key: const ValueKey("Menu"));
+        selected.removeLast();
+        bottomButtons.removeLast();
+        backButton.removeLast();
       }else{
-        selected = page;
-      }
+        if(!keep){
+          selected = [selected[0]];
+          bottomButtons = [bottomButtons[0]];
+          backButton = [backButton[0]];
+        }
 
-      bottomButtons = bottom;
-      backButton = back;
+        bottomButtons.add(bottom);
+        selected.add(page);
+        backButton.add(back);
+      }
     });
   }
 
@@ -74,7 +83,7 @@ class _HomeState extends State<Home>{
 
     return WillPopScope(
       onWillPop: (){
-        if(selected.key == const ValueKey("Menu")){
+        if(selected.last.key == const ValueKey("Menu")){
           return Future(() => true);
         }
 
@@ -95,7 +104,7 @@ class _HomeState extends State<Home>{
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     buildBackButton(),
-                    Expanded(child: selected),
+                    Expanded(child: selected.last),
                     buildBottomButtons()
                   ],
                 )
@@ -107,7 +116,7 @@ class _HomeState extends State<Home>{
   }
 
   Widget buildBackButton(){
-    if(!backButton){
+    if(!backButton.last){
       return Container();
     }
 
@@ -120,7 +129,7 @@ class _HomeState extends State<Home>{
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 5),
-              shape: RoundedRectangleBorder()
+              shape: const RoundedRectangleBorder()
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -134,7 +143,7 @@ class _HomeState extends State<Home>{
   }
 
   Widget buildBottomButtons(){
-    if(!bottomButtons){
+    if(!bottomButtons.last){
       return Container();
     }
 
@@ -145,7 +154,7 @@ class _HomeState extends State<Home>{
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           TextButton(
-            onPressed: (){changePage(Achievements(), back: true);},
+            onPressed: (){changePage(Achievements());},
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -155,7 +164,7 @@ class _HomeState extends State<Home>{
             )
           ),
           TextButton(
-              onPressed: (){changePage(About(), back: true);},
+              onPressed: (){changePage(About());},
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: const [
@@ -165,7 +174,7 @@ class _HomeState extends State<Home>{
               )
           ),
           TextButton(
-              onPressed: (){changePage(Ranking(), back: true);},
+              onPressed: (){changePage(Ranking());},
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: const [

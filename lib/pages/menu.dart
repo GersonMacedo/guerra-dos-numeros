@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:guerra_dos_numeros/imagesLoader.dart';
-import 'package:guerra_dos_numeros/pages/levelSelector.dart';
+import 'package:guerra_dos_numeros/pages/modeSelector.dart';
 
 class Menu extends StatefulWidget {
   const Menu(this.changePage, {super.key});
 
-  final void Function(Widget?, {bool bottom, bool back}) changePage;
+  final void Function(Widget?, {bool bottom, bool back, bool keep}) changePage;
 
   @override
   State<Menu> createState() => _MenuState();
@@ -103,7 +103,7 @@ class _MenuState extends State<Menu>{
             )
           ),
           ElevatedButton(
-            onPressed: (){widget.changePage(LevelSelector(widget.changePage, frame, fps), back: true);},
+            onPressed: (){widget.changePage(ModeSelector(widget.changePage), keep: true);},
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xff50CB93),
               shape: RoundedRectangleBorder(
