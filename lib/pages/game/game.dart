@@ -47,7 +47,6 @@ class GameState extends State<Game>{
   int result = 0;
   int frame = 0;
   int fps = 10;
-  int wrongAnswers = 0;
   int nextStage = -100;
   ImagesLoader images = ImagesLoader(false, true);
   late TopGameFrame topGameFrame;
@@ -68,7 +67,9 @@ class GameState extends State<Game>{
       Duration(microseconds: 1000000 ~/ fps), (timer) {
         setState(() {
           frame++;
-          fightFrame.state.updateFrame(frame);
+          if(frame >= 10){
+            fightFrame.state.updateFrame(frame);
+          }
 
           if(finished){
             return;
@@ -95,6 +96,8 @@ class GameState extends State<Game>{
 
   void loadStack(){
     stage = stack.last.stage;
+    step = stack.last.step;
+    iteration = stack.last.iteration;
     x = stack.last.x;
     y = stack.last.y;
     operation = stack.last.operation;
@@ -103,22 +106,41 @@ class GameState extends State<Game>{
     stack.removeLast();
   }
 
-  void startLevel(){
+  void startLevel(bool first){
     stack = level.operations.sublist(0);
+    finished = false;
+    timeLeft = 90;
+    carry = 0;
+    result = 0;
+    responded = false;
+    nextStage = -100;
     loadStack();
 
+    maxSize = 0;
     for(var number in numbers){
       maxSize = max(maxSize, number.length);
     }
     totalStages = maxSize + 1;
 
     String mainQuestion = level.question == "" ? "Quanto é | $operation | ?" : level.question;
-    topGameFrame = TopGameFrame(TopGameState(), mainQuestion, numbers, level.question == "" ? 1 : 0, totalStages, widget.changePage);
-    fightFrame = FightFrame(FightState(), images);
-    numbersGridFrame = NumbersGridFrame(NumbersGridState(), successDrag, operation, x, y, r, maxSize);
-    mathQuestionFrame = MathQuestionFrame(MathQuestionState(), respond);
-    dragQuestionFrame = DragQuestionFrame(DragQuestionState());
+    if(first){
+      topGameFrame = TopGameFrame(TopGameState(), mainQuestion, numbers, level.question == "" ? 1 : 0, totalStages, widget.changePage);
+      fightFrame = FightFrame(FightState(), images);
+      numbersGridFrame = NumbersGridFrame(NumbersGridState(), successDrag, operation, x, y, r, maxSize);
+      mathQuestionFrame = MathQuestionFrame(MathQuestionState(), respond);
+      dragQuestionFrame = DragQuestionFrame(DragQuestionState());
+    }else{
+      topGameFrame.state.updateQuestion(mainQuestion, numbers, stage, totalStages);
+      fightFrame.state.reset();
+      numbersGridFrame.state.newOperation(operation, x, y, r, maxSize);
+      mathQuestionFrame.state.reset();
+      dragQuestionFrame.state.reset();
+    }
 
+    frame = -1;
+  }
+
+  void firstFrame(){
     if(operation == "/"){
       throw("NOT IMPLEMENTED");
     }else{
@@ -154,7 +176,7 @@ class GameState extends State<Game>{
   @override
   void initState() {
     level = widget.level;
-    startLevel();
+    startLevel(true);
     super.initState();
   }
 
@@ -310,7 +332,6 @@ class GameState extends State<Game>{
         mathQuestionFrame.state.respond("Resposta correta!");
         timeLeft += widget.level.correctBonus;
       }else if(timeLeft == 0){
-        wrongAnswers++;
         fightFrame.state.setRobotAttack(frame);
         nextStage = frame + 20;
         mathQuestionFrame.state.respond("Acabou o tempo!");
@@ -370,6 +391,10 @@ class GameState extends State<Game>{
 
   @override
   Widget build(BuildContext context) {
+    if(frame == 0){
+      firstFrame();
+    }
+
     return Container(
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
       height: double.infinity,
@@ -431,15 +456,65 @@ class GameState extends State<Game>{
   }
 
   Widget buildEnd(){
+    double width = 140;
+    double height = 40;
 
     return Container(
       padding: const EdgeInsets.all(10),
-      alignment: Alignment.center,
       height: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 115 : 175,
-      child: Text(
-        stage == totalStages ? "Parabéns voce terminou!!!" : "Acabou o tempo, voce perdeu!!",
-        style: const TextStyle(fontSize: 40,color: Colors.black)
-      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(5),
+            decoration: const BoxDecoration(
+                color: Color(0xFF828DF4),
+                borderRadius: BorderRadius.all(Radius.circular(20))
+            ),
+            child: Text(
+              stage == totalStages ? "Parabéns voce terminou!!!" : "Acabou o tempo, voce perdeu!!",
+              style: const TextStyle(fontSize: 25,color: Colors.black)
+            )
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: width,
+                height: height,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF828DF4)),
+                  onPressed: () => widget.changePage(null),
+                  child: const Text("Sair da fase", style: TextStyle(fontSize: 15))
+                ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: width,
+                height: height,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF828DF4), padding: const EdgeInsets.all(5)),
+                  onPressed: () => startLevel(false),
+                  child: const Text("Jogar novamente", style: TextStyle(fontSize: 15))
+                ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: width,
+                height: height,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF828DF4)),
+                  onPressed: (){
+                    level = Levels.getNextLevel();
+                    startLevel(false);
+                  },
+                  child: const Text("Próxima fase", style: TextStyle(fontSize: 15))
+                ),
+              ),
+            ],
+          )
+        ],
+      )
     );
   }
 }

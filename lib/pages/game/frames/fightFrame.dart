@@ -17,10 +17,17 @@ class FightState extends State<FightFrame>{
   int robotAttack = -100;
   int attackType = 0;
 
+  void reset(){
+    frame = 0;
+    hamburgerAttack = -100;
+    robotAttack = -100;
+    attackType = 0;
+  }
+
   void updateFrame(int newFrame){
-    setState(() {
-      frame = newFrame;
-    });
+    frame = newFrame;
+
+    setState((){});
   }
 
   void setHamburgerAttack(int time){

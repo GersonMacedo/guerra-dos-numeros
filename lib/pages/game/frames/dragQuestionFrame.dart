@@ -12,15 +12,24 @@ class DragQuestionState extends State<DragQuestionFrame>{
   String question = "Mova os numeros para as posições corretas";
   List<String> questions = [""];
   List<bool> dragElement = [true, true];
+  bool built = false;
 
   void update(List<String> options){
     questions = options;
 
-    setState(() {});
+    if(built){
+      setState(() {});
+    }
+  }
+
+  void reset(){
+    questions = [""];
+    dragElement = [true, true];
   }
 
   @override
   Widget build(BuildContext context) {
+    built = true;
     List<Widget> row = [];
 
     for(int i = 0; i < questions.length; i++){

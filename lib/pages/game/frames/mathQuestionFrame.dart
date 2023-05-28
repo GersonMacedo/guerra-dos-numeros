@@ -17,7 +17,15 @@ class MathQuestionState extends State<MathQuestionFrame>{
   List<String> options = [];
   int correct = 0;
   bool responded = false;
+  bool built = false;
   Random random = Random();
+
+  void reset(){
+    question = "";
+    options = [];
+    correct = 0;
+    responded = false;
+  }
 
   void buildOperationQuestion(String answer){
     question = "Qual operação você precisa fazer?";
@@ -29,6 +37,10 @@ class MathQuestionState extends State<MathQuestionFrame>{
         correct = i;
         break;
       }
+    }
+
+    if(built){
+      setState((){});
     }
   }
 
@@ -42,7 +54,9 @@ class MathQuestionState extends State<MathQuestionFrame>{
       options.add((answer - correct + i).toString());
     }
 
-    setState(() {});
+    if(built){
+      setState((){});
+    }
   }
 
   void respond(String message){
@@ -54,6 +68,7 @@ class MathQuestionState extends State<MathQuestionFrame>{
 
   @override
   Widget build(BuildContext context){
+    built = true;
     Size size = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size;
     double buttonsWidth = 140;
     double buttonsHeight = 50;

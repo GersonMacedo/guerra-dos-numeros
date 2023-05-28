@@ -46,7 +46,7 @@ class _LevelSelectorState extends State<LevelSelector>{
 
         Widget container = Container(
           decoration: BoxDecoration(
-            color: Color(actual < next ? 0xff00ff00 : (actual == next ? 0xff212A3E : 0x44ffffff)),
+            color: Color(actual < next ? 0xff50CB93 : (actual == next ? 0xff212A3E : 0x44ffffff)),
             borderRadius: const BorderRadius.all(Radius.circular(5)),
           ),
           width: 80,

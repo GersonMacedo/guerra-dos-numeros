@@ -17,14 +17,31 @@ class TopGameFrame extends StatefulWidget {
 class TopGameState extends State<TopGameFrame>{
   @override
   void initState() {
-    List<String> questionPieces = widget.question.split("|");
-    builtQuestion = "${questionPieces[0]}${widget.numbers[0]}${questionPieces[1]}${widget.numbers[1]}${questionPieces[2]}";
+    buildQuestion(widget.question, widget.numbers);
+    initialState = widget.initialState;
+    totalStages = widget.totalStages;
 
     super.initState();
   }
 
   late String builtQuestion;
+  late int initialState;
+  late int totalStages;
   int stage = 0;
+
+  void buildQuestion(String question, List<String> numbers){
+    List<String> questionPieces = question.split("|");
+    builtQuestion = "${questionPieces[0]}${numbers[0]}${questionPieces[1]}${numbers[1]}${questionPieces[2]}";
+  }
+
+  void updateQuestion(String question, List<String> numbers, int initial, int total){
+    buildQuestion(question, numbers);
+    stage = 0;
+    initialState = initial;
+    totalStages = total;
+
+    setState((){});
+  }
 
   void updateStage(int newStage){
     setState(() {
@@ -44,7 +61,7 @@ class TopGameState extends State<TopGameFrame>{
             children: [
               buildExitButton(),
               const SizedBox(height: 5),
-              buildQuestion(),
+              buildQuestionWidget(),
             ]
           )
         ),
@@ -69,7 +86,7 @@ class TopGameState extends State<TopGameFrame>{
     );
   }
 
-  Widget buildQuestion(){
+  Widget buildQuestionWidget(){
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
@@ -86,11 +103,11 @@ class TopGameState extends State<TopGameFrame>{
       child: Row(
         children: [
           Expanded(
-            flex: stage - widget.initialState,
+            flex: stage - initialState,
             child: Container(color: Colors.green)
           ),
           Expanded(
-            flex: widget.totalStages - stage - widget.initialState,
+            flex: totalStages - stage - initialState,
             child: Container(color: Colors.white)
           )
         ]

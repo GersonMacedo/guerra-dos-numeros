@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:guerra_dos_numeros/levels.dart';
 import 'package:guerra_dos_numeros/pages/about.dart';
 import 'package:guerra_dos_numeros/pages/achievements.dart';
 import 'package:guerra_dos_numeros/pages/menu.dart';
@@ -42,6 +43,7 @@ class _HomeState extends State<Home>{
     selected.add(Menu(changePage, key: UniqueKey()));
     bottomButtons.add(true);
     backButton.add(false);
+    Levels.addDemoLevels(30, 20);
   }
 
   List<Widget> selected = [];

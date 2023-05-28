@@ -3,12 +3,14 @@ import 'dart:math';
 import 'package:guerra_dos_numeros/levels.dart';
 
 class MathStack{
-  MathStack(this.operation, this.x, this.y, this.numbers, this.stage);
+  MathStack(this.operation, this.x, this.y, this.numbers, this.stage, this.step, this.iteration);
 
   String operation;
   int x, y;
   List<String> numbers;
   int stage;
+  int step;
+  int iteration;
 }
 
 class LevelData{
@@ -61,36 +63,30 @@ class Levels{
 
   static List<List<LevelData>> levels = [
     [
-      LevelData.withQuestion([MathStack("+", 0, 0, ["12", "47"], 0)], 90, 30, sumQuestions[0]),
-      LevelData.withQuestion([MathStack("+", 0, 0, ["37", "29"], 0)], 90, 30, sumQuestions[1]),
-      LevelData.withQuestion([MathStack("+", 0, 0, ["1", "1"], 0)], 90, 30, "TODO 3 : | + | ?"),
-      LevelData.withQuestion([MathStack("+", 0, 0, ["1", "1"], 0)], 90, 30, "TODO 4 : | + | ?"),
-      LevelData.withQuestion([MathStack("+", 0, 0, ["1", "1"], 0)], 90, 30, "TODO 5 : | + | ?"),
-      LevelData.withQuestion([MathStack("+", 0, 0, ["1", "1"], 0)], 90, 30, "TODO 6 : | + | ?"),
-      LevelData.withQuestion([MathStack("+", 0, 0, ["1", "1"], 0)], 90, 30, "TODO 7 : | + | ?"),
-      LevelData.withQuestion([MathStack("+", 0, 0, ["1", "1"], 0)], 90, 30, "TODO 8 : | + | ?"),
-      LevelData.withQuestion([MathStack("+", 0, 0, ["1", "1"], 0)], 90, 30, "TODO 9 : | + | ?"),
-      LevelData.withQuestion([MathStack("+", 0, 0, ["1", "1"], 0)], 90, 30, "TODO 10 : | + | ?"),
-      LevelData.withQuestion([MathStack("+", 0, 0, ["1", "1"], 0)], 90, 30, "TODO 11 : | + | ?"),
-      LevelData.withQuestion([MathStack("+", 0, 0, ["1", "1"], 0)], 90, 30, "TODO 12 : | + | ?"),
-      LevelData.withQuestion([MathStack("+", 0, 0, ["1", "1"], 0)], 90, 30, "TODO 13 : | + | ?"),
-      LevelData.withQuestion([MathStack("+", 0, 0, ["1", "1"], 0)], 90, 30, "TODO 14 : | + | ?"),
-      LevelData.withQuestion([MathStack("+", 0, 0, ["1", "1"], 0)], 90, 30, "TODO 15 : | + | ?"),
+      LevelData.withQuestion([MathStack("+", 0, 0, ["12", "47"], 0, 0, 0)], 90, 30, sumQuestions[0]),
+      LevelData.withQuestion([MathStack("+", 0, 0, ["37", "29"], 0, 0, 0)], 90, 30, sumQuestions[1])
     ],
     [
-      LevelData([MathStack("x", 0, 0, ["12", "23"], 0)], 90, 30),
-      LevelData.withQuestion([MathStack("x", 0, 0, ["1", "4"], 0)], 90, 30, "TODO 2 : | x |"),
-      LevelData.withQuestion([MathStack("x", 0, 0, ["1", "4"], 0)], 90, 30, "TODO 3 : | x |"),
-      LevelData.withQuestion([MathStack("x", 0, 0, ["1", "4"], 0)], 90, 30, "TODO 4 : | x |"),
+      LevelData([MathStack("x", 0, 0, ["12", "23"], 0, 0, 0)], 90, 30),
     ]
   ];
+
+  static void addDemoLevels(int sum, int multiplication){
+    for(int i = levels[0].length + 1; i <= sum; i++){
+      levels[0].add(LevelData.withQuestion([MathStack("+", 0, 0, ["1", "1"], 0, 0, 0)], 90, 30, "TODO $i : | + | ?"));
+    }
+
+    for(int i = levels[1].length + 1; i <= multiplication; i++){
+      levels[1].add(LevelData.withQuestion([MathStack("x", 0, 0, ["1", "1"], 0, 0, 0)], 90, 30, "TODO $i : | x | ?"));
+    }
+  }
 
   static LevelData getLevel(){
     return type >= 0 ? levels[type][actual] : getCustomLevel();
   }
 
   static LevelData getNextLevel(){
-    return levels[type][++actual];
+    return type >= 0 ? levels[type][++actual] : getCustomLevel();
   }
 
   static int getTotalLevels(){
@@ -98,18 +94,18 @@ class Levels{
   }
 
   static bool hasNextLevel(){
-    return getTotalLevels() > actual + 1;
+    return type < 0 || getTotalLevels() > actual + 1;
   }
 
   static LevelData getCustomLevel(){
 
-    var mathStack = [MathStack(operators[operator], 0, 0, getNumberList(2).map((e) => e.toString()).toList(), 0)];
+    var mathStack = [MathStack(operators[operator], 0, 0, getNumberList(2).map((e) => e.toString()).toList(), 0, 0, 0)];
 
     return LevelData(mathStack, correctTimeList[time], wrongTimeList[time]);
   }
 
   static void finish(){
-    if(next[type] == actual + 1){
+    if(type >= 0 && next[type] == actual + 1){
       next[type]++;
     }
   }

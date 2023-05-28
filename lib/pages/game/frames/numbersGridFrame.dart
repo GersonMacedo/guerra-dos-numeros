@@ -38,6 +38,7 @@ class NumbersGridState extends State<NumbersGridFrame>{
     y = widget.y;
     r = widget.r;
     initialR = r;
+
     for(int i = 0; i <= r; i++){
       addLine.add(i + 1 == r);
       carryLine.add(i == 0);
@@ -45,6 +46,28 @@ class NumbersGridState extends State<NumbersGridFrame>{
     maxSize = widget.maxSize;
 
     super.initState();
+  }
+
+  void newOperation(String newOperation, int newX, int newY, int newR, int newMaxSize){
+    operation = newOperation;
+    x = newX;
+    y = newY;
+    r = newR;
+    initialR = r;
+
+    grid.clear();
+    acceptDrag.clear();
+    highlight.clear();
+    addLine.clear();
+    carryLine.clear();
+
+    for(int i = 0; i <= r; i++){
+      addLine.add(i + 1 == r);
+      carryLine.add(i == 0);
+    }
+    maxSize = widget.maxSize;
+
+    setState((){});
   }
 
   Color getColor(int i, int j){
