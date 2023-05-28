@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:guerra_dos_numeros/levels.dart';
 import 'package:guerra_dos_numeros/pages/customLevelSelector.dart';
 import 'package:guerra_dos_numeros/pages/levelSelector.dart';
 
@@ -77,7 +78,10 @@ class _ModeSelectorState extends State<ModeSelector>{
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             ElevatedButton(
-              onPressed: () => widget.changePage(LevelSelector(widget.changePage, 0), keep: true),
+              onPressed: (){
+                Levels.type = 0;
+                widget.changePage(LevelSelector(widget.changePage), keep: true);
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -95,8 +99,10 @@ class _ModeSelectorState extends State<ModeSelector>{
                           color: Color(0xFF212A3E),
                           borderRadius: BorderRadius.all(Radius.circular(5))
                       ),
+                      alignment: Alignment.center,
                       width: 50,
-                      height: 50
+                      height: 50,
+                      child: const Text("+", style: TextStyle(fontSize: 30, color: Colors.white))
                     ),
                     const Text("      adição e subtração", style: TextStyle(fontSize: 30, color: Colors.black))
                   ],
@@ -105,7 +111,10 @@ class _ModeSelectorState extends State<ModeSelector>{
             ),
             const SizedBox(height: 20, width: double.infinity),
             ElevatedButton(
-                onPressed: () => widget.changePage(LevelSelector(widget.changePage, 1), keep: true),
+                onPressed: (){
+                  Levels.type = 1;
+                  widget.changePage(LevelSelector(widget.changePage), keep: true);
+                },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
@@ -123,8 +132,10 @@ class _ModeSelectorState extends State<ModeSelector>{
                             color: Color(0xFF212A3E),
                             borderRadius: BorderRadius.all(Radius.circular(5))
                           ),
+                          alignment: Alignment.center,
                           width: 50,
-                          height: 50
+                          height: 50,
+                          child: const Text("x", style: TextStyle(fontSize: 30, color: Colors.white))
                         ),
                         const Text("      multiplicação e divisão", style: TextStyle(fontSize: 30, color: Colors.black))
                       ],
@@ -133,7 +144,10 @@ class _ModeSelectorState extends State<ModeSelector>{
             ),
             const SizedBox(height: 20, width: double.infinity),
             ElevatedButton(
-                onPressed: () => widget.changePage(CustomLevelSelector(widget.changePage), keep: true),
+                onPressed: (){
+                  Levels.type = -1;
+                  widget.changePage(CustomLevelSelector(widget.changePage), keep: true);
+                },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
@@ -151,8 +165,10 @@ class _ModeSelectorState extends State<ModeSelector>{
                             color: Color(0xFF212A3E),
                             borderRadius: BorderRadius.all(Radius.circular(5))
                           ),
+                          alignment: Alignment.center,
                           width: 50,
-                          height: 50
+                          height: 50,
+                          child: const Text("?", style: TextStyle(fontSize: 30, color: Colors.white))
                         ),
                         const Text("      aleatório", style: TextStyle(fontSize: 30, color: Colors.black))
                       ],

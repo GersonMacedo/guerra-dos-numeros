@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:guerra_dos_numeros/imagesLoader.dart';
-import 'package:guerra_dos_numeros/pages/game/frames/congratulationsFrame.dart';
+import 'package:guerra_dos_numeros/levels.dart';
 import 'package:guerra_dos_numeros/pages/game/frames/dragQuestionFrame.dart';
 import 'package:guerra_dos_numeros/pages/game/frames/fightFrame.dart';
 import 'package:guerra_dos_numeros/pages/game/frames/mathQuestionFrame.dart';
@@ -18,22 +18,12 @@ import 'package:guerra_dos_numeros/pages/game/frames/topFrame.dart';
 //TODO: operações de vezes, subtração e multiplicação
 //TODO: Modo de resolver expressões
 
-class MathStack{
-  MathStack(this.operation, this.x, this.y, this.numbers, this.stage);
-
-  String operation;
-  int x, y;
-  List<String> numbers;
-  int stage;
-}
 
 class Game extends StatefulWidget {
-  const Game(this.question, this.stack, this.changePage, this.time, {super.key});
+  const Game(this.changePage, this.level, {super.key});
 
-  final String question;
-  final List<MathStack> stack;
+  final LevelData level;
   final void Function(Widget?) changePage;
-  final int time;
 
   @override
   State<Game> createState() => GameState();
@@ -45,10 +35,12 @@ class GameState extends State<Game>{
   late int stage, x, y, r;
   late List<String> numbers;
   late int totalStages;
+  late LevelData level;
   int step = 0;
   int totalSteps = 2;
   int iteration = 0;
   bool responded = false;
+  bool finished = false;
   int timeLeft = 90;
   int maxSize = 0;
   int carry = 0;
@@ -63,7 +55,6 @@ class GameState extends State<Game>{
   late NumbersGridFrame numbersGridFrame;
   late MathQuestionFrame mathQuestionFrame;
   late DragQuestionFrame dragQuestionFrame;
-  CongratulationsFrame congratulationsFrame = const CongratulationsFrame();
   late Timer _timer;
 
   @override
@@ -74,17 +65,23 @@ class GameState extends State<Game>{
 
   GameState(){
     _timer = Timer.periodic(
-      Duration(microseconds: 1000000 ~/ fps),
-      (timer) {
-      setState(() {
+      Duration(microseconds: 1000000 ~/ fps), (timer) {
+        setState(() {
           frame++;
           fightFrame.state.updateFrame(frame);
-          if(frame % fps == 0){
+
+          if(finished){
+            return;
+          }
+
+          if(timeLeft <= 0){
+            finished = true;
+            return;
+          }
+
+          if((stage != 0 || step != 0) && frame % fps == 0){
             if(timeLeft != 0 && !responded){
               timeLeft--;
-              if(timeLeft == 0){
-                respond(false);
-              }
             }
           }
 
@@ -106,9 +103,8 @@ class GameState extends State<Game>{
     stack.removeLast();
   }
 
-  @override
-  void initState() {
-    stack = widget.stack;
+  void startLevel(){
+    stack = level.operations.sublist(0);
     loadStack();
 
     for(var number in numbers){
@@ -116,13 +112,12 @@ class GameState extends State<Game>{
     }
     totalStages = maxSize + 1;
 
-    String mainQuestion = widget.question == "" ? "Quanto é | $operation | ?" : widget.question;
-    topGameFrame = TopGameFrame(TopGameState(), mainQuestion, numbers, widget.question == "" ? 1 : 0, totalStages, widget.changePage);
+    String mainQuestion = level.question == "" ? "Quanto é | $operation | ?" : level.question;
+    topGameFrame = TopGameFrame(TopGameState(), mainQuestion, numbers, level.question == "" ? 1 : 0, totalStages, widget.changePage);
     fightFrame = FightFrame(FightState(), images);
     numbersGridFrame = NumbersGridFrame(NumbersGridState(), successDrag, operation, x, y, r, maxSize);
     mathQuestionFrame = MathQuestionFrame(MathQuestionState(), respond);
     dragQuestionFrame = DragQuestionFrame(DragQuestionState());
-
 
     if(operation == "/"){
       throw("NOT IMPLEMENTED");
@@ -152,14 +147,14 @@ class GameState extends State<Game>{
         numbersGridFrame.state.acceptDrag[x + 2][y + i] = operation == "-" ? 2 : 3;
       }
 
-      if(stage == 0){
-        mathQuestionFrame.state.buildOperationQuestion(operation);
-      }else{
-        dragQuestionFrame.state.update(numbers.map((e) => e.toString()).toList());
-        numbersGridFrame.state.grid[r - 1][y] = operation;
-      }
+      mathQuestionFrame.state.buildOperationQuestion(operation);
     }
+  }
 
+  @override
+  void initState() {
+    level = widget.level;
+    startLevel();
     super.initState();
   }
 
@@ -193,8 +188,6 @@ class GameState extends State<Game>{
 
   void updateStage(){
     setState(() {
-      timeLeft = widget.time;
-
       step++;
       if(step == totalSteps){
         step = 0;
@@ -205,7 +198,7 @@ class GameState extends State<Game>{
           iteration = 0;
 
           if(stage == totalStages){
-            if(operation == "x"){
+            if(operation == "x" && maxSize != 1){
               operation = "+";
               stage = 1;
               step = 0;
@@ -217,6 +210,8 @@ class GameState extends State<Game>{
               numbersGridFrame.state.updateOperation(operation, x, y, r, maxSize);
             }else if(stack.isEmpty){
               topGameFrame.state.updateStage(stage);
+              finished = true;
+              Levels.finish();
               return;
             }else{
               loadStack();
@@ -313,6 +308,7 @@ class GameState extends State<Game>{
         fightFrame.state.setHamburgerAttack(frame + 10 - frame % 10);
         nextStage = frame + 30 - frame % 10;
         mathQuestionFrame.state.respond("Resposta correta!");
+        timeLeft += widget.level.correctBonus;
       }else if(timeLeft == 0){
         wrongAnswers++;
         fightFrame.state.setRobotAttack(frame);
@@ -342,7 +338,7 @@ class GameState extends State<Game>{
       }else{
         fightFrame.state.setRobotAttack(frame + 10 - frame % 10);
         nextStage = frame + 30 - frame % 10;
-        wrongAnswers++;
+        timeLeft = max(0, timeLeft - widget.level.wrongPenalty);
         mathQuestionFrame.state.respond("Resposta errada!");
       }
 
@@ -383,11 +379,11 @@ class GameState extends State<Game>{
         children: [
           topGameFrame,
           IndexedStack(
-            index: stage == totalStages ? 2 : step,
+            index: finished ? 2 : step,
             children: [
               mathQuestionFrame,
               dragQuestionFrame,
-              congratulationsFrame
+              buildEnd()
             ],
           ),
           const SizedBox(height: 5),
@@ -430,6 +426,19 @@ class GameState extends State<Game>{
           Text("${timeLeft ~/ 60}:${(timeLeft % 60).toString().padLeft(2, "0")} ", style: TextStyle(fontSize: 25, color: timeLeft > 5 ? Colors.white : Colors.red)),
           Icon(Icons.punch_clock, color: timeLeft > 5 ? Colors.white : Colors.red)
         ],
+      ),
+    );
+  }
+
+  Widget buildEnd(){
+
+    return Container(
+      padding: const EdgeInsets.all(10),
+      alignment: Alignment.center,
+      height: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 115 : 175,
+      child: Text(
+        stage == totalStages ? "Parabéns voce terminou!!!" : "Acabou o tempo, voce perdeu!!",
+        style: const TextStyle(fontSize: 40,color: Colors.black)
       ),
     );
   }

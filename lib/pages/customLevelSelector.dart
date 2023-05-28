@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:guerra_dos_numeros/levels.dart';
 import 'package:guerra_dos_numeros/pages/game/game.dart';
 import 'package:guerra_dos_numeros/utils.dart';
 
@@ -12,15 +13,6 @@ import 'package:guerra_dos_numeros/utils.dart';
 //1: subtração
 //2: multiplicação
 //3: divisão
-List<List<String>> questionsMatrix = [
-  [
-    "Mariazinha tinha | reais guardado, no seu aniversário ela ganhou mais | reais do seu pai. Quantos reais ela tem hoje?",
-    "Joãozinho tinha | maçãs e acabou de pegar | da macieira do seu vizinho, quantas maçãs ele tem agora?"
-  ],
-  [],
-  [],
-  []
-];
 
 class CustomLevelSelector extends StatefulWidget {
   const CustomLevelSelector(this.changePage, {super.key});
@@ -31,47 +23,10 @@ class CustomLevelSelector extends StatefulWidget {
 }
 
 class _CustomLevelSelectorState extends State<CustomLevelSelector>{
-  int operator = 0;
-  bool interpretation = true;
-  int digits = 2;
-  int time = 0;
-  List<int> timeList = [90, 30, 10, 2];
-  List<String> operators = ["+", "-", "x", "/"];
   Color disabled = const Color(0xFF101010);
-
-  int getRandomNumber(){
-    Random random = Random();
-    return pow(10, digits - 1).toInt() + random.nextInt(pow(10, digits).toInt() - pow(10, digits - 1).toInt() - 1);
-  }
-
-  List<int> getNumberList(int size){
-    List<int> list = [];
-    for(int i = 0; i < size; i++){
-      list.add(getRandomNumber());
-    }
-
-    if(operator == 1){
-      list.sort((int a, int b) => b - a);
-    }else if(operator == 3){
-      list[0] *= list[1];
-    }
-
-    return list;
-  }
-
-  String getQuestion(){
-    if(!interpretation || questionsMatrix[operator].isEmpty){
-      return "";
-    }
-
-    Random random = Random();
-    int questionNumber = random.nextInt(questionsMatrix[operator].length).toInt();
-    return questionsMatrix[operator][questionNumber];
-  }
 
   @override
   Widget build(BuildContext context){
-    var mathStack = [MathStack(operators[operator], 0, 0, getNumberList(2).map((e) => e.toString()).toList(), interpretation ? 0 : 1)];
     return Container(
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -88,7 +43,7 @@ class _CustomLevelSelectorState extends State<CustomLevelSelector>{
           const SizedBox(height: 30),
           customIconButton(context, Colors.green, const Icon(Icons.play_circle), " Jogar", 22, Colors.white, 120, 50,(){
             widget.changePage(
-              Game(getQuestion(), mathStack, widget.changePage, timeList[time]),
+              Game(widget.changePage, Levels.getLevel()),
               back: false,
               bottom: false,
               keep: true
@@ -118,11 +73,11 @@ class _CustomLevelSelectorState extends State<CustomLevelSelector>{
         Material(
           color: const Color(0xFF54436B),
           child: Checkbox(
-              value: interpretation,
+              value: Levels.interpretation,
               fillColor: MaterialStateColor.resolveWith(getColor),
               onChanged: (newValue){
                 setState(() {
-                  interpretation = newValue!;
+                  Levels.interpretation = newValue!;
                 });
               }
           )
@@ -136,23 +91,23 @@ class _CustomLevelSelectorState extends State<CustomLevelSelector>{
       const Text("Operação:", style: TextStyle(color: Colors.black, fontSize: 30))
     ];
 
-    for(int i = 0; i < operators.length; i++){
+    for(int i = 0; i < Levels.operators.length; i++){
       row.add(const SizedBox(width: 15));
       row.add(
         SizedBox(
           width: 50,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: operator == i ? Colors.green : const Color(0xFF828DF4),
+              backgroundColor: Levels.operator == i ? Colors.green : const Color(0xFF828DF4),
             ),
             onPressed: (){
               setState(() {
                 if(i == 0 || i == 2){
-                  operator = i;
+                  Levels.operator = i;
                 }
               });
             },
-            child: Text(operators[i]),
+            child: Text(Levels.operators[i]),
           ),
         )
       );
@@ -172,28 +127,28 @@ class _CustomLevelSelectorState extends State<CustomLevelSelector>{
           width: 50,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: digits == 2 ? disabled : const Color(0xFF828DF4),
+              backgroundColor: Levels.digits == 2 ? disabled : const Color(0xFF828DF4),
             ),
             onPressed: (){
               setState(() {
-                digits = max(2, digits - 1);
+                Levels.digits = max(2, Levels.digits - 1);
               });
             },
             child: const Text("<"),
           ),
         ),
         const SizedBox(width: 15),
-        Text("$digits", style: const TextStyle(color: Colors.black, fontSize: 30)),
+        Text("${Levels.digits}", style: const TextStyle(color: Colors.black, fontSize: 30)),
         const SizedBox(width: 15),
         SizedBox(
           width: 50,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: digits == 9 ? disabled : const Color(0xFF828DF4),
+              backgroundColor: Levels.digits == 9 ? disabled : const Color(0xFF828DF4),
             ),
             onPressed: (){
               setState(() {
-                digits = min(9, digits + 1);
+                Levels.digits = min(9, Levels.digits + 1);
               });
             },
             child: const Text(">"),
@@ -217,12 +172,12 @@ class _CustomLevelSelectorState extends State<CustomLevelSelector>{
             width: 70,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: time == i ? Colors.green : const Color(0xFF828DF4),
+                backgroundColor: Levels.time == i ? Colors.green : const Color(0xFF828DF4),
                 padding: EdgeInsets.all(0)
               ),
               onPressed: (){
                 setState(() {
-                  time = i;
+                  Levels.time = i;
                 });
               },
               child: Text(options[i], style: const TextStyle(fontSize: 15)),
