@@ -62,14 +62,15 @@ flutter:
   assets:
     - assets/images/
     - assets/images/clouds/
-    - assets/images/hamburgerJumping/
+    - assets/images/grassMap/
+    - assets/images/defaultHamburger/
+    - assets/images/defaultRobot/
     - assets/images/hittingHamburger/
     - assets/images/hittingRobot/
-    - assets/images/laser/
-    - assets/images/movingRobot/
-    - assets/images/pinkBananaAttack/
-    - assets/images/appleBananaAttack/
-    - assets/images/throwBananaAttack/
+    - assets/images/attackLaser/
+    - assets/images/attackPinkBanana/
+    - assets/images/attackAppleBanana/
+    - assets/images/attackThrowBanana/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

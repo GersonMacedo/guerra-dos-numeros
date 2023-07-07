@@ -52,38 +52,44 @@ class FightState extends State<FightFrame>{
       alignment: Alignment.center,
       width: width + 10,
       height: height + 5,
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 2.5),
       decoration: const BoxDecoration(
-        color: Colors.white,
+          color: Color(0xFF1F2D5E),
         borderRadius: BorderRadius.all(Radius.circular(10))
       ),
       child: Stack(
         fit: StackFit.loose,
         children: [
-          Positioned(
-            left: 0,
+          Positioned.fill(
             top: 0,
+            child: Transform.translate(
+              offset: Offset(0, height*0.28), // Defina o deslocamento desejado verticalmente
+              child: widget.images.grassMap[frame % 16],
+            ),
+          ),
+          Positioned(
+            left: width / 2 - 125,
+            top: height*0.3,
             width: height,
             height: height,
             child: getHamburger()
           ),
           Positioned(
-              left: height,
-              top: 0,
+              right: width / 2 - 125,
+              top: height*0.3,
               width: height,
               height: height,
               child: getRobot()
           ),
           Positioned(
-              left: height * 9 / 10,
-              top: (frame % 10  < 5 && nobodyAttacks() ? height / 10 - widget.images.heights[frame % 10] * height / 50 : height / 10),
-              width: height / 2,
-              height: height / 2,
+              left: width / 2 - 125,
+              top: height*0.3,
+              width: height,
+              height: height,
               child: getBanana()
           ),
           Positioned(
-              left: 133 * height / 250,
-              top: 0,
+              right: width / 2 - 125,
+              top: height*0.3,
               width: height,
               height: height,
               child: getLaser()
@@ -94,8 +100,15 @@ class FightState extends State<FightFrame>{
   }
 
   Widget getHamburger(){
-    if(frame >= hamburgerAttack && frame < hamburgerAttack + 20){
-      return widget.images.hamburger[0];
+    if(frame >= hamburgerAttack && frame < hamburgerAttack + 5){
+      return Container(
+        width: 0,
+        height: 0,
+      );
+    }
+
+    if(frame >= hamburgerAttack + 5 && frame < hamburgerAttack + 20){
+      return widget.images.sttopedHamburger;
     }
 
     if(frame >= robotAttack + 10 && frame < robotAttack + 20){
@@ -112,30 +125,33 @@ class FightState extends State<FightFrame>{
       return diff % 2 == 0 ? widget.images.hittingRobot[diff ~/ 2] : Container();
     }
 
-    if(frame >= robotAttack && frame < robotAttack + 20){
-      return widget.images.robot[0];
+    if(frame >= robotAttack && frame < robotAttack + 10){
+      return Container(
+        width: 0,
+        height: 0,
+      );
+    }
+
+    if(frame >= robotAttack + 10 && frame < robotAttack + 20){
+      return widget.images.sttopedRobot;
     }
 
     return widget.images.robot[(frame % 10  > 1) && (frame % 10 < 7) ? frame % 10 - 2 : 0];
   }
 
   Widget getBanana(){
-    int start = hamburgerAttack + widget.images.attackDelay[attackType];
+    int start = hamburgerAttack;
     int end = start + widget.images.attackFrames[attackType];
     if(frame >= start && frame < end){
       return widget.images.hamburgerAttacks[attackType][frame - start];
     }
 
-    if(frame >= robotAttack + 10 && frame < robotAttack + 20 && (frame - robotAttack) % 2 == 1 ){
-      return Container();
-    }
-
-    return widget.images.banana;
+    return Container();
   }
 
   Widget getLaser(){
-    if(frame >= robotAttack + 3 && frame < robotAttack + 10){
-      return widget.images.robotAttack[frame - robotAttack - 3];
+    if(frame >= robotAttack && frame < robotAttack + 10){
+      return widget.images.robotAttack[frame - robotAttack];
     }
 
     return Container();

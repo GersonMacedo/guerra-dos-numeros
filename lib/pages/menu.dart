@@ -80,24 +80,17 @@ class _MenuState extends State<Menu>{
                 Positioned.fill(child: images.clouds[frame % 16]),
                 Positioned(
                     left: width / 2 - 150,
-                    top: 107,
-                    width: 50,
-                    height: 50,
+                    top: 20,
+                    width: 200,
+                    height: 200,
                     child: images.hamburger[frame % 8  < 5 ? frame % 8 : 0]
                 ),
                 Positioned(
-                    left: width / 2 + 100,
-                    top: 107,
-                    width: 50,
-                    height: 50,
+                    right: width / 2 - 150,
+                    top: 20,
+                    width: 200,
+                    height: 200,
                     child: images.robot[frame % 8  > 2 ? frame % 8 - 3 : 0]
-                ),
-                Positioned(
-                    left: width / 2 - 105,
-                    top: frame % 8  < 5 ? 112 - images.heights[frame % 8] : 112,
-                    width: 25,
-                    height: 25,
-                    child: images.banana
                 )
               ],
             )
