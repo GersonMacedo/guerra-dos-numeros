@@ -20,10 +20,11 @@ import 'package:guerra_dos_numeros/pages/game/frames/topFrame.dart';
 
 
 class Game extends StatefulWidget {
-  const Game(this.changePage, this.level, {super.key});
+  const Game(this.changePage, this.level, this.skinNumber, {super.key});
 
   final LevelData level;
   final void Function(Widget?) changePage;
+  final int skinNumber;
 
   @override
   State<Game> createState() => GameState();
@@ -125,7 +126,7 @@ class GameState extends State<Game>{
     String mainQuestion = level.question == "" ? "Quanto é | $operation | ?" : level.question;
     if(first){
       topGameFrame = TopGameFrame(TopGameState(), mainQuestion, numbers, level.question == "" ? 1 : 0, totalStages, widget.changePage);
-      fightFrame = FightFrame(FightState(), images);
+      fightFrame = FightFrame(FightState(), images, widget.skinNumber);
       numbersGridFrame = NumbersGridFrame(NumbersGridState(), successDrag, operation, x, y, r, maxSize);
       mathQuestionFrame = MathQuestionFrame(MathQuestionState(), respond);
       dragQuestionFrame = DragQuestionFrame(DragQuestionState());

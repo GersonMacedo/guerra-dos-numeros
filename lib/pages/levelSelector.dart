@@ -4,8 +4,9 @@ import 'package:guerra_dos_numeros/levels.dart';
 import 'package:guerra_dos_numeros/pages/game/game.dart';
 
 class LevelSelector extends StatefulWidget {
-  const LevelSelector(this.changePage, {super.key});
+  const LevelSelector(this.changePage, this.skinNumber, {super.key});
   final void Function(Widget?, {bool bottom, bool back, bool keep}) changePage;
+  final int skinNumber;
 
   @override
   State<LevelSelector> createState() => _LevelSelectorState();
@@ -71,7 +72,7 @@ class _LevelSelectorState extends State<LevelSelector>{
             onPressed: (){
               Levels.actual = actual - 1;
               widget.changePage(
-                Game(widget.changePage, Levels.getLevel()),
+                Game(widget.changePage, Levels.getLevel(), widget.skinNumber),
                 back: false,
                 bottom: false,
                 keep: true

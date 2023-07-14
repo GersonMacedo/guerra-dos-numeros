@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:guerra_dos_numeros/levels.dart';
 import 'package:guerra_dos_numeros/pages/customLevelSelector.dart';
 import 'package:guerra_dos_numeros/pages/levelSelector.dart';
+import 'package:guerra_dos_numeros/pages/skinSelector.dart';
 
 class ModeSelector extends StatefulWidget {
   const ModeSelector(this.changePage, {super.key});
@@ -13,10 +14,17 @@ class ModeSelector extends StatefulWidget {
 
 class _ModeSelectorState extends State<ModeSelector>{
   bool numericMode = true;
-  
+  int skinNumber = 0;
+
   void setMode(bool mode){
     setState(() {
       numericMode = mode;
+    });
+  }
+
+  void updateSkin(int newValue) {
+    setState(() {
+      skinNumber = newValue;
     });
   }
 
@@ -25,62 +33,15 @@ class _ModeSelectorState extends State<ModeSelector>{
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Container(
-          alignment: Alignment.center,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text("escolha um modo", style: TextStyle(color: Colors.white, fontSize: 38)),
-              const SizedBox(height: 10),
-              Container(
-                decoration: const BoxDecoration(
-                  color: Color(0x20D9D9D9),
-                  borderRadius: BorderRadius.all(Radius.circular(5))
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 220,
-                      alignment: Alignment.center,
-                      color: Color(0x00D9D9D9 + (numericMode ? 0x20000000 : 0)),
-                      child: TextButton(
-                        onPressed: () => setMode(true),
-                        child: Container(
-                          width: 200,
-                          alignment: Alignment.center,
-                          child: const Text("numérico", style: TextStyle(color: Colors.white, fontSize: 38))
-                        ),
-                      )
-                    ),
-                    Container(
-                      width: 160,
-                      alignment: Alignment.center,
-                      color: Color(0x20D9D9D9 - (numericMode ? 0x20000000 : 0)),
-                      child: TextButton(
-                        onPressed: () => setMode(false),
-                        child: Container(
-                          width: 140,
-                          alignment: Alignment.center,
-                          child: const Text("texto", style: TextStyle(color: Colors.white, fontSize: 38))
-                        ),
-                      ),
-                    )
-                  ]
-                )
-              )
-            ]
-          )
-        ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            const Text("Escolha um modo", style: TextStyle(color: Colors.white, fontSize: 38)),
             ElevatedButton(
               onPressed: (){
                 Levels.type = 0;
-                widget.changePage(LevelSelector(widget.changePage), keep: true);
+                widget.changePage(LevelSelector(widget.changePage, skinNumber), keep: true);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
@@ -113,7 +74,7 @@ class _ModeSelectorState extends State<ModeSelector>{
             ElevatedButton(
                 onPressed: (){
                   Levels.type = 1;
-                  widget.changePage(LevelSelector(widget.changePage), keep: true);
+                  widget.changePage(LevelSelector(widget.changePage, skinNumber), keep: true);
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -146,7 +107,7 @@ class _ModeSelectorState extends State<ModeSelector>{
             ElevatedButton(
                 onPressed: (){
                   Levels.type = -1;
-                  widget.changePage(CustomLevelSelector(widget.changePage), keep: true);
+                  widget.changePage(CustomLevelSelector(widget.changePage, skinNumber),keep: true);
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -176,6 +137,28 @@ class _ModeSelectorState extends State<ModeSelector>{
                 )
             ),
           ]
+        ),
+        ElevatedButton(
+            onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SkinSelector(updateSkin),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)
+                )
+            ),
+            child: Container(
+                width: 400,
+                height: 70,
+                alignment: Alignment.center,
+                child: const Text("Escolha seu personagem", style: TextStyle(fontSize: 30, color: Colors.black)),
+            )
         ),
         Container()
       ]
