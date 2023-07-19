@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Ranking extends StatelessWidget {
   const Ranking({Key? key}) : super(key: key);
@@ -102,6 +104,24 @@ class Ranking extends StatelessWidget {
     },
   ];
 
+  signInWithGoogle() async {
+    GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
+
+    UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+    print(userCredential.user?.displayName);
+  }
+
+  void _onRefreshButtonPressed() {
+    signInWithGoogle();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -127,6 +147,13 @@ class Ranking extends StatelessWidget {
                   .toList(),
             ),
           ),
+          SizedBox(height: 20),
+          Center(
+            child: ElevatedButton(
+              onPressed: _onRefreshButtonPressed,
+              child: Text('Atualizar'),
+            ),
+          )
         ],
       ),
     );
