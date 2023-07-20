@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:guerra_dos_numeros/imagesLoader.dart';
 
 class About extends StatelessWidget {
   const About({super.key});

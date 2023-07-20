@@ -3,6 +3,7 @@ import 'package:guerra_dos_numeros/levels.dart';
 import 'package:guerra_dos_numeros/pages/customLevelSelector.dart';
 import 'package:guerra_dos_numeros/pages/levelSelector.dart';
 import 'package:guerra_dos_numeros/pages/skinSelector.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ModeSelector extends StatefulWidget {
   const ModeSelector(this.changePage, {super.key});
@@ -12,11 +13,29 @@ class ModeSelector extends StatefulWidget {
   State<ModeSelector> createState() => _ModeSelectorState();
 }
 
-class _ModeSelectorState extends State<ModeSelector>{
+class _ModeSelectorState extends State<ModeSelector> {
   bool numericMode = true;
   int skinNumber = 0;
 
-  void setMode(bool mode){
+  @override
+  void initState() {
+    super.initState();
+    _loadSkinNumber();
+  }
+
+  Future<void> _loadSkinNumber() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      skinNumber = prefs.getInt('skinNumber') ?? 0;
+    });
+  }
+
+  Future<void> _saveSkinNumber(int newValue) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('skinNumber', newValue);
+  }
+
+  void setMode(bool mode) {
     setState(() {
       numericMode = mode;
     });
@@ -25,6 +44,7 @@ class _ModeSelectorState extends State<ModeSelector>{
   void updateSkin(int newValue) {
     setState(() {
       skinNumber = newValue;
+      _saveSkinNumber(newValue);
     });
   }
 
@@ -39,15 +59,15 @@ class _ModeSelectorState extends State<ModeSelector>{
           children: [
             const Text("Escolha um modo", style: TextStyle(color: Colors.white, fontSize: 38)),
             ElevatedButton(
-              onPressed: (){
+              onPressed: () {
                 Levels.type = 0;
                 widget.changePage(LevelSelector(widget.changePage, skinNumber), keep: true);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)
-                )
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
               child: Container(
                 width: 400,
@@ -57,111 +77,111 @@ class _ModeSelectorState extends State<ModeSelector>{
                   children: [
                     Container(
                       decoration: const BoxDecoration(
-                          color: Color(0xFF212A3E),
-                          borderRadius: BorderRadius.all(Radius.circular(5))
+                        color: Color(0xFF212A3E),
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
                       ),
                       alignment: Alignment.center,
                       width: 50,
                       height: 50,
-                      child: const Text("+", style: TextStyle(fontSize: 30, color: Colors.white))
+                      child: const Text("+", style: TextStyle(fontSize: 30, color: Colors.white)),
                     ),
-                    const Text("      adição e subtração", style: TextStyle(fontSize: 30, color: Colors.black))
+                    const Text("      adição e subtração", style: TextStyle(fontSize: 30, color: Colors.black)),
                   ],
-                )
-              )
+                ),
+              ),
             ),
             const SizedBox(height: 20, width: double.infinity),
             ElevatedButton(
-                onPressed: (){
-                  Levels.type = 1;
-                  widget.changePage(LevelSelector(widget.changePage, skinNumber), keep: true);
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)
-                    )
-                ),
-                child: Container(
-                    width: 400,
-                    height: 70,
-                    alignment: Alignment.center,
-                    child: Row(
-                      children: [
-                        Container(
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF212A3E),
-                            borderRadius: BorderRadius.all(Radius.circular(5))
-                          ),
-                          alignment: Alignment.center,
-                          width: 50,
-                          height: 50,
-                          child: const Text("x", style: TextStyle(fontSize: 30, color: Colors.white))
-                        ),
-                        const Text("      multiplicação e divisão", style: TextStyle(fontSize: 30, color: Colors.black))
-                      ],
-                    )
-                )
-            ),
-            const SizedBox(height: 20, width: double.infinity),
-            ElevatedButton(
-                onPressed: (){
-                  Levels.type = -1;
-                  widget.changePage(CustomLevelSelector(widget.changePage, skinNumber),keep: true);
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)
-                    )
-                ),
-                child: Container(
-                    width: 400,
-                    height: 70,
-                    alignment: Alignment.center,
-                    child: Row(
-                      children: [
-                        Container(
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF212A3E),
-                            borderRadius: BorderRadius.all(Radius.circular(5))
-                          ),
-                          alignment: Alignment.center,
-                          width: 50,
-                          height: 50,
-                          child: const Text("?", style: TextStyle(fontSize: 30, color: Colors.white))
-                        ),
-                        const Text("      aleatório", style: TextStyle(fontSize: 30, color: Colors.black))
-                      ],
-                    )
-                )
-            ),
-          ]
-        ),
-        ElevatedButton(
-            onPressed: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SkinSelector(updateSkin),
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
+              onPressed: () {
+                Levels.type = 1;
+                widget.changePage(LevelSelector(widget.changePage, skinNumber), keep: true);
+              },
+              style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)
-                )
-            ),
-            child: Container(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Container(
                 width: 400,
                 height: 70,
                 alignment: Alignment.center,
-                child: const Text("Escolha seu personagem", style: TextStyle(fontSize: 30, color: Colors.black)),
-            )
+                child: Row(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF212A3E),
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      ),
+                      alignment: Alignment.center,
+                      width: 50,
+                      height: 50,
+                      child: const Text("x", style: TextStyle(fontSize: 30, color: Colors.white)),
+                    ),
+                    const Text("      multiplicação e divisão", style: TextStyle(fontSize: 30, color: Colors.black)),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20, width: double.infinity),
+            ElevatedButton(
+              onPressed: () {
+                Levels.type = -1;
+                widget.changePage(CustomLevelSelector(widget.changePage, skinNumber), keep: true);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Container(
+                width: 400,
+                height: 70,
+                alignment: Alignment.center,
+                child: Row(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF212A3E),
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      ),
+                      alignment: Alignment.center,
+                      width: 50,
+                      height: 50,
+                      child: const Text("?", style: TextStyle(fontSize: 30, color: Colors.white)),
+                    ),
+                    const Text("      aleatório", style: TextStyle(fontSize: 30, color: Colors.black)),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-        Container()
-      ]
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SkinSelector(updateSkin),
+              ),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          child: Container(
+            width: 400,
+            height: 70,
+            alignment: Alignment.center,
+            child: const Text("Escolha seu personagem", style: TextStyle(fontSize: 30, color: Colors.black)),
+          ),
+        ),
+        Container(),
+      ],
     );
   }
 }

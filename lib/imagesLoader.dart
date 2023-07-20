@@ -10,6 +10,9 @@ class ImagesLoader{
     stoppedHamburger = Image.asset('assets/images/stoppedHamburger.png', scale: 0.2);
     stoppedRobot = Image.asset('assets/images/stoppedRobot.png', scale: 0.2);
 
+    storeHamburger = Image.asset('assets/images/imagesForStore/storeHamburger.png', scale: 0.2);
+    storeRobotHamburger = Image.asset('assets/images/imagesForStore/storeRobotHamburger.png', scale: 0.2);
+
     //skins hamburger
     stoppedRobotHamburger = Image.asset('assets/images/skins/hamburger/robotHamburger/stoppedRobotHamburger.png', scale: 0.2);
 
@@ -53,6 +56,10 @@ class ImagesLoader{
       }
 
     }
+
+    // Other images
+    trophy = Image.asset('assets/images/trophy.png', scale: 0.2);
+
   }
 
   List<Image> hamburger = [];
@@ -78,9 +85,15 @@ class ImagesLoader{
   // hamburger skins taking damage
   List<Image> robotHamburgerTakingDamage = [];
 
+  // store images
+  late Image storeHamburger;
+  late Image storeRobotHamburger;
+
   List<double> heights = [0, 3, 5, 3, 0];
   List<String> attackPath = ["attackPinkBanana", "attackAppleBanana", "attackThrowBanana"];
   List<int> attackFrames = [8, 8, 6];
+
+  late Image trophy;
 
   void cacheImages(BuildContext context){
     for(var element in clouds){
