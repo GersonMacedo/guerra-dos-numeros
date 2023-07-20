@@ -7,9 +7,14 @@ class ImagesLoader{
       robot.add(Image.asset('assets/images/defaultRobot/$i.png', scale: 0.2));
     }
 
-    banana = Image.asset('assets/images/banana.png', scale: 0.2);
-    sttopedHamburger = Image.asset('assets/images/sttopedHamburger.png', scale: 0.2);
-    sttopedRobot = Image.asset('assets/images/sttopedRobot.png', scale: 0.2);
+    stoppedHamburger = Image.asset('assets/images/stoppedHamburger.png', scale: 0.2);
+    stoppedRobot = Image.asset('assets/images/stoppedRobot.png', scale: 0.2);
+
+    storeHamburger = Image.asset('assets/images/imagesForStore/storeHamburger.png', scale: 0.2);
+    storeRobotHamburger = Image.asset('assets/images/imagesForStore/storeRobotHamburger.png', scale: 0.2);
+
+    //skins hamburger
+    stoppedRobotHamburger = Image.asset('assets/images/skins/hamburger/robotHamburger/stoppedRobotHamburger.png', scale: 0.2);
 
     if(loadClouds){
       for(int i = 0; i < 16; i++){
@@ -32,14 +37,29 @@ class ImagesLoader{
       }
 
       for(int i = 0; i < 10; i++){
-        hittingHamburger.add(Image.asset('assets/images/hittingHamburger/$i.png', scale: 0.2));
-        hittingRobot.add(Image.asset('assets/images/hittingRobot/$i.png', scale: 0.2));
+        takingDamageHamburger.add(Image.asset('assets/images/takingDamageHamburger/$i.png', scale: 0.2));
+        takingDamageRobot.add(Image.asset('assets/images/takingDamageRobot/$i.png', scale: 0.2));
       }
 
       for(int i = 0; i < 16; i++){
         grassMap.add(Image.asset('assets/images/grassMap/${15 - i}.png', repeat: ImageRepeat.repeatX, scale: 0.2));
       }
+
+      // hamburger skins
+      for(int i = 0; i < 5; i++){
+        robotHamburger.add(Image.asset('assets/images/skins/hamburger/robotHamburger/default/$i.png', scale: 0.2));
+      }
+
+      for(int i = 0; i < 9; i++){
+        robotHamburgerTakingDamage.add(Image.asset('assets/images/skins/hamburger/robotHamburger/takingDamage/$i.png', scale: 0.2));
+        robotHamburgerAttack.add(Image.asset('assets/images/skins/hamburger/robotHamburger/attackLaser/$i.png', scale: 0.2));
+      }
+
     }
+
+    // Other images
+    trophy = Image.asset('assets/images/trophy.png', scale: 0.2);
+
   }
 
   List<Image> hamburger = [];
@@ -48,15 +68,32 @@ class ImagesLoader{
   List<Image> grassMap = [];
   List<List<Image>> hamburgerAttacks = [];
   List<Image> robotAttack = [];
-  List<Image> hittingHamburger = [];
-  List<Image> hittingRobot = [];
-  late Image banana;
-  late Image sttopedHamburger;
-  late Image sttopedRobot;
+  List<Image> takingDamageHamburger = [];
+  List<Image> takingDamageRobot = [];
+  late Image stoppedHamburger;
+  late Image stoppedRobot;
+
+  // hamburger skins
+  List<Image> robotHamburger = [];
+
+  // hamburger skins stopped
+  late Image stoppedRobotHamburger;
+
+  // hamburger skins attack
+  List<Image> robotHamburgerAttack = [];
+
+  // hamburger skins taking damage
+  List<Image> robotHamburgerTakingDamage = [];
+
+  // store images
+  late Image storeHamburger;
+  late Image storeRobotHamburger;
 
   List<double> heights = [0, 3, 5, 3, 0];
   List<String> attackPath = ["attackPinkBanana", "attackAppleBanana", "attackThrowBanana"];
   List<int> attackFrames = [8, 8, 6];
+
+  late Image trophy;
 
   void cacheImages(BuildContext context){
     for(var element in clouds){
@@ -75,7 +112,6 @@ class ImagesLoader{
       precacheImage(element.image, context);
     }
 
-    precacheImage(banana.image, context);
 
     for(var attack in hamburgerAttacks){
       for(var element in attack){
@@ -87,12 +123,26 @@ class ImagesLoader{
       precacheImage(element.image, context);
     }
 
-    for(var element in hittingHamburger){
+    for(var element in takingDamageHamburger){
       precacheImage(element.image, context);
     }
 
-    for(var element in hittingRobot){
+    for(var element in takingDamageRobot){
       precacheImage(element.image, context);
     }
+
+    // hamburger skins
+    for(var element in robotHamburger){
+      precacheImage(element.image, context);
+    }
+
+    for(var element in robotHamburgerAttack){
+      precacheImage(element.image, context);
+    }
+
+    for(var element in robotHamburgerTakingDamage){
+      precacheImage(element.image, context);
+    }
+
   }
 }

@@ -123,8 +123,8 @@ class _HomeState extends State<Home>{
     }
 
     return Container(
-        height: 60,
-        width: 100,
+        height: 80,
+        width: 250,
         padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
         child: ElevatedButton(
             onPressed: (){changePage(null);},
@@ -136,8 +136,8 @@ class _HomeState extends State<Home>{
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: const [
-                Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
-                Text("  Voltar  ", style: TextStyle(color: Colors.black, fontSize: 18))
+                Icon(Icons.arrow_back_ios, size: 40, color: Colors.black),
+                Text("         voltar  ", style: TextStyle(color: Colors.black, fontSize: 30))
               ]
             )
         )

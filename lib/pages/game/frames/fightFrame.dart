@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:guerra_dos_numeros/imagesLoader.dart';
 
 class FightFrame extends StatefulWidget {
-  const FightFrame(this.state, this.images, {super.key});
+  const FightFrame(this.state, this.images, this.skinNumber,{super.key});
 
   final FightState state;
   final ImagesLoader images;
+  final int skinNumber;
 
   @override
   State<FightFrame> createState() => state;
@@ -67,28 +68,28 @@ class FightState extends State<FightFrame>{
             ),
           ),
           Positioned(
-            left: width / 2 - 125,
+            left: getAttackWidth(width),
             top: height*0.3,
             width: height,
             height: height,
             child: getHamburger()
           ),
           Positioned(
-              right: width / 2 - 125,
+              right: getAttackWidth(width),
               top: height*0.3,
               width: height,
               height: height,
               child: getRobot()
           ),
           Positioned(
-              left: width / 2 - 125,
+              left: getAttackWidth(width),
               top: height*0.3,
               width: height,
               height: height,
-              child: getBanana()
+              child: getAttackHamburger()
           ),
           Positioned(
-              right: width / 2 - 125,
+              right: getAttackWidth(width),
               top: height*0.3,
               width: height,
               height: height,
@@ -108,21 +109,21 @@ class FightState extends State<FightFrame>{
     }
 
     if(frame >= hamburgerAttack + 5 && frame < hamburgerAttack + 20){
-      return widget.images.sttopedHamburger;
+      return getHamburgerSkinStopped(widget.skinNumber);
     }
 
     if(frame >= robotAttack + 10 && frame < robotAttack + 20){
       int diff = frame - robotAttack - 10;
-      return diff % 2 == 0 ? widget.images.hittingHamburger[diff ~/ 2] : Container();
+      return diff % 2 == 0 ? getHamburgerSkinTakingDamage(widget.skinNumber)[diff ~/ 2] : Container();
     }
 
-    return widget.images.hamburger[frame % 10  < 5 ? frame % 10 : 0];
+    return getHamburgerSkinDefault(widget.skinNumber)[frame % 10  < 5 ? frame % 10 : 0];
   }
 
   Widget getRobot(){
     if(frame >= hamburgerAttack + 10 && frame < hamburgerAttack + 20){
       int diff = frame - hamburgerAttack - 10;
-      return diff % 2 == 0 ? widget.images.hittingRobot[diff ~/ 2] : Container();
+      return diff % 2 == 0 ? widget.images.takingDamageRobot[diff ~/ 2] : Container();
     }
 
     if(frame >= robotAttack && frame < robotAttack + 10){
@@ -133,17 +134,24 @@ class FightState extends State<FightFrame>{
     }
 
     if(frame >= robotAttack + 10 && frame < robotAttack + 20){
-      return widget.images.sttopedRobot;
+      return widget.images.stoppedRobot;
     }
 
     return widget.images.robot[(frame % 10  > 1) && (frame % 10 < 7) ? frame % 10 - 2 : 0];
   }
 
-  Widget getBanana(){
+  Widget getAttackHamburger(){
     int start = hamburgerAttack;
     int end = start + widget.images.attackFrames[attackType];
-    if(frame >= start && frame < end){
-      return widget.images.hamburgerAttacks[attackType][frame - start];
+
+    if(widget.skinNumber != 0){
+      if(frame >= hamburgerAttack && frame < hamburgerAttack + 9){
+        return getHamburgerSkinAttack(widget.skinNumber)[frame - hamburgerAttack];
+      }
+    }else{
+      if(frame >= start && frame < end){
+        return getHamburgerSkinAttack(0)[attackType][frame - start];
+      }
     }
 
     return Container();
@@ -155,5 +163,42 @@ class FightState extends State<FightFrame>{
     }
 
     return Container();
+  }
+
+  double getAttackWidth(width){
+    return (width == 500)?(width / 2 - 110):(width / 2 - 90);
+  }
+
+
+  List getHamburgerSkinDefault(int i){
+    if(i==1){
+      return widget.images.robotHamburger;
+    }else{
+      return widget.images.hamburger;
+    }
+  }
+
+  List getHamburgerSkinAttack(int i){
+    if(i==1){
+      return widget.images.robotHamburgerAttack;
+    }else{
+      return widget.images.hamburgerAttacks;
+    }
+  }
+
+  List getHamburgerSkinTakingDamage(int i){
+    if(i==1){
+      return widget.images.robotHamburgerTakingDamage;
+    }else{
+      return widget.images.takingDamageHamburger;
+    }
+  }
+
+  Image getHamburgerSkinStopped(int i){
+    if(i==1){
+      return widget.images.stoppedRobotHamburger;
+    }else{
+      return widget.images.stoppedHamburger;
+    }
   }
 }
