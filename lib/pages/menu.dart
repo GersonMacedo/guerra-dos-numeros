@@ -55,7 +55,7 @@ class _MenuState extends State<Menu>{
       width = MediaQuery.of(context).size.width * height / MediaQuery.of(context).size.height;
     }
 
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -72,7 +72,7 @@ class _MenuState extends State<Menu>{
           Container(
             width: double.infinity,
             height: 200,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 border: Border.symmetric(horizontal: BorderSide(color: Colors.white))
             ),
             child: Stack(

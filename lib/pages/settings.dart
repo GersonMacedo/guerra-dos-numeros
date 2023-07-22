@@ -9,9 +9,9 @@ class Settings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.all(10),
-        child: Column(
+        child: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             SizedBox(height: 15),
             Text("TODO: tela de configurações")
           ],

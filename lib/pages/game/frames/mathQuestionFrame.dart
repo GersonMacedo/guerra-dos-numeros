@@ -69,7 +69,7 @@ class MathQuestionState extends State<MathQuestionFrame>{
   @override
   Widget build(BuildContext context){
     built = true;
-    Size size = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size;
+    Size size = MediaQueryData.fromView(WidgetsBinding.instance.window).size;
     double buttonsWidth = 140;
     double buttonsHeight = 50;
     List<Widget> buttons = [];

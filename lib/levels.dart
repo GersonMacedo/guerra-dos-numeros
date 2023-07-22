@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:guerra_dos_numeros/levels.dart';
 
 class MathStack{
   MathStack(this.operation, this.x, this.y, this.numbers, this.stage, this.step, this.iteration);

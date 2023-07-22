@@ -174,7 +174,7 @@ class _CustomLevelSelectorState extends State<CustomLevelSelector>{
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Levels.time == i ? Colors.green : const Color(0xFF828DF4),
-                padding: EdgeInsets.all(0)
+                padding: const EdgeInsets.all(0)
               ),
               onPressed: (){
                 setState(() {

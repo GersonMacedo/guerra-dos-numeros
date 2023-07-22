@@ -37,7 +37,7 @@ class _LevelSelectorState extends State<LevelSelector>{
         int actual = (vertical ? 3 : 6) * i + j + first;
         if(actual > last){
           row.add(
-            Container(
+            const SizedBox(
               width: 90,
               height: 90
             )
@@ -135,7 +135,7 @@ class _LevelSelectorState extends State<LevelSelector>{
                   height: 50,
                   width: 100,
                   alignment: Alignment.center,
-                  child: Text("<", style: TextStyle(fontSize: 40))
+                  child: const Text("<", style: TextStyle(fontSize: 40))
                 )
               ),
               ElevatedButton(
@@ -150,7 +150,7 @@ class _LevelSelectorState extends State<LevelSelector>{
                       height: 50,
                       width: 100,
                       alignment: Alignment.center,
-                      child: Text(">", style: TextStyle(fontSize: 40))
+                      child: const Text(">", style: TextStyle(fontSize: 40))
                   )
               )
             ],
