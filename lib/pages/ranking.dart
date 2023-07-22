@@ -105,6 +105,7 @@ class Ranking extends StatelessWidget {
   ];
 
   signInWithGoogle() async {
+    print('resultado:');
     GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
@@ -115,7 +116,7 @@ class Ranking extends StatelessWidget {
     UserCredential userCredential =
         await FirebaseAuth.instance.signInWithCredential(credential);
 
-    print(userCredential.user?.displayName);
+    print('resultado: $userCredential.user');
   }
 
   void _onRefreshButtonPressed() {
@@ -130,10 +131,10 @@ class Ranking extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 50),
+          const SizedBox(height: 50),
           Container(
               margin: const EdgeInsets.symmetric(vertical: 50.0),
-              child: Text(
+              child: const Text(
                 'Ranking',
                 style: TextStyle(fontSize: 60, color: Colors.white),
               )),
@@ -147,11 +148,11 @@ class Ranking extends StatelessWidget {
                   .toList(),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Center(
             child: ElevatedButton(
               onPressed: _onRefreshButtonPressed,
-              child: Text('Atualizar'),
+              child: const Text('Atualizar'),
             ),
           )
         ],
@@ -177,16 +178,16 @@ class Ranking extends StatelessWidget {
               alignment: Alignment.center,
               child: Text(
                 name,
-                style: TextStyle(fontSize: 24),
+                style: const TextStyle(fontSize: 24),
               ),
             ),
           ),
           Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             height: 64,
             width: 100,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Color(0xFF212A3E),
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(8.0),
@@ -195,7 +196,7 @@ class Ranking extends StatelessWidget {
             ),
             child: Text(
               '$score',
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
               ),

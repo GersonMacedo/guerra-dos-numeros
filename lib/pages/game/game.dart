@@ -306,7 +306,7 @@ class GameState extends State<Game>{
 
         String question = "Quanto é $num1 x $num2";
         if(carry != 0){
-          question += " + ${carry}";
+          question += " + $carry";
         }
         question += " ?";
 

@@ -8,10 +8,10 @@ class Achievements extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
+        padding: const EdgeInsets.all(10),
+        child: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             SizedBox(height: 15),
             Text("TODO: tela de conquistas")
           ],

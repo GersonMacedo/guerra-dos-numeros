@@ -101,7 +101,7 @@ class FightState extends State<FightFrame>{
 
   Widget getHamburger(){
     if(frame >= hamburgerAttack && frame < hamburgerAttack + 5){
-      return Container(
+      return const SizedBox(
         width: 0,
         height: 0,
       );
@@ -126,7 +126,7 @@ class FightState extends State<FightFrame>{
     }
 
     if(frame >= robotAttack && frame < robotAttack + 10){
-      return Container(
+      return const SizedBox(
         width: 0,
         height: 0,
       );

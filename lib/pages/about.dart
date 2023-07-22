@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:guerra_dos_numeros/imagesLoader.dart';
 
 class About extends StatelessWidget {
   const About({super.key});
@@ -18,7 +17,7 @@ class About extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(
@@ -27,7 +26,7 @@ class About extends StatelessWidget {
                 size: 50,
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 10),
+                padding: EdgeInsets.only(left: 10),
                 child: Text(
                   "Sobre",
                   style: TextStyle(
@@ -38,11 +37,11 @@ class About extends StatelessWidget {
               ),
             ],
           ),
-          Container(
+          SizedBox(
             width: width* 0.8,
             child:
-              Padding(
-                padding: const EdgeInsets.only(left: 10, top: 10),
+              const Padding(
+                padding: EdgeInsets.only(left: 10, top: 10),
                 child: Text(
                   "O aplicativo 'Guerra dos Números, Robôs e coisas Matemáticas', "
                       "surgiu da necessidade apontada pela professora, Joselita, observada nas salas de aula. ",
@@ -58,7 +57,7 @@ class About extends StatelessWidget {
             padding: const EdgeInsets.only(left: 10, top: 50),
             child: Column(
               children: [
-                Row(
+                const Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(
@@ -67,7 +66,7 @@ class About extends StatelessWidget {
                       size: 50,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 10),
+                      padding: EdgeInsets.only(left: 10),
                       child: Text(
                         "Sinopse",
                         style: TextStyle(
@@ -83,7 +82,7 @@ class About extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 10, top: 10),
                     child: Container(
-                      child: Text(
+                      child: const Text(
                         "Prepare-se para uma aventura matemática eletrizante, "
                             "onde robôs se enfrentam em uma batalha épica contra "
                             "hambúrgueres. Enfrente desafios de matemática, enquanto  se diverte. ",

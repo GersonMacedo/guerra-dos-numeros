@@ -134,9 +134,9 @@ class _HomeState extends State<Home> {
                 backgroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 5),
                 shape: const RoundedRectangleBorder()),
-            child: Row(
+            child: const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
+                children: [
                   Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
                   Text("  Voltar  ",
                       style: TextStyle(color: Colors.black, fontSize: 18))
@@ -154,7 +154,7 @@ class _HomeState extends State<Home> {
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           TextButton(
               onPressed: () {
-                changePage(Achievements());
+                changePage(const Achievements());
               },
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -166,11 +166,11 @@ class _HomeState extends State<Home> {
               )),
           TextButton(
               onPressed: () {
-                changePage(About());
+                changePage(const About());
               },
-              child: Row(
+              child: const Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(Icons.info_outline, color: Colors.white, size: 30),
                   Text(" Sobre",
                       style: TextStyle(color: Colors.white, fontSize: 22))
@@ -178,11 +178,11 @@ class _HomeState extends State<Home> {
               )),
           TextButton(
               onPressed: () {
-                changePage(Ranking());
+                changePage(const Ranking());
               },
-              child: Row(
+              child: const Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(Icons.emoji_events_outlined,
                       color: Colors.white, size: 30),
                   Text(" Ranking",
