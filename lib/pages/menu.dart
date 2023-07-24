@@ -107,7 +107,7 @@ class _MenuState extends State<Menu>{
               width: 300,
               height: 50,
               alignment: Alignment.center,
-              child:  const Text("Iniciar", style: TextStyle(fontSize: 25))
+              child:  const Text("Iniciar", style: TextStyle(fontSize: 30))
             )
           )
         ],

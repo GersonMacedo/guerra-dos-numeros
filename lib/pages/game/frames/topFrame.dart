@@ -93,7 +93,7 @@ class TopGameState extends State<TopGameFrame>{
         color: Color(0xFF54436B),
         borderRadius: BorderRadius.all(Radius.circular(30))
       ),
-      child: Text(builtQuestion, style: const TextStyle(fontSize: 20, color: Colors.white))
+      child: Text(builtQuestion, style: const TextStyle(fontSize: 30, color: Colors.white))
     );
   }
 

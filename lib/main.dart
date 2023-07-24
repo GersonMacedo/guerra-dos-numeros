@@ -150,7 +150,7 @@ class _HomeState extends State<Home>{
     }
 
     return Container(
-      height: 50,
+      height: 70,
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -161,7 +161,7 @@ class _HomeState extends State<Home>{
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset('assets/images/medal.png'),
-                const Text("Conquistas", style: TextStyle(color: Colors.white, fontSize: 22))
+                const Text("Conquistas", style: TextStyle(color: Colors.white, fontSize: 25))
               ],
             )
           ),
@@ -170,8 +170,8 @@ class _HomeState extends State<Home>{
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: const [
-                  Icon(Icons.info_outline, color: Colors.white, size: 30),
-                  Text(" Sobre", style: TextStyle(color: Colors.white, fontSize: 22))
+                  Icon(Icons.info_outline, color: Colors.white, size: 40),
+                  Text(" Sobre", style: TextStyle(color: Colors.white, fontSize: 25))
                 ],
               )
           ),
@@ -180,8 +180,8 @@ class _HomeState extends State<Home>{
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: const [
-                  Icon(Icons.emoji_events_outlined, color: Colors.white, size: 30),
-                  Text(" Ranking", style: TextStyle(color: Colors.white, fontSize: 20))
+                  Icon(Icons.emoji_events_outlined, color: Colors.white, size: 40),
+                  Text(" Ranking", style: TextStyle(color: Colors.white, fontSize: 25))
                 ],
               )
           )
