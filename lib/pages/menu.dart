@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:guerra_dos_numeros/imagesLoader.dart';
 import 'package:guerra_dos_numeros/pages/modeSelector.dart';
+import 'package:guerra_dos_numeros/pages/skinSelector.dart';
 
 class Menu extends StatefulWidget {
   const Menu(this.changePage, {super.key});
@@ -72,7 +73,7 @@ class _MenuState extends State<Menu>{
           Container(
             width: double.infinity,
             height: 200,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 border: Border.symmetric(horizontal: BorderSide(color: Colors.white))
             ),
             child: Stack(
@@ -95,23 +96,66 @@ class _MenuState extends State<Menu>{
               ],
             )
           ),
-          ElevatedButton(
-            onPressed: (){widget.changePage(ModeSelector(widget.changePage), keep: true);},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xff50CB93),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20)
-              )
-            ),
-            child: Container(
-              width: 300,
-              height: 50,
-              alignment: Alignment.center,
-              child:  const Text("Iniciar", style: TextStyle(fontSize: 30))
-            )
-          )
+          buildButtons()
         ],
       )
+    );
+  }
+
+  Widget buildButtons(){
+    const double buttonsWidth = 250;
+    return Flex(
+      direction: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? Axis.horizontal : Axis.vertical,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          onPressed: (){widget.changePage(ModeSelector(widget.changePage), keep: true);},
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xff50CB93),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20)
+            )
+          ),
+          child: Container(
+            width: buttonsWidth,
+            height: 50,
+            alignment: Alignment.center,
+            child:  const Text("Iniciar", style: TextStyle(fontSize: 30))
+          )
+        ),
+        const SizedBox(width: 20, height: 20),
+        ElevatedButton(
+            onPressed: (){widget.changePage(ModeSelector(widget.changePage), keep: true);},
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff50CB93),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)
+                )
+            ),
+            child: Container(
+                width: buttonsWidth,
+                height: 50,
+                alignment: Alignment.center,
+                child:  const Text("Como Jogar", style: TextStyle(fontSize: 30))
+            )
+        ),
+        const SizedBox(width: 20, height: 20),
+        ElevatedButton(
+            onPressed: (){widget.changePage(const SkinSelector(), keep: true);},
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff50CB93),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)
+                )
+            ),
+            child: Container(
+                width: buttonsWidth,
+                height: 50,
+                alignment: Alignment.center,
+                child:  const Text("Personagens", style: TextStyle(fontSize: 30))
+            )
+        )
+      ]
     );
   }
 }

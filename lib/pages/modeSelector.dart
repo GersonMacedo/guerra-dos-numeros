@@ -158,28 +158,6 @@ class _ModeSelectorState extends State<ModeSelector> {
             ),
           ],
         ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SkinSelector(updateSkin),
-              ),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          child: Container(
-            width: 400,
-            height: 70,
-            alignment: Alignment.center,
-            child: const Text("Escolha seu personagem", style: TextStyle(fontSize: 30, color: Colors.black)),
-          ),
-        ),
         Container(),
       ],
     );
