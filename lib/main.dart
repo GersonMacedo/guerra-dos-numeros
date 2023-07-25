@@ -44,6 +44,7 @@ class _HomeState extends State<Home>{
     bottomButtons.add(true);
     backButton.add(false);
     Levels.addDemoLevels(30, 20);
+    Levels.loadData();
   }
 
   List<Widget> selected = [];

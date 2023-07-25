@@ -44,7 +44,7 @@ class _MenuState extends State<Menu>{
   late Timer _timer;
   int frame = 0;
   int fps = 10;
-  ImagesLoader images = ImagesLoader(true, false);
+  ImagesLoader images = ImagesLoader(true, true, false, false);
 
   @override
   Widget build(BuildContext context){

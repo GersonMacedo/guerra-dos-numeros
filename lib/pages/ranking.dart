@@ -8,7 +8,7 @@ class Ranking extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ImagesLoader images = ImagesLoader(false, true);
+    ImagesLoader images = ImagesLoader(false, false, false, false);
 
     double width =
     MediaQuery.of(context).size.width > MediaQuery.of(context).size.height

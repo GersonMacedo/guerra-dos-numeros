@@ -1,6 +1,5 @@
 import 'dart:math';
-
-import 'package:guerra_dos_numeros/levels.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MathStack{
   MathStack(this.operation, this.x, this.y, this.numbers, this.stage, this.step, this.iteration);
@@ -29,7 +28,7 @@ class LevelData{
 class Levels{
   static Random random = Random();
   static bool interpretation = true;
-  static List<int> next = [3, 2];
+  static List<int> next = [1, 1];
   static int type = -1;
   static int actual = 0;
   static int size = 0;
@@ -41,11 +40,18 @@ class Levels{
   static List<int> correctTimeList = [90, 30, 10, 2];
   static List<int> wrongTimeList = [30, 45, 60, 90];
 
+  static int hamburgerType = 0;
+
+  static Future<void> changeHamburgerType(int newType) async {
+    hamburgerType = newType;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt("hamburgerType", newType);
+  }
+
   static int getRandomNumber(){
     Random random = Random();
     return pow(10, digits - 1).toInt() + random.nextInt(pow(10, digits).toInt() - pow(10, digits - 1).toInt() - 1);
   }
-
 
   static List<int> getNumberList(int size){
     List<int> list = [];
@@ -70,6 +76,13 @@ class Levels{
       LevelData([MathStack("x", 0, 0, ["12", "23"], 0, 0, 0)], 90, 30),
     ]
   ];
+
+  static Future<void> loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    next[0] = prefs.getInt('next0') ?? 1;
+    next[1] = prefs.getInt('next1') ?? 1;
+    hamburgerType = prefs.getInt('hamburgerType') ?? 0;
+  }
 
   static void addDemoLevels(int sum, int multiplication){
     for(int i = levels[0].length + 1; i <= sum; i++){
@@ -104,9 +117,11 @@ class Levels{
     return LevelData(mathStack, correctTimeList[time], wrongTimeList[time]);
   }
 
-  static void finish(){
+  static Future<void> finish() async {
     if(type >= 0 && next[type] == actual + 1){
       next[type]++;
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt("next$type", next[type]);
     }
   }
 }

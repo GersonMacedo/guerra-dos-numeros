@@ -49,7 +49,7 @@ class GameState extends State<Game>{
   int frame = 0;
   int fps = 10;
   int nextStage = -100;
-  ImagesLoader images = ImagesLoader(false, true);
+  ImagesLoader images = ImagesLoader(true, false, true, false);
   late TopGameFrame topGameFrame;
   late FightFrame fightFrame;
   late NumbersGridFrame numbersGridFrame;

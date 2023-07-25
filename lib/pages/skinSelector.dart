@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:guerra_dos_numeros/imagesLoader.dart';
+import 'package:guerra_dos_numeros/levels.dart';
 
 class SkinSelector extends StatelessWidget {
   final void Function(int) callback;
@@ -8,7 +9,7 @@ class SkinSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ImagesLoader images = ImagesLoader(false, true);
+    ImagesLoader images = ImagesLoader(false, false, false, true);
     double width = MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 960 : 540;
     double height = MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 540 : 960;
 
@@ -27,7 +28,7 @@ class SkinSelector extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () {
-                callback(0);
+                Levels.changeHamburgerType(0);
                 Navigator.pop(context);
               },
               child: MouseRegion(
@@ -40,13 +41,13 @@ class SkinSelector extends StatelessWidget {
                   height: height*0.1,
                   margin: const EdgeInsets.only(top: 50),
                   alignment: Alignment.center,
-                  child: images.storeHamburger,
+                  child: images.storeHamburger[0],
                 ),
               ),
             ),
             GestureDetector(
               onTap: () {
-                callback(1);
+                Levels.changeHamburgerType(1);
                 Navigator.pop(context);
               },
               child: MouseRegion(
@@ -59,7 +60,7 @@ class SkinSelector extends StatelessWidget {
                   height: height * 0.1,
                   margin: const EdgeInsets.only(top: 50),
                   alignment: Alignment.center,
-                  child: images.storeRobotHamburger,
+                  child: images.storeHamburger[1],
                 ),
               ),
             ),
