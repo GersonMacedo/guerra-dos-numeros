@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:guerra_dos_numeros/imagesLoader.dart';
+import 'package:guerra_dos_numeros/pages/howToPlay.dart';
 import 'package:guerra_dos_numeros/pages/modeSelector.dart';
 import 'package:guerra_dos_numeros/pages/skinSelector.dart';
 
@@ -125,7 +126,7 @@ class _MenuState extends State<Menu>{
         ),
         const SizedBox(width: 20, height: 20),
         ElevatedButton(
-            onPressed: (){widget.changePage(ModeSelector(widget.changePage), keep: true);},
+            onPressed: (){widget.changePage(const HowToPlay(), keep: true);},
             style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xff50CB93),
                 shape: RoundedRectangleBorder(

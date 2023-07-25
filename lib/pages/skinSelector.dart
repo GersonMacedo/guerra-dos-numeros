@@ -83,8 +83,8 @@ class _SkinSelector extends State<SkinSelector> {
           row.add(
             Container(
               padding: const EdgeInsets.all(5),
-              decoration: const BoxDecoration(
-                  border: Border.symmetric(vertical: BorderSide(color: Colors.white), horizontal: BorderSide(color: Colors.white))
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white)
               ),
               width: size,
               height: size,
@@ -99,7 +99,7 @@ class _SkinSelector extends State<SkinSelector> {
           Container(
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
-                border: Border.symmetric(vertical: BorderSide(color: color, width: 2), horizontal: BorderSide(color: color, width: 2))
+                border: Border.all(width: 2, color: Colors.white)
             ),
             width: size,
             height: size,
