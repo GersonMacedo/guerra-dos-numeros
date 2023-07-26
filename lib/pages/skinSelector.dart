@@ -51,10 +51,6 @@ class _SkinSelector extends State<SkinSelector> {
       y = 2;
     }
 
-    if(MediaQuery.of(context).size.width / width > MediaQuery.of(context).size.height / height){
-      width = MediaQuery.of(context).size.width * height / MediaQuery.of(context).size.height;
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

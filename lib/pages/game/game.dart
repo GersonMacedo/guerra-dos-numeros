@@ -444,7 +444,7 @@ class GameState extends State<Game>{
   Widget buildTimer(BuildContext context){
     return Container(
       alignment: Alignment.center,
-      height: 50,
+      height: 40,
       width: 410,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
