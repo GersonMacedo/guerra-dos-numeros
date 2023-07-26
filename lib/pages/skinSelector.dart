@@ -80,10 +80,50 @@ class _SkinSelector extends State<SkinSelector> {
             Container(
               padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white, width: 3)
+                border: Border.all(color: Colors.white, width: 3)
               ),
               width: size,
               height: size,
+            )
+          );
+          row.add(const SizedBox(width: spaceBetween, height: spaceBetween));
+          continue;
+        }
+
+        if(index * 5 > Levels.next[0] + Levels.next[1] - 2){
+          row.add(
+            Container(
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.white, width: 3)
+              ),
+              width: size,
+              height: size,
+              child: Stack(
+                children: [
+                  images.storeHamburger[index],
+                  Flex(
+                    direction: Axis.vertical,
+                    children: [
+                      Expanded(
+                      child: FittedBox(
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            alignment: Alignment.center,
+                            color: Color(0xf054436B),
+                            child: Text(
+                              "Complete ${index * 5} fases para desbloquear",
+                              style: const TextStyle(fontSize: 12, color: Colors.white),
+                              textAlign: TextAlign.center
+                            )
+                          )
+                        ),
+                      ),
+                    ]
+                  )
+                ],
+              ),
             )
           );
           row.add(const SizedBox(width: spaceBetween, height: spaceBetween));
@@ -106,13 +146,7 @@ class _SkinSelector extends State<SkinSelector> {
               },
               child: MouseRegion(
                 cursor: SystemMouseCursors.click,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  ),
-                  alignment: Alignment.center,
-                  child: images.storeHamburger[index],
-                ),
+                child: images.storeHamburger[index],
               ),
             )
           )
