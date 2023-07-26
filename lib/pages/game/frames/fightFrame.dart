@@ -50,6 +50,47 @@ class FightState extends State<FightFrame>{
     double width = MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 400 : 500;
     double height = MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 200 : 250;
 
+    List<Widget> players = [];
+    if(frame >= robotAttack && frame < robotAttack + 10){
+      players.add(
+        Positioned(
+            left: getAttackWidth(width),
+            top: height*0.3,
+            width: height,
+            height: height,
+            child: getHamburger()
+        )
+      );
+      players.add(
+        Positioned(
+            right: getAttackWidth(width),
+            top: height*0.3,
+            width: height,
+            height: height,
+            child: getRobot()
+        )
+      );
+    }else{
+      players.add(
+          Positioned(
+              right: getAttackWidth(width),
+              top: height*0.3,
+              width: height,
+              height: height,
+              child: getRobot()
+          )
+      );
+      players.add(
+          Positioned(
+              left: getAttackWidth(width),
+              top: height*0.3,
+              width: height,
+              height: height,
+              child: getHamburger()
+          )
+      );
+    }
+
     return Container(
       alignment: Alignment.center,
       width: width + 10,
@@ -68,20 +109,8 @@ class FightState extends State<FightFrame>{
               child: widget.images.grassMap[frame % 16],
             ),
           ),
-          Positioned(
-            left: getAttackWidth(width),
-            top: height*0.3,
-            width: height,
-            height: height,
-            child: getHamburger()
-          ),
-          Positioned(
-              right: getAttackWidth(width),
-              top: height*0.3,
-              width: height,
-              height: height,
-              child: getRobot()
-          )
+          players[0],
+          players[1]
         ]
       )
     );
