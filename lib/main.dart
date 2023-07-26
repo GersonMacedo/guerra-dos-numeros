@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:guerra_dos_numeros/levels.dart';
@@ -11,7 +12,7 @@ import 'package:guerra_dos_numeros/utils.dart';
 //TODO: adicionar sons ao jogo
 //TODO: adicionar conquistas
 
-void main() {
+void main() async  {
   runApp(const MyApp());
 }
 

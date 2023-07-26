@@ -1,11 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:guerra_dos_numeros/authenticate.dart';
 import 'package:guerra_dos_numeros/imagesLoader.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 
-class Ranking extends StatelessWidget {
+class Ranking extends StatefulWidget {
   const Ranking({Key? key}) : super(key: key);
+
+  @override
+  _RankingState createState() => _RankingState();
+}
+
+class _RankingState extends State<Ranking> {
+  bool authenticated = false;
 
   static const usersList = [
     {
@@ -44,85 +52,14 @@ class Ranking extends StatelessWidget {
       'name': 'Ana Maria',
       'score': 500,
     },
-    {
-      'name': 'Ana Maria',
-      'score': 500,
-    },
-    {
-      'name': 'Ana Maria',
-      'score': 500,
-    },
-    {
-      'name': 'Ana Maria',
-      'score': 500,
-    },
-    {
-      'name': 'Paulo José',
-      'score': 1000,
-    },
-    {
-      'name': 'Ana Maria',
-      'score': 500,
-    },
-    {
-      'name': 'Ana Maria',
-      'score': 500,
-    },
-    {
-      'name': 'Ana Maria',
-      'score': 500,
-    },
-    {
-      'name': 'Ana Maria',
-      'score': 500,
-    },
-    {
-      'name': 'Ana Maria',
-      'score': 500,
-    },
-    {
-      'name': 'Paulo José',
-      'score': 1000,
-    },
-    {
-      'name': 'Ana Maria',
-      'score': 500,
-    },
-    {
-      'name': 'Ana Maria',
-      'score': 500,
-    },
-    {
-      'name': 'Ana Maria',
-      'score': 500,
-    },
-    {
-      'name': 'Ana Maria',
-      'score': 500,
-    },
-    {
-      'name': 'Ana Maria',
-      'score': 500,
-    },
   ];
 
-  signInWithGoogle() async {
-    print('resultado:');
-    GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
-    AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
-
-    UserCredential userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
-
-    print('resultado: $userCredential.user');
-  }
-
-  void _onRefreshButtonPressed() {
-    signInWithGoogle();
+  void _onRefreshButtonPressed() async {
+    print('antes do login');
+    await signInWithGoogle();
+    print('depois do login');
   }
 
   @override
@@ -130,13 +67,13 @@ class Ranking extends StatelessWidget {
     ImagesLoader images = ImagesLoader(false, true);
 
     double width =
-        MediaQuery.of(context).size.width > MediaQuery.of(context).size.height
-            ? 960
-            : 540;
+    MediaQuery.of(context).size.width > MediaQuery.of(context).size.height
+        ? 960
+        : 540;
     double height =
-        MediaQuery.of(context).size.width > MediaQuery.of(context).size.height
-            ? 540
-            : 960;
+    MediaQuery.of(context).size.width > MediaQuery.of(context).size.height
+        ? 540
+        : 960;
 
     if (MediaQuery.of(context).size.width / width >
         MediaQuery.of(context).size.height / height) {
@@ -173,9 +110,9 @@ class Ranking extends StatelessWidget {
             child: ListView(
               children: usersList
                   .map((user) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: _buildListItem(user),
-                      ))
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: _buildListItem(user),
+              ))
                   .toList(),
             ),
           ),
@@ -183,7 +120,7 @@ class Ranking extends StatelessWidget {
           Center(
             child: ElevatedButton(
               onPressed: _onRefreshButtonPressed,
-              child: const Text('Atualizar'),
+              child: Text('loggin ${authenticated ? '1' : '0'}'),
             ),
           )
         ],
