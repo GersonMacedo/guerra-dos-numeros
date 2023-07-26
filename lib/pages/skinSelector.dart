@@ -84,7 +84,7 @@ class _SkinSelector extends State<SkinSelector> {
             Container(
               padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white)
+                  border: Border.all(color: Colors.white, width: 3)
               ),
               width: size,
               height: size,
@@ -99,7 +99,7 @@ class _SkinSelector extends State<SkinSelector> {
           Container(
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
-                border: Border.all(width: 2, color: Colors.white)
+                border: Border.all(color: color, width: 3)
             ),
             width: size,
             height: size,

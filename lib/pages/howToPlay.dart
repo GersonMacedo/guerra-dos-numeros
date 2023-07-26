@@ -45,7 +45,7 @@ class HowToPlay extends StatelessWidget {
                 child: Image.asset("assets/images/tutorial/0.jpeg"),
               ),
               const Text(
-                "Depois de responder corretamente a operação você precisara tocar e arrastar os numeros para as posições corretas como mostrado na próxima image.",
+                "Depois de responder corretamente a operação você precisará tocar e arrastar os numeros para as posições corretas como mostrado na próxima image.",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 28,

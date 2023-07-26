@@ -64,7 +64,7 @@ class ImagesLoader{
   int hamburgerSkins = 2;
   List<double> heights = [0, 3, 5, 3, 0];
   List<int> attacksTypes = [3, 1];
-  List<List<int>> attacksFrames = [[9, 11, 7], [10]];
+  List<List<int>> attacksFrames = [[10, 11, 8], [10]];
 
   late Image trophy;
 

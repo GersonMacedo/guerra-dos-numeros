@@ -81,20 +81,6 @@ class FightState extends State<FightFrame>{
               width: height,
               height: height,
               child: getRobot()
-          ),
-          Positioned(
-              left: getAttackWidth(width),
-              top: height*0.3,
-              width: height,
-              height: height,
-              child: getAttackHamburger()
-          ),
-          Positioned(
-              right: getAttackWidth(width),
-              top: height*0.3,
-              width: height,
-              height: height,
-              child: getLaser()
           )
         ]
       )
@@ -102,15 +88,11 @@ class FightState extends State<FightFrame>{
   }
 
   Widget getHamburger(){
-    if(frame >= hamburgerAttack && frame < hamburgerAttack + 5){
-      return Container(
-        width: 0,
-        height: 0,
-      );
-    }
+    int start = hamburgerAttack;
+    int end = start + widget.images.attacksFrames[Levels.hamburgerType][attackType];
 
-    if(frame >= hamburgerAttack + 5 && frame < hamburgerAttack + 20){
-      return widget.images.hamburger[0];
+    if(frame >= start && frame < end){
+      return widget.images.hamburgerAttacks[attackType][frame - start];
     }
 
     if(frame >= robotAttack + 10 && frame < robotAttack + 20){
@@ -128,10 +110,7 @@ class FightState extends State<FightFrame>{
     }
 
     if(frame >= robotAttack && frame < robotAttack + 10){
-      return Container(
-        width: 0,
-        height: 0,
-      );
+      return widget.images.robotAttack[frame - robotAttack];
     }
 
     if(frame >= robotAttack + 10 && frame < robotAttack + 20){
@@ -139,25 +118,6 @@ class FightState extends State<FightFrame>{
     }
 
     return widget.images.robot[(frame % 10  > 1) && (frame % 10 < 7) ? frame % 10 - 2 : 0];
-  }
-
-  Widget getAttackHamburger(){
-    int start = hamburgerAttack;
-    int end = start + widget.images.attacksFrames[Levels.hamburgerType][attackType];
-
-    if(frame >= start && frame < end){
-      return widget.images.hamburgerAttacks[attackType][frame - start];
-    }
-
-    return Container();
-  }
-
-  Widget getLaser(){
-    if(frame >= robotAttack && frame < robotAttack + 10){
-      return widget.images.robotAttack[frame - robotAttack];
-    }
-
-    return Container();
   }
 
   double getAttackWidth(width){
