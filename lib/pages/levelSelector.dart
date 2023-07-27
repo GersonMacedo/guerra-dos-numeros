@@ -149,9 +149,10 @@ class _LevelSelectorState extends State<LevelSelector>{
           continue;
         }
 
+        Color color = Color(actual < next ? 0xff50CB93 : (actual == next ? 0xff212A3E : 0x44ffffff));
         Widget container = Container(
           decoration: BoxDecoration(
-            color: Color(actual < next ? 0xff50CB93 : (actual == next ? 0xff212A3E : 0x44ffffff)),
+            color: color,
             borderRadius: const BorderRadius.all(Radius.circular(5)),
           ),
           width: size,
@@ -166,12 +167,16 @@ class _LevelSelectorState extends State<LevelSelector>{
           continue;
         }
 
+        if(Levels.levelsWithoutMistakes[mode][actual - 1]){
+          color = Colors.yellow;
+        }
         row.add(
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.all(0),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5)
+                borderRadius: BorderRadius.circular(5),
+                side: BorderSide(color: color, width: 5)
               )
             ),
             onPressed: (){

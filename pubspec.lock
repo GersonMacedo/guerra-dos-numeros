@@ -276,10 +276,17 @@ packages:
     dependency: transitive
     description:
       name: http
+<<<<<<< HEAD
       sha256: "759d1a329847dd0f39226c688d3e06a6b8679668e350e2891a6474f8b4bb8525"
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+=======
+      sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.13.6"
+>>>>>>> 1fee9bfc4df3b779c6b98742caab0cd029417ad4
   http_parser:
     dependency: transitive
     description:
@@ -327,7 +334,11 @@ packages:
       sha256: "3c74dbf8763d36539f114c799d8a2d87343b5067e9d796ca22b5eb8437090ee3"
       url: "https://pub.dev"
     source: hosted
+<<<<<<< HEAD
     version: "1.9.1"
+=======
+    version: "1.8.0"
+>>>>>>> 1fee9bfc4df3b779c6b98742caab0cd029417ad4
   nested:
     dependency: transitive
     description:
@@ -508,7 +519,11 @@ packages:
       sha256: eb6ac1540b26de412b3403a163d919ba86f6a973fe6cc50ae3541b80092fdcfb
       url: "https://pub.dev"
     source: hosted
+<<<<<<< HEAD
     version: "0.5.1"
+=======
+    version: "0.4.16"
+>>>>>>> 1fee9bfc4df3b779c6b98742caab0cd029417ad4
   typed_data:
     dependency: transitive
     description:

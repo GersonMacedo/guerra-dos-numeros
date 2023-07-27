@@ -49,6 +49,7 @@ class GameState extends State<Game>{
   int frame = 0;
   int fps = 10;
   int nextStage = -100;
+  int mistakes = 0;
   ImagesLoader images = ImagesLoader(true, false, true, false);
   late TopGameFrame topGameFrame;
   late FightFrame fightFrame;
@@ -115,6 +116,7 @@ class GameState extends State<Game>{
     result = 0;
     responded = false;
     nextStage = -100;
+    mistakes = 0;
     loadStack();
 
     maxSize = 0;
@@ -234,7 +236,7 @@ class GameState extends State<Game>{
             }else if(stack.isEmpty){
               topGameFrame.state.updateStage(stage);
               finished = true;
-              Levels.finish();
+              Levels.finish(mistakes != 0);
               return;
             }else{
               loadStack();
@@ -358,6 +360,7 @@ class GameState extends State<Game>{
           throw("NOT IMPLEMENTED RIGHT ANSWER $operation");
         }
       }else{
+        mistakes++;
         fightFrame.state.setRobotAttack(frame + 10 - frame % 10);
         nextStage = frame + 30 - frame % 10;
         timeLeft = max(0, timeLeft - widget.level.wrongPenalty);

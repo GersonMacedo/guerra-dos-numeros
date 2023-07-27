@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       Provider<DatabaseProvider>(create: (context) => DatabaseProvider()),
     ],
     child: MaterialApp(
-      title: 'Flutter Demo',
+      title: Levels.title,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
