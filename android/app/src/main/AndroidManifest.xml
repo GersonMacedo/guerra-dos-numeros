@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.gerson.guerra_dos_numeros">
+    package="com.example.guerra_dos_numeros">
    <application
         android:label="Guerra dos numeros"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
-            android:name="com.gerson.guerra_dos_numeros.MainActivity"
+            android:name="com.example.guerra_dos_numeros.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"

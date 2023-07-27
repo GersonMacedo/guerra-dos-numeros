@@ -1,17 +1,24 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:guerra_dos_numeros/provider/databaseProvider.dart';
+import 'package:guerra_dos_numeros/provider/googleSignInProvider.dart';
 import 'package:guerra_dos_numeros/levels.dart';
 import 'package:guerra_dos_numeros/pages/about.dart';
 import 'package:guerra_dos_numeros/pages/achievements.dart';
 import 'package:guerra_dos_numeros/pages/menu.dart';
 import 'package:guerra_dos_numeros/pages/ranking.dart';
 import 'package:guerra_dos_numeros/utils.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 
 //TODO: adicionar sons ao jogo
 //TODO: adicionar conquistas
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
@@ -20,15 +27,20 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context) => MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => GoogleSignInProvider()),
+      Provider<DatabaseProvider>(create: (context) => DatabaseProvider()),
+    ],
+    child: MaterialApp(
       title: Levels.title,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Home()
-    );
-  }
+      home: const Home(),
+    ),
+  );
+
 }
 
 class Home extends StatefulWidget {
@@ -177,7 +189,10 @@ class _HomeState extends State<Home>{
               )
           ),
           TextButton(
-              onPressed: (){changePage(Ranking());},
+              onPressed: (){
+
+                changePage(Ranking());
+                },
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: const [
