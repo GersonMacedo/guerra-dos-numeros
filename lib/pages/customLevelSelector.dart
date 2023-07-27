@@ -33,15 +33,42 @@ class _CustomLevelSelectorState extends State<CustomLevelSelector>{
         child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 15),
-          buildInterpretation(),
-          const SizedBox(height: 15),
+          const SizedBox(height: 50),
+          Container(
+            alignment: Alignment.center,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+              ),
+              width: 450,
+              height: 70,
+              padding: const EdgeInsets.all(10),
+              alignment: Alignment.center,
+              child: Row(
+                children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                      color: Color(0xff212A3E),
+                      borderRadius: BorderRadius.all(Radius.circular(5))
+                    ),
+                    alignment: Alignment.center,
+                    width: 50,
+                    height: 50,
+                    child: Text("?", style: const TextStyle(fontSize: 30, color: Colors.white))
+                  ),
+                  const Expanded(child: Text("Aleatório", style: const TextStyle(fontSize: 30, color: Colors.black), textAlign: TextAlign.center))
+                ],
+              )
+            )
+          ),
+          const SizedBox(height: 25),
           buildOperators(),
-          const SizedBox(height: 15),
+          const SizedBox(height: 10),
           buildDigits(),
-          const SizedBox(height: 15),
+          const SizedBox(height: 10),
           buildTime(),
-          const SizedBox(height: 30),
+          const SizedBox(height: 10),
           customIconButton(context, Colors.green, const Icon(Icons.play_circle), " Jogar", 22, Colors.white, 120, 50,(){
             widget.changePage(
               Game(widget.changePage, Levels.getLevel(), widget.skinNumber),
@@ -70,7 +97,7 @@ class _CustomLevelSelectorState extends State<CustomLevelSelector>{
   Widget buildInterpretation(){
     return Row(
       children: [
-        const Text("Interpretação: ", style: TextStyle(color: Colors.black, fontSize: 30)),
+        const Text("Interpretação: ", style: TextStyle(color: Colors.white, fontSize: 30)),
         Material(
           color: const Color(0xFF54436B),
           child: Checkbox(
@@ -89,7 +116,10 @@ class _CustomLevelSelectorState extends State<CustomLevelSelector>{
 
   Widget buildOperators(){
     List<Widget> row = [
-      const Text("Operação:", style: TextStyle(color: Colors.black, fontSize: 30))
+      Container(
+        width: 150,
+        child: const Text("Operação:", style: TextStyle(color: Colors.white, fontSize: 30)),
+      )
     ];
 
     for(int i = 0; i < Levels.operators.length; i++){
@@ -99,7 +129,7 @@ class _CustomLevelSelectorState extends State<CustomLevelSelector>{
           width: 50,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Levels.operator == i ? Colors.green : const Color(0xFF828DF4),
+              backgroundColor: Levels.operator == i ? Colors.green : (i == 0 || i == 2 ? const Color(0xFF828DF4) : Colors.black),
             ),
             onPressed: (){
               setState(() {
@@ -122,7 +152,10 @@ class _CustomLevelSelectorState extends State<CustomLevelSelector>{
   Widget buildDigits(){
     return Row(
       children: [
-        const Text("Digitos:", style: TextStyle(color: Colors.black, fontSize: 30)),
+        Container(
+          width: 150,
+          child: const Text("Digitos:", style: TextStyle(color: Colors.white, fontSize: 30)),
+        ),
         const SizedBox(width: 15),
         SizedBox(
           width: 50,
@@ -163,7 +196,10 @@ class _CustomLevelSelectorState extends State<CustomLevelSelector>{
   Widget buildTime(){
     List<String> options = ["Fácil", "Médio", "Difícil", "Extremo"];
     List<Widget> row = [
-      const Text("Tempo:", style: TextStyle(color: Colors.black, fontSize: 30))
+      Container(
+        width: 150,
+        child: const Text("Tempo:", style: TextStyle(color: Colors.white, fontSize: 30)),
+      )
     ];
 
     for(int i = 0; i < options.length; i++){

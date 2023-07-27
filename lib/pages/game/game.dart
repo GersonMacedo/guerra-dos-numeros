@@ -42,7 +42,7 @@ class GameState extends State<Game>{
   int iteration = 0;
   bool responded = false;
   bool finished = false;
-  int timeLeft = 90;
+   int timeLeft = 90;
   int maxSize = 0;
   int carry = 0;
   int result = 0;
@@ -111,7 +111,7 @@ class GameState extends State<Game>{
   void startLevel(bool first){
     stack = level.operations.sublist(0);
     finished = false;
-    timeLeft = 90;
+    timeLeft = min(90, 5 * level.correctBonus);
     carry = 0;
     result = 0;
     responded = false;

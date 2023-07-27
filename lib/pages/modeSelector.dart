@@ -58,6 +58,7 @@ class _ModeSelectorState extends State<ModeSelector> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             const Text("Escolha um modo", style: TextStyle(color: Colors.white, fontSize: 38)),
+            const SizedBox(height: 20, width: double.infinity),
             ElevatedButton(
               onPressed: () {
                 Levels.type = 0;
@@ -85,7 +86,7 @@ class _ModeSelectorState extends State<ModeSelector> {
                       height: 50,
                       child: const Text("+", style: TextStyle(fontSize: 30, color: Colors.white)),
                     ),
-                    const Text("    adição e subtração", style: TextStyle(fontSize: 30, color: Colors.black)),
+                    const Expanded(child: Text("Adição", style: TextStyle(fontSize: 30, color: Colors.black), textAlign: TextAlign.center))
                   ],
                 ),
               ),
@@ -118,7 +119,7 @@ class _ModeSelectorState extends State<ModeSelector> {
                       height: 50,
                       child: const Text("x", style: TextStyle(fontSize: 30, color: Colors.white)),
                     ),
-                    const Text("    multiplicação e divisão", style: TextStyle(fontSize: 30, color: Colors.black)),
+                    const Expanded(child: Text("Multiplicação", style: TextStyle(fontSize: 30, color: Colors.black), textAlign: TextAlign.center)),
                   ],
                 ),
               ),
@@ -151,7 +152,7 @@ class _ModeSelectorState extends State<ModeSelector> {
                       height: 50,
                       child: const Text("?", style: TextStyle(fontSize: 30, color: Colors.white)),
                     ),
-                    const Text("    aleatório", style: TextStyle(fontSize: 30, color: Colors.black)),
+                    const Expanded( child: Text("Aleatório", style: TextStyle(fontSize: 30, color: Colors.black), textAlign: TextAlign.center,)),
                   ],
                 ),
               ),

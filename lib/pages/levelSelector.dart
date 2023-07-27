@@ -13,7 +13,7 @@ class LevelSelector extends StatefulWidget {
 }
 
 class _LevelSelectorState extends State<LevelSelector>{
-  final List<String> title = ["      adição e subtração", "      multiplicação e divisão"];
+  final List<String> title = ["Adição", "Multiplicação"];
   final List<String> type = ["+", "x"];
   int mode = Levels.type;
   int first = 1;
@@ -83,7 +83,7 @@ class _LevelSelectorState extends State<LevelSelector>{
                     height: 50,
                     child: Text(type[mode], style: const TextStyle(fontSize: 30, color: Colors.white))
                   ),
-                  Text(title[mode], style: const TextStyle(fontSize: 30, color: Colors.black))
+                  Expanded(child: Text(title[mode], style: const TextStyle(fontSize: 30, color: Colors.black), textAlign: TextAlign.center))
                 ],
               )
           ),
@@ -146,6 +146,7 @@ class _LevelSelectorState extends State<LevelSelector>{
                   height: size
               )
           );
+          row.add(const SizedBox(width: spaceBetween));
           continue;
         }
 
@@ -153,7 +154,7 @@ class _LevelSelectorState extends State<LevelSelector>{
         Widget container = Container(
           decoration: BoxDecoration(
             color: color,
-            borderRadius: const BorderRadius.all(Radius.circular(5)),
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
           ),
           width: size,
           height: size,
@@ -175,7 +176,7 @@ class _LevelSelectorState extends State<LevelSelector>{
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.all(0),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(20),
                 side: BorderSide(color: color, width: 5)
               )
             ),
