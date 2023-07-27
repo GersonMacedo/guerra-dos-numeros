@@ -4,6 +4,10 @@ import 'package:guerra_dos_numeros/imagesLoader.dart';
 import 'package:guerra_dos_numeros/pages/howToPlay.dart';
 import 'package:guerra_dos_numeros/pages/modeSelector.dart';
 import 'package:guerra_dos_numeros/pages/skinSelector.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/databaseProvider.dart';
+import '../provider/googleSignInProvider.dart';
 
 class Menu extends StatefulWidget {
   const Menu(this.changePage, {super.key});
@@ -52,7 +56,7 @@ class _MenuState extends State<Menu>{
   Widget build(BuildContext context){
     double width = MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 960 : 540;
     double height = MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 540 : 960;
-
+    
     if(MediaQuery.of(context).size.width / width > MediaQuery.of(context).size.height / height){
       width = MediaQuery.of(context).size.width * height / MediaQuery.of(context).size.height;
     }
@@ -105,6 +109,9 @@ class _MenuState extends State<Menu>{
 
   Widget buildButtons(){
     const double buttonsWidth = 250;
+    String loginOrLogout = "Entrar na Conta";
+    DatabaseProvider databaseProvider = DatabaseProvider();
+
     return Flex(
       direction: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? Axis.horizontal : Axis.vertical,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -155,6 +162,40 @@ class _MenuState extends State<Menu>{
                 alignment: Alignment.center,
                 child:  const Text("Personagens", style: TextStyle(fontSize: 30))
             )
+        ),
+        const SizedBox(width: 20, height: 20),
+        ElevatedButton(
+          onPressed: () async {
+            final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
+            if (provider.user != null) {
+              // O usuário está logado
+              await provider.logout();
+            } else {
+              // O usuário não está logado
+              await provider.googleLogin();
+            }
+            await databaseProvider.saveUserData();
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xff50CB93),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+          child: Container(
+            width: buttonsWidth,
+            height: 50,
+            alignment: Alignment.center,
+            child: Consumer<GoogleSignInProvider>(
+              builder: (context, provider, _) {
+                String buttonText = provider.user != null ? "Sair da Conta" : "Entrar na Conta";
+                return Text(
+                  buttonText,
+                  style: TextStyle(fontSize: 30),
+                );
+              },
+            ),
+          ),
         )
       ]
     );
