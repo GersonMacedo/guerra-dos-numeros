@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:guerra_dos_numeros/imagesLoader.dart';
+import 'package:guerra_dos_numeros/levels.dart';
 import 'package:guerra_dos_numeros/pages/howToPlay.dart';
 import 'package:guerra_dos_numeros/pages/modeSelector.dart';
 import 'package:guerra_dos_numeros/pages/skinSelector.dart';
@@ -66,8 +67,8 @@ class _MenuState extends State<Menu>{
           Container(
             padding: const EdgeInsets.all(20),
             child: const Text(
-              "Guerra dos números, Robôs e coisas matemáticas",
-              style: TextStyle(fontSize: 40, color: Colors.white),
+              Levels.title,
+              style: TextStyle(fontSize: 50, color: Colors.white),
               textAlign: TextAlign.center,
             )
           ),

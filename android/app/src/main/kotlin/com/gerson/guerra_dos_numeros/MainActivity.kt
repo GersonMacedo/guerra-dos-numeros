@@ -1,4 +1,4 @@
-package com.example.guerra_dos_numeros
+package com.gerson.guerra_dos_numeros
 
 import io.flutter.embedding.android.FlutterActivity
 

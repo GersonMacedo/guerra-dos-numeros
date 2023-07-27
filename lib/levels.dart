@@ -26,12 +26,16 @@ class LevelData{
 }
 
 class Levels{
+  static const String title = 'Guerra dos números';
+
   static Random random = Random();
   static bool interpretation = true;
   static List<int> next = [1, 1];
   static int type = -1;
   static int actual = 0;
   static int size = 0;
+  static List<List<bool>> levelsWithoutMistakes = [];
+  static int totalWithoutMistakes = 0;
 
   static List<String> operators = ["+", "-", "x", "/"];
   static int operator = 0;
@@ -82,6 +86,16 @@ class Levels{
     next[0] = prefs.getInt('next0') ?? 1;
     next[1] = prefs.getInt('next1') ?? 1;
     hamburgerType = prefs.getInt('hamburgerType') ?? 0;
+
+    for(int i = 0; i < levels.length; i++){
+      levelsWithoutMistakes.add([]);
+      for(int j = 0; j < levels[i].length; j++){
+        levelsWithoutMistakes[i].add(prefs.getBool('mistakes${i}_$j') ?? false);
+        if(levelsWithoutMistakes[i][j]){
+          totalWithoutMistakes++;
+        }
+      }
+    }
   }
 
   static void addDemoLevels(int sum, int multiplication){
@@ -117,11 +131,19 @@ class Levels{
     return LevelData(mathStack, correctTimeList[time], wrongTimeList[time]);
   }
 
-  static Future<void> finish() async {
-    if(type >= 0 && next[type] == actual + 1){
-      next[type]++;
+  static Future<void> finish(bool mistakes) async {
+    if(type >= 0){
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt("next$type", next[type]);
+      if(next[type] == actual + 1) {
+        next[type]++;
+        await prefs.setInt("next$type", next[type]);
+      }
+
+      if(!mistakes && !levelsWithoutMistakes[type][actual]){
+        levelsWithoutMistakes[type][actual] = true;
+        await prefs.setBool("mistakes${type}_$actual", true);
+        totalWithoutMistakes++;
+      }
     }
   }
 }
