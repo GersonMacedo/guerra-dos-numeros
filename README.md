@@ -1,6 +1,6 @@
 # guerra_dos_numeros
 
- <img src="./assets/images/stoppedHamburger.png" alt="Hamburguer"/>
+ <img src="./assets/images/hamburger/attacks/0_0_0.png" alt="Hamburguer"/>
 
 
 **Guerra dos Números** é um jogo educativo desenvolvido para tornar o aprendizado das operações básicas de matemática uma experiência divertida e envolvente.
