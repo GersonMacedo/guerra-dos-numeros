@@ -52,7 +52,6 @@ class DragQuestionState extends State<DragQuestionFrame>{
         )
       );
       if(!dragElement[i]){
-        row.add(hidedText);
         continue;
       }
 

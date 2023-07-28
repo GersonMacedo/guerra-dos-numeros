@@ -55,7 +55,6 @@ class _HomeState extends State<Home>{
     selected.add(Menu(changePage, key: UniqueKey()));
     bottomButtons.add(true);
     backButton.add(false);
-    Levels.addDemoLevels(30, 20);
     Levels.loadData();
   }
 

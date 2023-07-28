@@ -105,6 +105,11 @@ class GameState extends State<Game>{
     y = stack.last.y;
     operation = stack.last.operation;
     numbers = stack.last.numbers.sublist(0);
+    if(int.parse(numbers[0]) < int.parse(numbers[1])){
+      String k = numbers[0];
+      numbers[0] = numbers[1];
+      numbers[1] = k;
+    }
     r = x + numbers.length + 1;
     stack.removeLast();
   }
@@ -112,7 +117,7 @@ class GameState extends State<Game>{
   void startLevel(bool first){
     stack = level.operations.sublist(0);
     finished = false;
-    timeLeft = min(90, 5 * level.correctBonus);
+    timeLeft = min(90, 3 * level.correctBonus);
     carry = 0;
     result = 0;
     responded = false;
@@ -124,7 +129,7 @@ class GameState extends State<Game>{
     for(var number in numbers){
       maxSize = max(maxSize, number.length);
     }
-    totalStages = maxSize + 1;
+    totalStages = (operation == '+' ? maxSize: min(numbers[0].length, numbers[1].length)) + 1;
 
     String mainQuestion = level.question == "" ? "Quanto é | $operation | ?" : level.question;
     if(first){
@@ -169,8 +174,8 @@ class GameState extends State<Game>{
       ];
 
       for(int i = 1; i <= maxSize; i++){
-        numbersGridFrame.state.acceptDrag[x + 1][y + i] = operation == "-" ? 1 : 3;
-        numbersGridFrame.state.acceptDrag[x + 2][y + i] = operation == "-" ? 2 : 3;
+        numbersGridFrame.state.acceptDrag[x + 1][y + i] = (operation == "-" || (operation == 'x' && numbers[0].length != numbers[1].length)) ? 1 : 3;
+        numbersGridFrame.state.acceptDrag[x + 2][y + i] = (operation == "-" || (operation == 'x' && numbers[0].length != numbers[1].length)) ? 2 : 3;
       }
 
       mathQuestionFrame.state.buildOperationQuestion(operation);
@@ -202,7 +207,7 @@ class GameState extends State<Game>{
       if(result >= 10){
         carry = result ~/ 10;
         dragQuestionFrame.state.update([(carry).toString(), (result % 10).toString()]);
-        numbersGridFrame.state.acceptDrag[(operation == "+" ? stage + 1 != totalStages : iteration + 1 != maxSize) ? x : r][maxSize - (operation == "x" ? 1 : stage) - iteration] = 1;
+        numbersGridFrame.state.acceptDrag[(operation == "+" ? stage + 1 != totalStages : numbersGridFrame.state.grid[x + 1][maxSize - iteration - 1] != "") ? x : r][maxSize - (operation == "x" ? 1 : stage) - iteration] = 1;
         numbersGridFrame.state.acceptDrag[r][numbersGridFrame.state.acceptDrag[r].length - stage - iteration] = 2;
       }else{
         carry = 0;
@@ -335,37 +340,16 @@ class GameState extends State<Game>{
         fightFrame.state.setHamburgerAttack(frame + 10 - frame % 10);
         nextStage = frame + 30 - frame % 10;
         mathQuestionFrame.state.respond("Resposta correta!");
-        timeLeft += widget.level.correctBonus;
+        timeLeft += level.correctBonus;
       }else if(timeLeft == 0){
         fightFrame.state.setRobotAttack(frame);
         nextStage = frame + 20;
         mathQuestionFrame.state.respond("Acabou o tempo!");
-        if(stage == 0 && step + 1 == totalSteps && operation != "/"){
-          for(int i = 0; i < maxSize; i++){
-            numbersGridFrame.state.grid[x + 1][i + 1] = numbers[0][i];
-            numbersGridFrame.state.grid[x + 2][i + 1] = numbers[1][i];
-          }
-
-          dragQuestionFrame.state.dragElement = [false, false];
-          numbersGridFrame.state.clearDrag();
-        }else if(operation != "/"){
-          if(step == 1){
-            if(carry != 0){
-              numbersGridFrame.state.grid[stage != totalStages && iteration + 1 != maxSize ? x : r][maxSize - (operation == "x" ? 1 : stage) - iteration] = carry.toString();
-            }
-
-            numbersGridFrame.state.grid[r][numbersGridFrame.state.acceptDrag[r].length - stage - iteration] = (result % 10).toString();
-            numbersGridFrame.state.clearDrag();
-          }
-
-        }else{
-          throw("NOT IMPLEMENTED RIGHT ANSWER $operation");
-        }
       }else{
         mistakes++;
         fightFrame.state.setRobotAttack(frame + 10 - frame % 10);
         nextStage = frame + 30 - frame % 10;
-        timeLeft = max(0, timeLeft - widget.level.wrongPenalty);
+        timeLeft = max(0, timeLeft - level.wrongPenalty);
         mathQuestionFrame.state.respond("Resposta errada!");
       }
 
@@ -380,7 +364,7 @@ class GameState extends State<Game>{
         for(int k = 1; k <= maxSize; k++){
           numbersGridFrame.state.acceptDrag[i][k] = 0;
           if(k - 1 < dragQuestionFrame.state.questions[element].length){
-            numbersGridFrame.state.grid[i][k] = dragQuestionFrame.state.questions[element][k - 1];
+            numbersGridFrame.state.grid[i][k + maxSize - dragQuestionFrame.state.questions[element].length] = dragQuestionFrame.state.questions[element][k - 1];
           }
         }
       }else{
@@ -435,7 +419,15 @@ class GameState extends State<Game>{
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                fightFrame,
+                GestureDetector(
+                  onDoubleTap: (){
+                    print("Skiped");
+                    stage = totalStages;
+                    finished = true;
+                    Levels.finish(false);
+                  },
+                  child: fightFrame,
+                ),
                 buildTimer(context)
               ]
             )
@@ -519,10 +511,12 @@ class GameState extends State<Game>{
                   width: width,
                   height: height,
                   child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF828DF4)),
+                      style: ElevatedButton.styleFrom(backgroundColor: Levels.hasNextLevel() ? const Color(0xFF828DF4) : Colors.black),
                       onPressed: (){
-                        level = Levels.getNextLevel();
-                        startLevel(false);
+                        if(Levels.hasNextLevel()){
+                          level = Levels.getNextLevel();
+                          startLevel(false);
+                        }
                       },
                       child: const Text("Próxima fase", style: TextStyle(fontSize: 15))
                   ),
