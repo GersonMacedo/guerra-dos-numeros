@@ -16,7 +16,7 @@ Para baixar e instalar o nosso aplicativo, siga os passos abaixo:
 <ol>
   <li> Aponte a câmera para o QRcode abaixo ou clique aqui para acessar o link diretamente.</li>
 </ol>
-  <img src="https://avatars.githubusercontent.com/u/59461895?v=4" alt="QR code" style="width:300px;"/>
+  <img src="./https_drive_google_com_file_d_18jXQYSmGPSGrs5HAyvlri4QwDlekr5IF_view_usp_sharing.png" alt="QR code" style="width:300px;"/>
 - Caso o QR Code não funcione, você pode tentar acessar pelo <a href="https://drive.google.com/file/d/18jXQYSmGPSGrs5HAyvlri4QwDlekr5IF/view?usp=sharing" target="_BLANK">link direto</a> ou tente acessar pelo link: [www.algumlink.com](https://drive.google.com/file/d/18jXQYSmGPSGrs5HAyvlri4QwDlekr5IF/view?usp=sharing)
 
 
