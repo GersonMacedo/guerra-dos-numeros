@@ -18,12 +18,14 @@ class FightState extends State<FightFrame>{
   int hamburgerAttack = -100;
   int robotAttack = -100;
   int attackType = 0;
+  int finished = -1;
 
   void reset(){
     frame = 0;
     hamburgerAttack = -100;
     robotAttack = -100;
     attackType = 0;
+    finished = -1;
   }
 
   void updateFrame(int newFrame){
@@ -43,6 +45,10 @@ class FightState extends State<FightFrame>{
 
   bool nobodyAttacks(){
     return (frame < hamburgerAttack || hamburgerAttack + 20 < frame) && (frame < robotAttack + 10 || robotAttack + 20 < frame);
+  }
+
+  void end(bool victory){
+    finished = victory ? 0 : 1;
   }
 
   @override
@@ -117,6 +123,10 @@ class FightState extends State<FightFrame>{
   }
 
   Widget getHamburger(){
+    if(frame >= robotAttack + 20 && finished == 1){
+      return widget.images.hamburgerDefeated;
+    }
+
     int start = hamburgerAttack;
     int end = start + widget.images.attacksFrames[Levels.hamburgerType][attackType];
 
@@ -133,6 +143,10 @@ class FightState extends State<FightFrame>{
   }
 
   Widget getRobot(){
+    if(frame >= hamburgerAttack + 20 && finished == 0){
+      return widget.images.robotDefeated;
+    }
+
     if(frame >= hamburgerAttack + 10 && frame < hamburgerAttack + 20){
       int diff = frame - hamburgerAttack - 10;
       return diff % 2 == 0 ? widget.images.takingDamageRobot[diff ~/ 2] : Container();

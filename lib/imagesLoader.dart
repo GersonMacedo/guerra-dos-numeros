@@ -48,7 +48,7 @@ class ImagesLoader{
 
     // Other images
     trophy = Image.asset('assets/images/trophy.png', scale: 0.2);
-
+    hamburgerDefeated = Image.asset('assets/images/hamburger/defeated/${Levels.hamburgerType}.png', scale: 0.2);
   }
 
   List<Image> hamburger = [];
@@ -60,6 +60,8 @@ class ImagesLoader{
   List<Image> takingDamageHamburger = [];
   List<Image> takingDamageRobot = [];
   List<Image> storeHamburger = [];
+  Image hamburgerDefeated = Image.asset('assets/images/hamburger/defeated/${Levels.hamburgerType}.png', scale: 0.2);
+  Image robotDefeated = Image.asset('assets/images/robot/defeated.png', scale: 0.2);
 
   int hamburgerSkins = 2;
   List<double> heights = [0, 3, 5, 3, 0];

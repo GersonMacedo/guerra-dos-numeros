@@ -73,11 +73,13 @@ flutter:
     - assets/images/grassMap/
     - assets/images/hamburger/attacks/
     - assets/images/hamburger/default/
+    - assets/images/hamburger/defeated/
     - assets/images/hamburger/store/
     - assets/images/hamburger/takingDamage/
     - assets/images/robot/attacks/
     - assets/images/robot/default/
     - assets/images/robot/takingDamage/
+    - assets/images/robot/
     - assets/images/tutorial/
 
   # An image asset can refer to one or more resolution-specific "variants", see

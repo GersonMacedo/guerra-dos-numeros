@@ -33,8 +33,24 @@ class DragQuestionState extends State<DragQuestionFrame>{
     List<Widget> row = [];
 
     for(int i = 0; i < questions.length; i++){
-      Widget yellowText = Text(" ${questions[i]} ", style: const TextStyle(fontSize: 40, color: Colors.yellow, decoration: TextDecoration.none));
-      Widget hidedText = Text(" ${questions[i]} ", style: const TextStyle(fontSize: 40, color: Color(0xFF54436B)));
+      Widget yellowText = Container(
+        color: const Color(0x0054436B),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Text(
+          questions[i],
+          style: const TextStyle(fontSize: 40, color: Colors.yellow, decoration: TextDecoration.none),
+          textAlign: TextAlign.center
+        )
+      );
+      Widget hidedText = Container(
+        color: const Color(0xFF54436B),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Text(
+          questions[i],
+          style: const TextStyle(fontSize: 40, color: Color(0xFF54436B)),
+          textAlign: TextAlign.center
+        )
+      );
       if(!dragElement[i]){
         row.add(hidedText);
         continue;

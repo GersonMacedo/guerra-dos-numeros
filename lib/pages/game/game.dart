@@ -79,6 +79,7 @@ class GameState extends State<Game>{
 
           if(timeLeft <= 0){
             finished = true;
+            fightFrame.state.end(false);
             return;
           }
 
@@ -236,6 +237,7 @@ class GameState extends State<Game>{
             }else if(stack.isEmpty){
               topGameFrame.state.updateStage(stage);
               finished = true;
+              fightFrame.state.end(true);
               Levels.finish(mistakes != 0);
               return;
             }else{
@@ -463,59 +465,70 @@ class GameState extends State<Game>{
     double width = 140;
     double height = 40;
 
+    Widget message;
+    if (stage == totalStages){
+      message = Container(
+        width: double.infinity,
+        margin: EdgeInsets.only(bottom: height / 2),
+        alignment: Alignment.center,
+        child: Image.asset("assets/images/congratulations.png"),
+      );
+    }else{
+      message = Container(
+        width: double.infinity,
+        height: double.infinity,
+        alignment: Alignment.center,
+        child: const Text("Acabou o tempo, voce perdeu!!", style: TextStyle(fontSize: 25, color: Colors.white))
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.all(10),
       height: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 115 : 175,
-      child: Column(
+      width: double.infinity,
+      child: Stack(
         children: [
+          message,
           Container(
-            padding: const EdgeInsets.all(5),
-            decoration: const BoxDecoration(
-                color: Color(0xFF828DF4),
-                borderRadius: BorderRadius.all(Radius.circular(20))
-            ),
-            child: Text(
-              stage == totalStages ? "Parabéns voce terminou!!!" : "Acabou o tempo, voce perdeu!!",
-              style: const TextStyle(fontSize: 25,color: Colors.black)
+            height: double.infinity,
+            alignment: Alignment.bottomCenter,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: width,
+                  height: height,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF828DF4)),
+                      onPressed: () => widget.changePage(null),
+                      child: const Text("Sair da fase", style: TextStyle(fontSize: 15))
+                  ),
+                ),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: width,
+                  height: height,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF828DF4), padding: const EdgeInsets.all(5)),
+                      onPressed: () => startLevel(false),
+                      child: const Text("Jogar novamente", style: TextStyle(fontSize: 15))
+                  ),
+                ),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: width,
+                  height: height,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF828DF4)),
+                      onPressed: (){
+                        level = Levels.getNextLevel();
+                        startLevel(false);
+                      },
+                      child: const Text("Próxima fase", style: TextStyle(fontSize: 15))
+                  ),
+                ),
+              ],
             )
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: width,
-                height: height,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF828DF4)),
-                  onPressed: () => widget.changePage(null),
-                  child: const Text("Sair da fase", style: TextStyle(fontSize: 15))
-                ),
-              ),
-              const SizedBox(width: 10),
-              SizedBox(
-                width: width,
-                height: height,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF828DF4), padding: const EdgeInsets.all(5)),
-                  onPressed: () => startLevel(false),
-                  child: const Text("Jogar novamente", style: TextStyle(fontSize: 15))
-                ),
-              ),
-              const SizedBox(width: 10),
-              SizedBox(
-                width: width,
-                height: height,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF828DF4)),
-                  onPressed: (){
-                    level = Levels.getNextLevel();
-                    startLevel(false);
-                  },
-                  child: const Text("Próxima fase", style: TextStyle(fontSize: 15))
-                ),
-              ),
-            ],
           )
         ],
       )
