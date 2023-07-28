@@ -20,11 +20,10 @@ import 'package:guerra_dos_numeros/pages/game/frames/topFrame.dart';
 
 
 class Game extends StatefulWidget {
-  const Game(this.changePage, this.level, this.skinNumber, {super.key});
+  const Game(this.changePage, this.level, {super.key});
 
   final LevelData level;
   final void Function(Widget?) changePage;
-  final int skinNumber;
 
   @override
   State<Game> createState() => GameState();
@@ -42,14 +41,15 @@ class GameState extends State<Game>{
   int iteration = 0;
   bool responded = false;
   bool finished = false;
-  int timeLeft = 90;
+   int timeLeft = 90;
   int maxSize = 0;
   int carry = 0;
   int result = 0;
   int frame = 0;
   int fps = 10;
   int nextStage = -100;
-  ImagesLoader images = ImagesLoader(false, true);
+  int mistakes = 0;
+  ImagesLoader images = ImagesLoader(true, false, true, false);
   late TopGameFrame topGameFrame;
   late FightFrame fightFrame;
   late NumbersGridFrame numbersGridFrame;
@@ -78,6 +78,7 @@ class GameState extends State<Game>{
 
           if(timeLeft <= 0){
             finished = true;
+            fightFrame.state.end(false);
             return;
           }
 
@@ -103,6 +104,11 @@ class GameState extends State<Game>{
     y = stack.last.y;
     operation = stack.last.operation;
     numbers = stack.last.numbers.sublist(0);
+    if(int.parse(numbers[0]) < int.parse(numbers[1])){
+      String k = numbers[0];
+      numbers[0] = numbers[1];
+      numbers[1] = k;
+    }
     r = x + numbers.length + 1;
     stack.removeLast();
   }
@@ -110,23 +116,24 @@ class GameState extends State<Game>{
   void startLevel(bool first){
     stack = level.operations.sublist(0);
     finished = false;
-    timeLeft = 90;
+    timeLeft = min(90, 3 * level.correctBonus);
     carry = 0;
     result = 0;
     responded = false;
     nextStage = -100;
+    mistakes = 0;
     loadStack();
 
     maxSize = 0;
     for(var number in numbers){
       maxSize = max(maxSize, number.length);
     }
-    totalStages = maxSize + 1;
+    totalStages = (operation == '+' ? maxSize: min(numbers[0].length, numbers[1].length)) + 1;
 
     String mainQuestion = level.question == "" ? "Quanto é | $operation | ?" : level.question;
     if(first){
       topGameFrame = TopGameFrame(TopGameState(), mainQuestion, numbers, level.question == "" ? 1 : 0, totalStages, widget.changePage);
-      fightFrame = FightFrame(FightState(), images, widget.skinNumber);
+      fightFrame = FightFrame(FightState(), images);
       numbersGridFrame = NumbersGridFrame(NumbersGridState(), successDrag, operation, x, y, r, maxSize);
       mathQuestionFrame = MathQuestionFrame(MathQuestionState(), respond);
       dragQuestionFrame = DragQuestionFrame(DragQuestionState());
@@ -166,8 +173,8 @@ class GameState extends State<Game>{
       ];
 
       for(int i = 1; i <= maxSize; i++){
-        numbersGridFrame.state.acceptDrag[x + 1][y + i] = operation == "-" ? 1 : 3;
-        numbersGridFrame.state.acceptDrag[x + 2][y + i] = operation == "-" ? 2 : 3;
+        numbersGridFrame.state.acceptDrag[x + 1][y + i] = (operation == "-" || (operation == 'x' && numbers[0].length != numbers[1].length)) ? 1 : 3;
+        numbersGridFrame.state.acceptDrag[x + 2][y + i] = (operation == "-" || (operation == 'x' && numbers[0].length != numbers[1].length)) ? 2 : 3;
       }
 
       mathQuestionFrame.state.buildOperationQuestion(operation);
@@ -199,7 +206,7 @@ class GameState extends State<Game>{
       if(result >= 10){
         carry = result ~/ 10;
         dragQuestionFrame.state.update([(carry).toString(), (result % 10).toString()]);
-        numbersGridFrame.state.acceptDrag[(operation == "+" ? stage + 1 != totalStages : iteration + 1 != maxSize) ? x : r][maxSize - (operation == "x" ? 1 : stage) - iteration] = 1;
+        numbersGridFrame.state.acceptDrag[(operation == "+" ? stage + 1 != totalStages : numbersGridFrame.state.grid[x + 1][maxSize - iteration - 1] != "") ? x : r][maxSize - (operation == "x" ? 1 : stage) - iteration] = 1;
         numbersGridFrame.state.acceptDrag[r][numbersGridFrame.state.acceptDrag[r].length - stage - iteration] = 2;
       }else{
         carry = 0;
@@ -234,7 +241,8 @@ class GameState extends State<Game>{
             }else if(stack.isEmpty){
               topGameFrame.state.updateStage(stage);
               finished = true;
-              Levels.finish();
+              fightFrame.state.end(true);
+              Levels.finish(mistakes != 0);
               return;
             }else{
               loadStack();
@@ -331,36 +339,16 @@ class GameState extends State<Game>{
         fightFrame.state.setHamburgerAttack(frame + 10 - frame % 10);
         nextStage = frame + 30 - frame % 10;
         mathQuestionFrame.state.respond("Resposta correta!");
-        timeLeft += widget.level.correctBonus;
+        timeLeft += level.correctBonus;
       }else if(timeLeft == 0){
         fightFrame.state.setRobotAttack(frame);
         nextStage = frame + 20;
         mathQuestionFrame.state.respond("Acabou o tempo!");
-        if(stage == 0 && step + 1 == totalSteps && operation != "/"){
-          for(int i = 0; i < maxSize; i++){
-            numbersGridFrame.state.grid[x + 1][i + 1] = numbers[0][i];
-            numbersGridFrame.state.grid[x + 2][i + 1] = numbers[1][i];
-          }
-
-          dragQuestionFrame.state.dragElement = [false, false];
-          numbersGridFrame.state.clearDrag();
-        }else if(operation != "/"){
-          if(step == 1){
-            if(carry != 0){
-              numbersGridFrame.state.grid[stage != totalStages && iteration + 1 != maxSize ? x : r][maxSize - (operation == "x" ? 1 : stage) - iteration] = carry.toString();
-            }
-
-            numbersGridFrame.state.grid[r][numbersGridFrame.state.acceptDrag[r].length - stage - iteration] = (result % 10).toString();
-            numbersGridFrame.state.clearDrag();
-          }
-
-        }else{
-          throw("NOT IMPLEMENTED RIGHT ANSWER $operation");
-        }
       }else{
+        mistakes++;
         fightFrame.state.setRobotAttack(frame + 10 - frame % 10);
         nextStage = frame + 30 - frame % 10;
-        timeLeft = max(0, timeLeft - widget.level.wrongPenalty);
+        timeLeft = max(0, timeLeft - level.wrongPenalty);
         mathQuestionFrame.state.respond("Resposta errada!");
       }
 
@@ -375,7 +363,7 @@ class GameState extends State<Game>{
         for(int k = 1; k <= maxSize; k++){
           numbersGridFrame.state.acceptDrag[i][k] = 0;
           if(k - 1 < dragQuestionFrame.state.questions[element].length){
-            numbersGridFrame.state.grid[i][k] = dragQuestionFrame.state.questions[element][k - 1];
+            numbersGridFrame.state.grid[i][k + maxSize - dragQuestionFrame.state.questions[element].length] = dragQuestionFrame.state.questions[element][k - 1];
           }
         }
       }else{
@@ -430,7 +418,17 @@ class GameState extends State<Game>{
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                fightFrame,
+                GestureDetector(
+                  onDoubleTap: (){
+                    if(Levels.devMode){
+                      print("Skiped");
+                      stage = totalStages;
+                      finished = true;
+                      Levels.finish(false);
+                    }
+                  },
+                  child: fightFrame,
+                ),
                 buildTimer(context)
               ]
             )
@@ -444,7 +442,7 @@ class GameState extends State<Game>{
   Widget buildTimer(BuildContext context){
     return Container(
       alignment: Alignment.center,
-      height: 50,
+      height: 40,
       width: 410,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -460,59 +458,74 @@ class GameState extends State<Game>{
     double width = 140;
     double height = 40;
 
+    Widget message;
+    if (stage == totalStages){
+      message = Container(
+        width: double.infinity,
+        margin: EdgeInsets.only(bottom: height / 2),
+        alignment: Alignment.center,
+        child: Image.asset("assets/images/congratulations.png"),
+      );
+    }else{
+      message = Container(
+        width: double.infinity,
+        height: double.infinity,
+        alignment: Alignment.center,
+        child: const Text("Acabou o tempo, voce perdeu!!", style: TextStyle(fontSize: 25, color: Colors.white))
+      );
+    }
+
+    bool next = Levels.hasNextLevel() && (Levels.type == -1 || stage == totalStages || Levels.next[Levels.type] > Levels.actual + 1);
+
     return Container(
       padding: const EdgeInsets.all(10),
       height: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 115 : 175,
-      child: Column(
+      width: double.infinity,
+      child: Stack(
         children: [
+          message,
           Container(
-            padding: const EdgeInsets.all(5),
-            decoration: const BoxDecoration(
-                color: Color(0xFF828DF4),
-                borderRadius: BorderRadius.all(Radius.circular(20))
-            ),
-            child: Text(
-              stage == totalStages ? "Parabéns voce terminou!!!" : "Acabou o tempo, voce perdeu!!",
-              style: const TextStyle(fontSize: 25,color: Colors.black)
+            height: double.infinity,
+            alignment: Alignment.bottomCenter,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: width,
+                  height: height,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF828DF4)),
+                      onPressed: () => widget.changePage(null),
+                      child: const Text("Sair da fase", style: TextStyle(fontSize: 15))
+                  ),
+                ),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: width,
+                  height: height,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF828DF4), padding: const EdgeInsets.all(5)),
+                      onPressed: () => startLevel(false),
+                      child: const Text("Jogar novamente", style: TextStyle(fontSize: 15))
+                  ),
+                ),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: width,
+                  height: height,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(backgroundColor: next ? const Color(0xFF828DF4) : Colors.black),
+                      onPressed: (){
+                        if(next){
+                          level = Levels.getNextLevel();
+                          startLevel(false);
+                        }
+                      },
+                      child: const Text("Próxima fase", style: TextStyle(fontSize: 15))
+                  ),
+                ),
+              ],
             )
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: width,
-                height: height,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF828DF4)),
-                  onPressed: () => widget.changePage(null),
-                  child: const Text("Sair da fase", style: TextStyle(fontSize: 15))
-                ),
-              ),
-              const SizedBox(width: 10),
-              SizedBox(
-                width: width,
-                height: height,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF828DF4), padding: const EdgeInsets.all(5)),
-                  onPressed: () => startLevel(false),
-                  child: const Text("Jogar novamente", style: TextStyle(fontSize: 15))
-                ),
-              ),
-              const SizedBox(width: 10),
-              SizedBox(
-                width: width,
-                height: height,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF828DF4)),
-                  onPressed: (){
-                    level = Levels.getNextLevel();
-                    startLevel(false);
-                  },
-                  child: const Text("Próxima fase", style: TextStyle(fontSize: 15))
-                ),
-              ),
-            ],
           )
         ],
       )

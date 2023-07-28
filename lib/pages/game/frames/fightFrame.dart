@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:guerra_dos_numeros/imagesLoader.dart';
+import 'package:guerra_dos_numeros/levels.dart';
 
 class FightFrame extends StatefulWidget {
-  const FightFrame(this.state, this.images, this.skinNumber,{super.key});
+  const FightFrame(this.state, this.images,{super.key});
 
   final FightState state;
   final ImagesLoader images;
-  final int skinNumber;
 
   @override
   State<FightFrame> createState() => state;
@@ -17,12 +17,14 @@ class FightState extends State<FightFrame>{
   int hamburgerAttack = -100;
   int robotAttack = -100;
   int attackType = 0;
+  int finished = -1;
 
   void reset(){
     frame = 0;
     hamburgerAttack = -100;
     robotAttack = -100;
     attackType = 0;
+    finished = -1;
   }
 
   void updateFrame(int newFrame){
@@ -33,7 +35,7 @@ class FightState extends State<FightFrame>{
 
   void setHamburgerAttack(int time){
     hamburgerAttack = time;
-    attackType = frame % widget.images.attackPath.length;
+    attackType = frame % widget.images.attacksTypes[Levels.hamburgerType];
   }
 
   void setRobotAttack(int time){
@@ -44,10 +46,55 @@ class FightState extends State<FightFrame>{
     return (frame < hamburgerAttack || hamburgerAttack + 20 < frame) && (frame < robotAttack + 10 || robotAttack + 20 < frame);
   }
 
+  void end(bool victory){
+    finished = victory ? 0 : 1;
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 400 : 500;
     double height = MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 200 : 250;
+
+    List<Widget> players = [];
+    if(frame >= robotAttack && frame < robotAttack + 10){
+      players.add(
+        Positioned(
+            left: getAttackWidth(width),
+            top: height*0.3,
+            width: height,
+            height: height,
+            child: getHamburger()
+        )
+      );
+      players.add(
+        Positioned(
+            right: getAttackWidth(width),
+            top: height*0.3,
+            width: height,
+            height: height,
+            child: getRobot()
+        )
+      );
+    }else{
+      players.add(
+          Positioned(
+              right: getAttackWidth(width),
+              top: height*0.3,
+              width: height,
+              height: height,
+              child: getRobot()
+          )
+      );
+      players.add(
+          Positioned(
+              left: getAttackWidth(width),
+              top: height*0.3,
+              width: height,
+              height: height,
+              child: getHamburger()
+          )
+      );
+    }
 
     return Container(
       alignment: Alignment.center,
@@ -67,138 +114,55 @@ class FightState extends State<FightFrame>{
               child: widget.images.grassMap[frame % 16],
             ),
           ),
-          Positioned(
-            left: getAttackWidth(width),
-            top: height*0.3,
-            width: height,
-            height: height,
-            child: getHamburger()
-          ),
-          Positioned(
-              right: getAttackWidth(width),
-              top: height*0.3,
-              width: height,
-              height: height,
-              child: getRobot()
-          ),
-          Positioned(
-              left: getAttackWidth(width),
-              top: height*0.3,
-              width: height,
-              height: height,
-              child: getAttackHamburger()
-          ),
-          Positioned(
-              right: getAttackWidth(width),
-              top: height*0.3,
-              width: height,
-              height: height,
-              child: getLaser()
-          )
+          players[0],
+          players[1]
         ]
       )
     );
   }
 
   Widget getHamburger(){
-    if(frame >= hamburgerAttack && frame < hamburgerAttack + 5){
-      return Container(
-        width: 0,
-        height: 0,
-      );
+    if(frame >= robotAttack + 20 && finished == 1){
+      return widget.images.hamburgerDefeated;
     }
 
-    if(frame >= hamburgerAttack + 5 && frame < hamburgerAttack + 20){
-      return getHamburgerSkinStopped(widget.skinNumber);
+    int start = hamburgerAttack;
+    int end = start + widget.images.attacksFrames[Levels.hamburgerType][attackType];
+
+    if(frame >= start && frame < end){
+      return widget.images.hamburgerAttacks[attackType][frame - start];
     }
 
     if(frame >= robotAttack + 10 && frame < robotAttack + 20){
       int diff = frame - robotAttack - 10;
-      return diff % 2 == 0 ? getHamburgerSkinTakingDamage(widget.skinNumber)[diff ~/ 2] : Container();
+      return diff % 2 == 0 ? widget.images.takingDamageHamburger[diff ~/ 2] : Container();
     }
 
-    return getHamburgerSkinDefault(widget.skinNumber)[frame % 10  < 5 ? frame % 10 : 0];
+    return widget.images.hamburger[frame % 10  < 5 ? frame % 10 : 0];
   }
 
   Widget getRobot(){
+    if(frame >= hamburgerAttack + 20 && finished == 0){
+      return widget.images.robotDefeated;
+    }
+
     if(frame >= hamburgerAttack + 10 && frame < hamburgerAttack + 20){
       int diff = frame - hamburgerAttack - 10;
       return diff % 2 == 0 ? widget.images.takingDamageRobot[diff ~/ 2] : Container();
     }
 
     if(frame >= robotAttack && frame < robotAttack + 10){
-      return Container(
-        width: 0,
-        height: 0,
-      );
+      return widget.images.robotAttack[frame - robotAttack];
     }
 
     if(frame >= robotAttack + 10 && frame < robotAttack + 20){
-      return widget.images.stoppedRobot;
+      return widget.images.robot[0];
     }
 
     return widget.images.robot[(frame % 10  > 1) && (frame % 10 < 7) ? frame % 10 - 2 : 0];
   }
 
-  Widget getAttackHamburger(){
-    int start = hamburgerAttack;
-    int end = start + widget.images.attackFrames[attackType];
-
-    if(widget.skinNumber != 0){
-      if(frame >= hamburgerAttack && frame < hamburgerAttack + 9){
-        return getHamburgerSkinAttack(widget.skinNumber)[frame - hamburgerAttack];
-      }
-    }else{
-      if(frame >= start && frame < end){
-        return getHamburgerSkinAttack(0)[attackType][frame - start];
-      }
-    }
-
-    return Container();
-  }
-
-  Widget getLaser(){
-    if(frame >= robotAttack && frame < robotAttack + 10){
-      return widget.images.robotAttack[frame - robotAttack];
-    }
-
-    return Container();
-  }
-
   double getAttackWidth(width){
     return (width == 500)?(width / 2 - 110):(width / 2 - 90);
-  }
-
-
-  List getHamburgerSkinDefault(int i){
-    if(i==1){
-      return widget.images.robotHamburger;
-    }else{
-      return widget.images.hamburger;
-    }
-  }
-
-  List getHamburgerSkinAttack(int i){
-    if(i==1){
-      return widget.images.robotHamburgerAttack;
-    }else{
-      return widget.images.hamburgerAttacks;
-    }
-  }
-
-  List getHamburgerSkinTakingDamage(int i){
-    if(i==1){
-      return widget.images.robotHamburgerTakingDamage;
-    }else{
-      return widget.images.takingDamageHamburger;
-    }
-  }
-
-  Image getHamburgerSkinStopped(int i){
-    if(i==1){
-      return widget.images.stoppedRobotHamburger;
-    }else{
-      return widget.images.stoppedHamburger;
-    }
   }
 }

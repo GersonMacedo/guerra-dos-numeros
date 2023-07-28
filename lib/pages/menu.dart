@@ -1,7 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:guerra_dos_numeros/imagesLoader.dart';
+import 'package:guerra_dos_numeros/levels.dart';
+import 'package:guerra_dos_numeros/pages/howToPlay.dart';
 import 'package:guerra_dos_numeros/pages/modeSelector.dart';
+import 'package:guerra_dos_numeros/pages/skinSelector.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/databaseProvider.dart';
+import '../provider/googleSignInProvider.dart';
 
 class Menu extends StatefulWidget {
   const Menu(this.changePage, {super.key});
@@ -44,13 +51,14 @@ class _MenuState extends State<Menu>{
   late Timer _timer;
   int frame = 0;
   int fps = 10;
-  ImagesLoader images = ImagesLoader(true, false);
+  int taps = 0;
+  ImagesLoader images = ImagesLoader(true, true, false, false);
 
   @override
   Widget build(BuildContext context){
     double width = MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 960 : 540;
     double height = MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 540 : 960;
-
+    
     if(MediaQuery.of(context).size.width / width > MediaQuery.of(context).size.height / height){
       width = MediaQuery.of(context).size.width * height / MediaQuery.of(context).size.height;
     }
@@ -61,18 +69,27 @@ class _MenuState extends State<Menu>{
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            child: const Text(
-              "Guerra dos números, Robôs e coisas matemáticas",
-              style: TextStyle(fontSize: 40, color: Colors.white),
-              textAlign: TextAlign.center,
-            )
+          GestureDetector(
+            onTap: (){
+              taps++;
+              if(taps == 10){
+                print("Devmode enabled");
+                Levels.devMode = true;
+              }
+            },
+            child: Container(
+                padding: const EdgeInsets.all(20),
+                child: const Text(
+                  Levels.title,
+                  style: TextStyle(fontSize: 50, color: Colors.white),
+                  textAlign: TextAlign.center,
+                )
+            ),
           ),
           Container(
             width: double.infinity,
             height: 200,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 border: Border.symmetric(horizontal: BorderSide(color: Colors.white))
             ),
             child: Stack(
@@ -95,23 +112,68 @@ class _MenuState extends State<Menu>{
               ],
             )
           ),
-          ElevatedButton(
-            onPressed: (){widget.changePage(ModeSelector(widget.changePage), keep: true);},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xff50CB93),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20)
-              )
-            ),
-            child: Container(
-              width: 300,
-              height: 50,
-              alignment: Alignment.center,
-              child:  const Text("Iniciar", style: TextStyle(fontSize: 25))
-            )
-          )
+          buildButtons()
         ],
       )
+    );
+  }
+
+  Widget buildButtons(){
+    const double buttonsWidth = 250;
+    String loginOrLogout = "Entrar na Conta";
+
+    return Flex(
+      direction: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? Axis.horizontal : Axis.vertical,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          onPressed: (){widget.changePage(ModeSelector(widget.changePage), keep: true);},
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xff50CB93),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20)
+            )
+          ),
+          child: Container(
+            width: buttonsWidth,
+            height: 50,
+            alignment: Alignment.center,
+            child:  const Text("Iniciar", style: TextStyle(fontSize: 30))
+          )
+        ),
+        const SizedBox(width: 20, height: 20),
+        ElevatedButton(
+            onPressed: (){widget.changePage(const HowToPlay(), keep: true);},
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff50CB93),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)
+                )
+            ),
+            child: Container(
+                width: buttonsWidth,
+                height: 50,
+                alignment: Alignment.center,
+                child:  const Text("Como Jogar", style: TextStyle(fontSize: 30))
+            )
+        ),
+        const SizedBox(width: 20, height: 20),
+        ElevatedButton(
+            onPressed: (){widget.changePage(const SkinSelector(), keep: true);},
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff50CB93),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)
+                )
+            ),
+            child: Container(
+                width: buttonsWidth,
+                height: 50,
+                alignment: Alignment.center,
+                child:  const Text("Personagens", style: TextStyle(fontSize: 30))
+            )
+        )
+      ]
     );
   }
 }

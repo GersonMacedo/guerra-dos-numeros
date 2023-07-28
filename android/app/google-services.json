@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "843845333660",
+    "project_id": "guerra-dos-numeros-737f2",
+    "storage_bucket": "guerra-dos-numeros-737f2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:843845333660:android:a06ac2ffcf47762cb3b359",
+        "android_client_info": {
+          "package_name": "com.example.guerra_dos_numeros"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "843845333660-u77oqpmkpu847dih5t38gvgphjduje3m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGPEaIBx0phL2zkXCTf08rsahOkyOPOlc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "843845333660-83a3l415jd9lk0nf7jpmg6s4f1vcdn62.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
