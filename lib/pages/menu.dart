@@ -121,7 +121,6 @@ class _MenuState extends State<Menu>{
   Widget buildButtons(){
     const double buttonsWidth = 250;
     String loginOrLogout = "Entrar na Conta";
-    DatabaseProvider databaseProvider = DatabaseProvider();
 
     return Flex(
       direction: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? Axis.horizontal : Axis.vertical,
@@ -173,40 +172,6 @@ class _MenuState extends State<Menu>{
                 alignment: Alignment.center,
                 child:  const Text("Personagens", style: TextStyle(fontSize: 30))
             )
-        ),
-        const SizedBox(width: 20, height: 20),
-        ElevatedButton(
-          onPressed: () async {
-            final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
-            if (provider.user != null) {
-              // O usuário está logado
-              await provider.logout();
-            } else {
-              // O usuário não está logado
-              await provider.googleLogin();
-            }
-            await databaseProvider.saveUserData();
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xff50CB93),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-          ),
-          child: Container(
-            width: buttonsWidth,
-            height: 50,
-            alignment: Alignment.center,
-            child: Consumer<GoogleSignInProvider>(
-              builder: (context, provider, _) {
-                String buttonText = provider.user != null ? "Sair da Conta" : "Entrar na Conta";
-                return Text(
-                  buttonText,
-                  style: TextStyle(fontSize: 30),
-                );
-              },
-            ),
-          ),
         )
       ]
     );

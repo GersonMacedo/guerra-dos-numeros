@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:guerra_dos_numeros/imagesLoader.dart';
+import 'package:provider/provider.dart';
 
 import '../provider/databaseProvider.dart';
+import '../provider/googleSignInProvider.dart';
 
 class Ranking extends StatefulWidget {
   const Ranking({Key? key}) : super(key: key);
@@ -49,20 +51,19 @@ class _RankingState extends State<Ranking> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(height: 30),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "RANKING",
+                "RANKING    ",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 40,
+                  fontSize: 35,
                 ),
               ),
               SizedBox(
-                width: 93,
-                height: 96,
+                width: 50,
+                height: 50,
                 child: images.trophy,
               ),
             ],
@@ -95,28 +96,67 @@ class _RankingState extends State<Ranking> {
               }).toList(),
             ),
           ),
-          Container(
-            margin: const EdgeInsets.only(bottom: 20),
-            child:
-            ElevatedButton(
-              onPressed: () {
-                // Chama a função para atualizar a lista quando o botão é pressionado
-                _refreshUsersList();
-              },
-              style: ElevatedButton.styleFrom(
+          const SizedBox(height: 5),
+          Flex(
+            direction: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? Axis.horizontal : Axis.vertical,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
+                  if (provider.user != null) {
+                    // O usuário está logado
+                    await provider.logout();
+                  } else {
+                    // O usuário não está logado
+                    await provider.googleLogin();
+                  }
+                  DatabaseProvider databaseProvider = DatabaseProvider();
+                  await databaseProvider.saveUserData();
+                },
+                style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xff50CB93),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)
-                  )
-              ),
-              child: Container(
-                  width: 200,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: Container(
+                  width: 250,
                   height: 50,
                   alignment: Alignment.center,
-                  child:  const Text("Atualizar", style: TextStyle(fontSize: 30))
-              )
-            ),
-          )
+                  child: Consumer<GoogleSignInProvider>(
+                    builder: (context, provider, _) {
+                      String buttonText = provider.user != null ? "Sair da Conta" : "Entrar na Conta";
+                      return Text(
+                        buttonText,
+                        style: TextStyle(fontSize: 30),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(width: 20, height: 20),
+              ElevatedButton(
+                  onPressed: () {
+                    // Chama a função para atualizar a lista quando o botão é pressionado
+                    _refreshUsersList();
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xff50CB93),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)
+                      )
+                  ),
+                  child: Container(
+                      width: 250,
+                      height: 50,
+                      alignment: Alignment.center,
+                      child:  const Text("Atualizar", style: TextStyle(fontSize: 30))
+                  )
+              ),
+            ],
+          ),
+          const SizedBox(height: 5),
         ],
       ),
     );
@@ -127,7 +167,7 @@ class _RankingState extends State<Ranking> {
     int score = user['score'];
 
     return Container(
-      height: 64,
+      height: 50,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8.0),
@@ -140,14 +180,14 @@ class _RankingState extends State<Ranking> {
               alignment: Alignment.center,
               child: Text(
                 name,
-                style: const TextStyle(fontSize: 24),
+                style: const TextStyle(fontSize: 20),
               ),
             ),
           ),
           Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(8.0),
-            height: 64,
+            height: 50,
             width: 100,
             decoration: const BoxDecoration(
               color: Color(0xFF212A3E),

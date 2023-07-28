@@ -95,7 +95,7 @@ class TopGameState extends State<TopGameFrame>{
       ),
       child: Text(
         builtQuestion,
-        style: const TextStyle(fontSize: 30, color: Colors.white),
+        style: const TextStyle(fontSize: 28, color: Colors.white),
         textAlign: TextAlign.justify,
       )
     );
