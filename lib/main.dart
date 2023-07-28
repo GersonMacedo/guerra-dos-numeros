@@ -2,17 +2,28 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:guerra_dos_numeros/provider/databaseProvider.dart';
+import 'package:guerra_dos_numeros/provider/googleSignInProvider.dart';
 import 'package:guerra_dos_numeros/levels.dart';
 import 'package:guerra_dos_numeros/pages/about.dart';
 import 'package:guerra_dos_numeros/pages/achievements.dart';
 import 'package:guerra_dos_numeros/pages/menu.dart';
 import 'package:guerra_dos_numeros/pages/ranking.dart';
 import 'package:guerra_dos_numeros/utils.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 
 //TODO: adicionar sons ao jogo
 //TODO: adicionar conquistas
 
+<<<<<<< HEAD
 void main() async  {
+=======
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
   runApp(const MyApp());
 }
 
@@ -21,6 +32,7 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
+<<<<<<< HEAD
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Flutter Demo',
@@ -29,6 +41,22 @@ class MyApp extends StatelessWidget {
         ),
         home: const Home());
   }
+=======
+  Widget build(BuildContext context) => MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => GoogleSignInProvider()),
+      Provider<DatabaseProvider>(create: (context) => DatabaseProvider()),
+    ],
+    child: MaterialApp(
+      title: Levels.title,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const Home(),
+    ),
+  );
+
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
 }
 
 class Home extends StatefulWidget {
@@ -43,7 +71,7 @@ class _HomeState extends State<Home> {
     selected.add(Menu(changePage, key: UniqueKey()));
     bottomButtons.add(true);
     backButton.add(false);
-    Levels.addDemoLevels(30, 20);
+    Levels.loadData();
   }
 
   List<Widget> selected = [];
@@ -150,6 +178,7 @@ class _HomeState extends State<Home> {
     }
 
     return Container(
+<<<<<<< HEAD
         height: 50,
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
@@ -175,9 +204,34 @@ class _HomeState extends State<Home> {
                   Icon(Icons.info_outline, color: Colors.white, size: 30),
                   Text(" Sobre",
                       style: TextStyle(color: Colors.white, fontSize: 22))
+=======
+      height: 70,
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          TextButton(
+            onPressed: (){changePage(Achievements());},
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset('assets/images/medal.png'),
+                const Text("Conquistas", style: TextStyle(color: Colors.white, fontSize: 25))
+              ],
+            )
+          ),
+          TextButton(
+              onPressed: (){changePage(About());},
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  Icon(Icons.info_outline, color: Colors.white, size: 40),
+                  Text(" Sobre", style: TextStyle(color: Colors.white, fontSize: 25))
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
                 ],
               )),
           TextButton(
+<<<<<<< HEAD
               onPressed: () {
                 changePage(const Ranking());
               },
@@ -188,6 +242,17 @@ class _HomeState extends State<Home> {
                       color: Colors.white, size: 30),
                   Text(" Ranking",
                       style: TextStyle(color: Colors.white, fontSize: 20))
+=======
+              onPressed: (){
+
+                changePage(Ranking());
+                },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  Icon(Icons.emoji_events_outlined, color: Colors.white, size: 40),
+                  Text(" Ranking", style: TextStyle(color: Colors.white, fontSize: 25))
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
                 ],
               ))
         ]));

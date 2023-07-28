@@ -64,7 +64,7 @@ class NumbersGridState extends State<NumbersGridFrame>{
       addLine.add(i + 1 == r);
       carryLine.add(i == 0);
     }
-    maxSize = widget.maxSize;
+    maxSize = newMaxSize;
 
     setState((){});
   }

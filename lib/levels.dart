@@ -1,8 +1,16 @@
 import 'dart:math';
+<<<<<<< HEAD
 
 class MathStack {
   MathStack(this.operation, this.x, this.y, this.numbers, this.stage, this.step,
       this.iteration);
+=======
+import 'package:shared_preferences/shared_preferences.dart';
+import 'provider/databaseProvider.dart';
+
+class MathStack{
+  MathStack(this.operation, this.x, this.y, this.numbers, this.stage, this.step, this.iteration);
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
 
   String operation;
   int x, y;
@@ -26,13 +34,21 @@ class LevelData {
   int wrongPenalty;
 }
 
+<<<<<<< HEAD
 class Levels {
+=======
+class Levels{
+  static const String title = 'Batalha dos números';
+
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
   static Random random = Random();
   static bool interpretation = true;
-  static List<int> next = [3, 2];
+  static List<int> next = [1, 1];
   static int type = -1;
   static int actual = 0;
   static int size = 0;
+  static List<List<bool>> levelsWithoutMistakes = [];
+  static int totalWithoutMistakes = 0;
 
   static List<String> operators = ["+", "-", "x", "/"];
   static int operator = 0;
@@ -41,14 +57,32 @@ class Levels {
   static List<int> correctTimeList = [90, 30, 10, 2];
   static List<int> wrongTimeList = [30, 45, 60, 90];
 
+<<<<<<< HEAD
   static int getRandomNumber() {
+=======
+  static int hamburgerType = 0;
+  static bool devMode = false;
+  static List<int> page = [1, 1];
+
+  static Future<void> changeHamburgerType(int newType) async {
+    hamburgerType = newType;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt("hamburgerType", newType);
+  }
+
+  static int getRandomNumber(){
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
     Random random = Random();
     return pow(10, digits - 1).toInt() +
         random
             .nextInt(pow(10, digits).toInt() - pow(10, digits - 1).toInt() - 1);
   }
 
+<<<<<<< HEAD
   static List<int> getNumberList(int size) {
+=======
+  static List<int> getNumberList(int size){
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
     List<int> list = [];
     for (int i = 0; i < size; i++) {
       list.add(getRandomNumber());
@@ -107,7 +141,11 @@ class Levels {
     "Rafael tem | vidros de tinta. Cada vidro tem | pincéis. Quantos pincéis ele tem no total?",
     "Luciana tem | caixas de lápis de cor. Cada caixa tem | lápis de cor. Quantos lápis de cor ela tem no total?",
     "Hugo tem | cestas de morangos. Cada cesta tem | morangos. Quantos morangos ele tem no total?",
+<<<<<<< HEAD
     "Laura tem | garrafas de água. Cada garrafa tem | copos. Quantos copos de água ela tem no total?",
+=======
+    "Laura tem | garrafas de água. Cada garrafa pode encher | copos. Quantos copos de água ela pode encher no total?",
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
     "Bruno tem | caixas de bolas. Cada caixa tem | bolas. Quantas bolas ele tem no total?",
     "Marina tem | potes de massinha. Cada pote tem | moldes. Quantos moldes ela tem no total?",
     "Gustavo tem | caixas de lápis de cera. Cada caixa tem | lápis de cera. Quantos lápis de cera ele tem no total?",
@@ -131,10 +169,13 @@ class Levels {
     "Miguel tem | caixas de gizes de cera. Cada caixa tem | giz de cera. Quantos gizes de cera ele tem no total?",
     "Maria Eduarda tem | sacolas de balas. Cada sacola tem | balas. Quantas balas ela tem no total?",
     "Pedro Henrique tem | pacotes de canetas coloridas. Cada pacote tem | canetas coloridas. Quantas canetas coloridas ele tem no total?",
+<<<<<<< HEAD
     "Pedro Henrique tem | pacotes de canetas coloridas. Cada pacote tem | canetas coloridas. Quantas canetas coloridas ele tem no total?",
     "Pedro Henrique tem | pacotes de canetas coloridas. Cada pacote tem | canetas coloridas. Quantas canetas coloridas ele tem no total?",
     "Pedro Henrique tem | pacotes de canetas coloridas. Cada pacote tem | canetas coloridas. Quantas canetas coloridas ele tem no total?",
     "Pedro Henrique tem | pacotes de canetas coloridas. Cada pacote tem | canetas coloridas. Quantas canetas coloridas ele tem no total?",
+=======
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
   ];
   static List<List<LevelData>> levels = [
     [
@@ -143,6 +184,7 @@ class Levels {
       ], 90, 30, sumQuestions[0]),
       LevelData.withQuestion([
         MathStack("+", 0, 0, ["67", "39"], 0, 0, 0)
+<<<<<<< HEAD
       ], 78, 30, sumQuestions[1]),
       LevelData.withQuestion([
         MathStack("+", 0, 0, ["24", "54"], 0, 0, 0)
@@ -251,11 +293,119 @@ class Levels {
       LevelData([
         MathStack("x", 0, 0, ["12", "23"], 0, 0, 0)
       ], 90, 30),
+=======
+      ], 90, 30, sumQuestions[1]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["59", "82"], 0, 0, 0)
+      ], 90, 30, sumQuestions[2]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["107", "293"], 0, 0, 0)
+      ], 80, 35, sumQuestions[3]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["587", "812"], 0, 0, 0)
+      ], 80, 35, sumQuestions[4]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["1589", "2321"], 0, 0, 0)
+      ], 80, 35, sumQuestions[5]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["3547", "9421"], 0, 0, 0)
+      ], 70, 40, sumQuestions[6]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["86391", "13443"], 0, 0, 0)
+      ], 70, 40, sumQuestions[7]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["67641", "84195"], 0, 0, 0)
+      ], 70, 40, sumQuestions[8]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["54194", "71476"], 0, 0, 0)
+      ], 60, 45, sumQuestions[9]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["23177", "13478"], 0, 0, 0)
+      ], 60, 45, sumQuestions[10]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["494197", "149816"], 0, 0, 0)
+      ], 60, 45, sumQuestions[11]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["971792", "132509"], 0, 0, 0)
+      ], 50, 50, sumQuestions[12]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["119862", "756194"], 0, 0, 0)
+      ], 50, 50, sumQuestions[13]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["432159", "874613"], 0, 0, 0)
+      ], 50, 50, sumQuestions[14]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["948956", "57410"], 0, 0, 0)
+      ], 40, 55, sumQuestions[15]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["34424", "427919"], 0, 0, 0)
+      ], 40, 55, sumQuestions[16]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["14981", "2379419"], 0, 0, 0)
+      ], 40, 55, sumQuestions[17]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["974512", "6514267"], 0, 0, 0)
+      ], 30, 60, sumQuestions[18]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["1265730", "7291045"], 0, 0, 0)
+      ], 30, 60, sumQuestions[19]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["4698458", "6528096"], 0, 0, 0)
+      ], 30, 60, sumQuestions[20]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["5084175", "1679021"], 0, 0, 0)
+      ], 25, 65, sumQuestions[21]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["94685296", "105761"], 0, 0, 0)
+      ], 25, 65, sumQuestions[22]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["25164857", "42"], 0, 0, 0)
+      ], 25, 65, sumQuestions[23]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["69845021", "98674836"], 0, 0, 0)
+      ], 20, 70, sumQuestions[24]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["174015457", "9685410"], 0, 0, 0)
+      ], 20, 70, sumQuestions[25]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["874230415", "897438154"], 0, 0, 0)
+      ], 20, 70, sumQuestions[26]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["7840210401", "89641251"], 0, 0, 0)
+      ], 15, 75, sumQuestions[27]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["1657629427", "581789717"], 0, 0, 0)
+      ], 15, 75, sumQuestions[28]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["3219498168", "9817985157"], 0, 0, 0)
+      ], 15, 75, sumQuestions[29]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["75468418505", "1320167578"], 0, 0, 0)
+      ], 10, 80, sumQuestions[30]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["63432765214", "31451614564"], 0, 0, 0)
+      ], 10, 80, sumQuestions[31]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["631654101359", "13467126749"], 0, 0, 0)
+      ], 10, 80, sumQuestions[32]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["16879415215665", "9863786412379"], 0, 0, 0)
+      ], 5, 90, sumQuestions[33]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["8514875613207984", "1898745641674984"], 0, 0, 0)
+      ], 5, 90, sumQuestions[34]),
+      LevelData.withQuestion([
+        MathStack("+", 0, 0, ["95176342788654367", "81409564163416946"], 0, 0, 0)
+      ], 5, 90, sumQuestions[35]),
+    ],
+    [
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
       LevelData.withQuestion([
         MathStack("x", 0, 0, ["12", "47"], 0, 0, 0)
       ], 90, 30, multiplicationQuestions[0]),
       LevelData.withQuestion([
         MathStack("x", 0, 0, ["67", "39"], 0, 0, 0)
+<<<<<<< HEAD
       ], 78, 30, multiplicationQuestions[1]),
       LevelData.withQuestion([
         MathStack("x", 0, 0, ["24", "54"], 0, 0, 0)
@@ -367,6 +517,134 @@ class Levels {
       levels[0].add(LevelData.withQuestion([
         MathStack("+", 0, 0, ["1", "1"], 0, 0, 0)
       ], 90, 30, "TODO $i : | + | ?"));
+=======
+      ], 90, 30, multiplicationQuestions[1]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["24", "54"], 0, 0, 0)
+      ], 90, 30, multiplicationQuestions[2]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["99", "99"], 0, 0, 0)
+      ], 80, 35, multiplicationQuestions[3]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["456", "27"], 0, 0, 0)
+      ], 80, 35, multiplicationQuestions[4]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["894", "132"], 0, 0, 0)
+      ], 80, 35, multiplicationQuestions[5]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["153", "645"], 0, 0, 0)
+      ], 70, 40, multiplicationQuestions[6]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["666", "13"], 0, 0, 0)
+      ], 70, 40, multiplicationQuestions[7]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["963", "147"], 0, 0, 0)
+      ], 70, 40, multiplicationQuestions[8]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["146", "782"], 0, 0, 0)
+      ], 60, 45, multiplicationQuestions[9]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["485", "689"], 0, 0, 0)
+      ], 60, 45, multiplicationQuestions[10]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["987", "159"], 0, 0, 0)
+      ], 60, 45, multiplicationQuestions[11]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["4896", "42"], 0, 0, 0)
+      ], 50, 50, multiplicationQuestions[12]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["7968", "25"], 0, 0, 0)
+      ], 50, 50, multiplicationQuestions[13]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["1645", "146"], 0, 0, 0)
+      ], 50, 50, multiplicationQuestions[14]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["9848", "657"], 0, 0, 0)
+      ], 40, 55, multiplicationQuestions[15]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["8457", "1136"], 0, 0, 0)
+      ], 40, 55, multiplicationQuestions[16]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["5941", "1453"], 0, 0, 0)
+      ], 40, 55, multiplicationQuestions[17]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["4196", "9685"], 0, 0, 0)
+      ], 30, 60, multiplicationQuestions[18]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["9321", "4968"], 0, 0, 0)
+      ], 30, 60, multiplicationQuestions[19]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["41968", "92"], 0, 0, 0)
+      ], 25, 60, multiplicationQuestions[20]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["52761", "54"], 0, 0, 0)
+      ], 25, 65, multiplicationQuestions[21]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["96837", "841"], 0, 0, 0)
+      ], 25, 65, multiplicationQuestions[22]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["63698", "1698"], 0, 0, 0)
+      ], 20, 65, multiplicationQuestions[23]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["41726", "2917"], 0, 0, 0)
+      ], 20, 70, multiplicationQuestions[24]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["91757", "3146"], 0, 0, 0)
+      ], 20, 70, multiplicationQuestions[25]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["45673", "7864"], 0, 0, 0)
+      ], 15, 70, multiplicationQuestions[26]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["32197", "6546"], 0, 0, 0)
+      ], 15, 75, multiplicationQuestions[27]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["19641", "19641"], 0, 0, 0)
+      ], 15, 75, multiplicationQuestions[28]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["34745", "27873"], 0, 0, 0)
+      ], 15, 75, multiplicationQuestions[29]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["24789", "74538"], 0, 0, 0)
+      ], 10, 80, multiplicationQuestions[30]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["78987", "78987"], 0, 0, 0)
+      ], 10, 80, multiplicationQuestions[31]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["98413", "49863"], 0, 0, 0)
+      ], 10, 80, multiplicationQuestions[32]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["49652", "74968"], 0, 0, 0)
+      ], 5, 90, multiplicationQuestions[33]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["93684", "36786"], 0, 0, 0)
+      ], 5, 90, multiplicationQuestions[5]),
+      LevelData.withQuestion([
+        MathStack("x", 0, 0, ["695874", "846579"], 0, 0, 0)
+      ], 5, 90, multiplicationQuestions[10]),
+    ]
+  ];
+
+  static Future<void> loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    next[0] = prefs.getInt('next0') ?? 1;
+    next[1] = prefs.getInt('next1') ?? 1;
+    hamburgerType = prefs.getInt('hamburgerType') ?? 0;
+
+    for(int i = 0; i < levels.length; i++){
+      levelsWithoutMistakes.add([]);
+      for(int j = 0; j < levels[i].length; j++){
+        levelsWithoutMistakes[i].add(prefs.getBool('mistakes${i}_$j') ?? false);
+        if(levelsWithoutMistakes[i][j]){
+          totalWithoutMistakes++;
+        }
+      }
+    }
+  }
+
+  static void addDemoLevels(int sum, int multiplication){
+    for(int i = levels[0].length + 1; i <= sum; i++){
+      levels[0].add(LevelData.withQuestion([MathStack("+", 0, 0, ["1", "1"], 0, 0, 0)], 90, 30, "TODO $i : | + | ?"));
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
     }
 
     for (int i = levels[1].length + 1; i <= multiplication; i++) {
@@ -401,9 +679,27 @@ class Levels {
     return LevelData(mathStack, correctTimeList[time], wrongTimeList[time]);
   }
 
+<<<<<<< HEAD
   static void finish() {
     if (type >= 0 && next[type] == actual + 1) {
       next[type]++;
+=======
+  static Future<void> finish(bool mistakes) async {
+    if(type >= 0){
+      final prefs = await SharedPreferences.getInstance();
+      if(next[type] == actual + 1) {
+        next[type]++;
+        await prefs.setInt("next$type", next[type]);
+        DatabaseProvider databaseProvider = DatabaseProvider();
+        databaseProvider.saveUserData();
+      }
+
+      if(!mistakes && !levelsWithoutMistakes[type][actual]){
+        levelsWithoutMistakes[type][actual] = true;
+        await prefs.setBool("mistakes${type}_$actual", true);
+        totalWithoutMistakes++;
+      }
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
     }
   }
 }

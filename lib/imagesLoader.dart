@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:guerra_dos_numeros/levels.dart';
 
 class ImagesLoader{
-  ImagesLoader(bool loadClouds, bool loadAttacks){
-    for(int i = 0; i < 5; i++){
-      hamburger.add(Image.asset('assets/images/defaultHamburger/$i.png', scale: 0.2));
-      robot.add(Image.asset('assets/images/defaultRobot/$i.png', scale: 0.2));
+  ImagesLoader(bool loadSkins, bool loadClouds, bool loadAttacks, bool loadStore){
+    if(loadSkins){
+      for(int i = 0; i < 5; i++){
+        hamburger.add(Image.asset('assets/images/hamburger/default/${Levels.hamburgerType}_$i.png', scale: 0.2));
+        robot.add(Image.asset('assets/images/robot/default/$i.png', scale: 0.2));
+      }
     }
 
-    stoppedHamburger = Image.asset('assets/images/stoppedHamburger.png', scale: 0.2);
-    stoppedRobot = Image.asset('assets/images/stoppedRobot.png', scale: 0.2);
-
-    storeHamburger = Image.asset('assets/images/imagesForStore/storeHamburger.png', scale: 0.2);
-    storeRobotHamburger = Image.asset('assets/images/imagesForStore/storeRobotHamburger.png', scale: 0.2);
-
-    //skins hamburger
-    stoppedRobotHamburger = Image.asset('assets/images/skins/hamburger/robotHamburger/stoppedRobotHamburger.png', scale: 0.2);
+    if(loadStore){
+      for(int i = 0; i < hamburgerSkins; i++){
+        storeHamburger.add(Image.asset("assets/images/hamburger/store/$i.png", scale: 0.2));
+      }
+    }
 
     if(loadClouds){
       for(int i = 0; i < 16; i++){
@@ -23,43 +23,32 @@ class ImagesLoader{
     }
 
     if(loadAttacks){
-      for(int i = 0; i < attackPath.length; i++){
+      for(int i = 0; i < attacksTypes[Levels.hamburgerType]; i++){
         List<Image> attacks = [];
-        for(int j = 0; j < attackFrames[i]; j++){
-          attacks.add(Image.asset('assets/images/${attackPath[i]}/$j.png', scale: 0.2));
+        for(int j = 0; j < attacksFrames[Levels.hamburgerType][i]; j++){
+          attacks.add(Image.asset("assets/images/hamburger/attacks/${Levels.hamburgerType}_${i}_$j.png", scale: 0.2));
         }
 
         hamburgerAttacks.add(attacks);
       }
 
       for(int i = 0; i < 11; i++){
-        robotAttack.add(Image.asset('assets/images/attackLaser/$i.png', scale: 0.2));
+        robotAttack.add(Image.asset('assets/images/robot/attacks/$i.png', scale: 0.2));
       }
 
       for(int i = 0; i < 10; i++){
-        takingDamageHamburger.add(Image.asset('assets/images/takingDamageHamburger/$i.png', scale: 0.2));
-        takingDamageRobot.add(Image.asset('assets/images/takingDamageRobot/$i.png', scale: 0.2));
+        takingDamageHamburger.add(Image.asset('assets/images/hamburger/takingDamage/${Levels.hamburgerType}_$i.png', scale: 0.2));
+        takingDamageRobot.add(Image.asset('assets/images/robot/takingDamage/$i.png', scale: 0.2));
       }
 
       for(int i = 0; i < 16; i++){
         grassMap.add(Image.asset('assets/images/grassMap/${15 - i}.png', repeat: ImageRepeat.repeatX, scale: 0.2));
       }
-
-      // hamburger skins
-      for(int i = 0; i < 5; i++){
-        robotHamburger.add(Image.asset('assets/images/skins/hamburger/robotHamburger/default/$i.png', scale: 0.2));
-      }
-
-      for(int i = 0; i < 9; i++){
-        robotHamburgerTakingDamage.add(Image.asset('assets/images/skins/hamburger/robotHamburger/takingDamage/$i.png', scale: 0.2));
-        robotHamburgerAttack.add(Image.asset('assets/images/skins/hamburger/robotHamburger/attackLaser/$i.png', scale: 0.2));
-      }
-
     }
 
     // Other images
     trophy = Image.asset('assets/images/trophy.png', scale: 0.2);
-
+    hamburgerDefeated = Image.asset('assets/images/hamburger/defeated/${Levels.hamburgerType}.png', scale: 0.2);
   }
 
   List<Image> hamburger = [];
@@ -70,28 +59,14 @@ class ImagesLoader{
   List<Image> robotAttack = [];
   List<Image> takingDamageHamburger = [];
   List<Image> takingDamageRobot = [];
-  late Image stoppedHamburger;
-  late Image stoppedRobot;
+  List<Image> storeHamburger = [];
+  Image hamburgerDefeated = Image.asset('assets/images/hamburger/defeated/${Levels.hamburgerType}.png', scale: 0.2);
+  Image robotDefeated = Image.asset('assets/images/robot/defeated.png', scale: 0.2);
 
-  // hamburger skins
-  List<Image> robotHamburger = [];
-
-  // hamburger skins stopped
-  late Image stoppedRobotHamburger;
-
-  // hamburger skins attack
-  List<Image> robotHamburgerAttack = [];
-
-  // hamburger skins taking damage
-  List<Image> robotHamburgerTakingDamage = [];
-
-  // store images
-  late Image storeHamburger;
-  late Image storeRobotHamburger;
-
+  int hamburgerSkins = 8;
   List<double> heights = [0, 3, 5, 3, 0];
-  List<String> attackPath = ["attackPinkBanana", "attackAppleBanana", "attackThrowBanana"];
-  List<int> attackFrames = [8, 8, 6];
+  List<int> attacksTypes = [3, 1, 1, 1, 1, 1, 1, 1];
+  List<List<int>> attacksFrames = [[10, 11, 8], [17], [10], [21], [21], [10], [14], [30]];
 
   late Image trophy;
 
@@ -112,7 +87,6 @@ class ImagesLoader{
       precacheImage(element.image, context);
     }
 
-
     for(var attack in hamburgerAttacks){
       for(var element in attack){
         precacheImage(element.image, context);
@@ -131,18 +105,8 @@ class ImagesLoader{
       precacheImage(element.image, context);
     }
 
-    // hamburger skins
-    for(var element in robotHamburger){
+    for(var element in storeHamburger){
       precacheImage(element.image, context);
     }
-
-    for(var element in robotHamburgerAttack){
-      precacheImage(element.image, context);
-    }
-
-    for(var element in robotHamburgerTakingDamage){
-      precacheImage(element.image, context);
-    }
-
   }
 }

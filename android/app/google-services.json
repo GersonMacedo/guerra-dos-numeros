@@ -1,19 +1,32 @@
 {
   "project_info": {
+<<<<<<< HEAD
     "project_number": "134089324431",
     "project_id": "projeto-es3",
     "storage_bucket": "projeto-es3.appspot.com"
+=======
+    "project_number": "843845333660",
+    "project_id": "guerra-dos-numeros-737f2",
+    "storage_bucket": "guerra-dos-numeros-737f2.appspot.com"
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
   },
   "client": [
     {
       "client_info": {
+<<<<<<< HEAD
         "mobilesdk_app_id": "1:134089324431:android:5d9ca2b5bce24fd620fdfa",
         "android_client_info": {
           "package_name": "trabalho.es3"
+=======
+        "mobilesdk_app_id": "1:843845333660:android:a06ac2ffcf47762cb3b359",
+        "android_client_info": {
+          "package_name": "com.example.guerra_dos_numeros"
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
         }
       },
       "oauth_client": [
         {
+<<<<<<< HEAD
           "client_id": "134089324431-h1atlrk0udf2n5q00j08i0fm78toitp3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -23,19 +36,30 @@
         },
         {
           "client_id": "134089324431-nd5a3ik79tlsl263crk09nph3bp36uc9.apps.googleusercontent.com",
+=======
+          "client_id": "843845333660-u77oqpmkpu847dih5t38gvgphjduje3m.apps.googleusercontent.com",
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
           "client_type": 3
         }
       ],
       "api_key": [
         {
+<<<<<<< HEAD
           "current_key": "AIzaSyB8et_IqT6Z4HS0TTJ6XYjkwMmsNl-XKNQ"
+=======
+          "current_key": "AIzaSyDGPEaIBx0phL2zkXCTf08rsahOkyOPOlc"
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
+<<<<<<< HEAD
               "client_id": "134089324431-nd5a3ik79tlsl263crk09nph3bp36uc9.apps.googleusercontent.com",
+=======
+              "client_id": "843845333660-83a3l415jd9lk0nf7jpmg6s4f1vcdn62.apps.googleusercontent.com",
+>>>>>>> b4878a0f941ad913c768ad05490f526adfeb1c64
               "client_type": 3
             }
           ]
