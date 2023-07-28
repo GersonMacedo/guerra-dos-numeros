@@ -63,10 +63,10 @@ class ImagesLoader{
   Image hamburgerDefeated = Image.asset('assets/images/hamburger/defeated/${Levels.hamburgerType}.png', scale: 0.2);
   Image robotDefeated = Image.asset('assets/images/robot/defeated.png', scale: 0.2);
 
-  int hamburgerSkins = 6;
+  int hamburgerSkins = 8;
   List<double> heights = [0, 3, 5, 3, 0];
-  List<int> attacksTypes = [3, 1, 1, 1, 1, 1];
-  List<List<int>> attacksFrames = [[10, 11, 8], [10], [14], [10], [30], [21]];
+  List<int> attacksTypes = [3, 1, 1, 1, 1, 1, 1, 1];
+  List<List<int>> attacksFrames = [[10, 11, 8], [17], [10], [21], [21], [10], [14], [30]];
 
   late Image trophy;
 
