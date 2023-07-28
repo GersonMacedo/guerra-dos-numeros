@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'provider/databaseProvider.dart';
 
 class MathStack{
   MathStack(this.operation, this.x, this.y, this.numbers, this.stage, this.step, this.iteration);
@@ -422,6 +423,8 @@ class Levels{
       if(next[type] == actual + 1) {
         next[type]++;
         await prefs.setInt("next$type", next[type]);
+        DatabaseProvider databaseProvider = DatabaseProvider();
+        databaseProvider.saveUserData();
       }
 
       if(!mistakes && !levelsWithoutMistakes[type][actual]){
