@@ -15,9 +15,8 @@ import 'package:guerra_dos_numeros/utils.dart';
 //3: divisão
 
 class CustomLevelSelector extends StatefulWidget {
-  const CustomLevelSelector(this.changePage, this.skinNumber, {super.key});
+  const CustomLevelSelector(this.changePage, {super.key});
   final void Function(Widget?, {bool bottom, bool back, bool keep}) changePage;
-  final int skinNumber;
 
   @override
   State<CustomLevelSelector> createState() => _CustomLevelSelectorState();
@@ -71,7 +70,7 @@ class _CustomLevelSelectorState extends State<CustomLevelSelector>{
           const SizedBox(height: 10),
           customIconButton(context, Colors.green, const Icon(Icons.play_circle), " Jogar", 22, Colors.white, 120, 50,(){
             widget.changePage(
-              Game(widget.changePage, Levels.getLevel(), widget.skinNumber),
+              Game(widget.changePage, Levels.getLevel()),
               back: false,
               bottom: false,
               keep: true

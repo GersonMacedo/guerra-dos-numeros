@@ -45,6 +45,8 @@ class Levels{
   static List<int> wrongTimeList = [30, 45, 60, 90];
 
   static int hamburgerType = 0;
+  static bool devMode = false;
+  static List<int> page = [1, 1];
 
   static Future<void> changeHamburgerType(int newType) async {
     hamburgerType = newType;

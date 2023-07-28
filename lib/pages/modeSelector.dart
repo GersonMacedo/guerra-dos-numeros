@@ -15,36 +15,15 @@ class ModeSelector extends StatefulWidget {
 
 class _ModeSelectorState extends State<ModeSelector> {
   bool numericMode = true;
-  int skinNumber = 0;
 
   @override
   void initState() {
     super.initState();
-    _loadSkinNumber();
-  }
-
-  Future<void> _loadSkinNumber() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      skinNumber = prefs.getInt('skinNumber') ?? 0;
-    });
-  }
-
-  Future<void> _saveSkinNumber(int newValue) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('skinNumber', newValue);
   }
 
   void setMode(bool mode) {
     setState(() {
       numericMode = mode;
-    });
-  }
-
-  void updateSkin(int newValue) {
-    setState(() {
-      skinNumber = newValue;
-      _saveSkinNumber(newValue);
     });
   }
 
@@ -62,7 +41,7 @@ class _ModeSelectorState extends State<ModeSelector> {
             ElevatedButton(
               onPressed: () {
                 Levels.type = 0;
-                widget.changePage(LevelSelector(widget.changePage, skinNumber), keep: true);
+                widget.changePage(LevelSelector(widget.changePage), keep: true);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
@@ -95,7 +74,7 @@ class _ModeSelectorState extends State<ModeSelector> {
             ElevatedButton(
               onPressed: () {
                 Levels.type = 1;
-                widget.changePage(LevelSelector(widget.changePage, skinNumber), keep: true);
+                widget.changePage(LevelSelector(widget.changePage), keep: true);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
@@ -128,7 +107,7 @@ class _ModeSelectorState extends State<ModeSelector> {
             ElevatedButton(
               onPressed: () {
                 Levels.type = -1;
-                widget.changePage(CustomLevelSelector(widget.changePage, skinNumber), keep: true);
+                widget.changePage(CustomLevelSelector(widget.changePage), keep: true);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,

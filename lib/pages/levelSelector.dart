@@ -4,9 +4,8 @@ import 'package:guerra_dos_numeros/levels.dart';
 import 'package:guerra_dos_numeros/pages/game/game.dart';
 
 class LevelSelector extends StatefulWidget {
-  const LevelSelector(this.changePage, this.skinNumber, {super.key});
+  const LevelSelector(this.changePage, {super.key});
   final void Function(Widget?, {bool bottom, bool back, bool keep}) changePage;
-  final int skinNumber;
 
   @override
   State<LevelSelector> createState() => _LevelSelectorState();
@@ -16,14 +15,13 @@ class _LevelSelectorState extends State<LevelSelector>{
   final List<String> title = ["Adição", "Multiplicação"];
   final List<String> type = ["+", "x"];
   int mode = Levels.type;
-  int first = 1;
   int last = Levels.getTotalLevels();
   late int lastPage = last - ((last - 1) % 12);
   late int next = Levels.next[mode];
 
   void update(int v){
     setState(() {
-      first = min(max(1, first + v * 12), lastPage);
+      Levels.page[mode] = min(max(1, Levels.page[mode] + v * 12), lastPage);
     });
   }
 
@@ -95,7 +93,7 @@ class _LevelSelectorState extends State<LevelSelector>{
             children: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(first != 1 ? 0xff828DF4 : 0x44ffffff),
+                  backgroundColor: Color(Levels.page[mode] != 1 ? 0xff828DF4 : 0x44ffffff),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5)
                   )
@@ -110,7 +108,7 @@ class _LevelSelectorState extends State<LevelSelector>{
               ),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(first != lastPage ? 0xff828DF4 : 0x44ffffff),
+                      backgroundColor: Color(Levels.page[mode] != lastPage ? 0xff828DF4 : 0x44ffffff),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5)
                       )
@@ -138,7 +136,7 @@ class _LevelSelectorState extends State<LevelSelector>{
     for(int i = 0; i < y; i++){
       List<Widget> row = [];
       for(int j = 0; j < x; j++){
-        int actual = i * x + j + first;
+        int actual = i * x + j + Levels.page[mode];
         if(actual > last){
           row.add(
               Container(
@@ -183,7 +181,7 @@ class _LevelSelectorState extends State<LevelSelector>{
             onPressed: (){
               Levels.actual = actual - 1;
               widget.changePage(
-                Game(widget.changePage, Levels.getLevel(), widget.skinNumber),
+                Game(widget.changePage, Levels.getLevel()),
                 back: false,
                 bottom: false,
                 keep: true

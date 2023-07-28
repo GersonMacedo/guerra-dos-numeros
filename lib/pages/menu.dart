@@ -51,6 +51,7 @@ class _MenuState extends State<Menu>{
   late Timer _timer;
   int frame = 0;
   int fps = 10;
+  int taps = 0;
   ImagesLoader images = ImagesLoader(true, true, false, false);
 
   @override
@@ -68,13 +69,22 @@ class _MenuState extends State<Menu>{
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            child: const Text(
-              Levels.title,
-              style: TextStyle(fontSize: 50, color: Colors.white),
-              textAlign: TextAlign.center,
-            )
+          GestureDetector(
+            onTap: (){
+              taps++;
+              if(taps == 10){
+                print("Devmode enabled");
+                Levels.devMode = true;
+              }
+            },
+            child: Container(
+                padding: const EdgeInsets.all(20),
+                child: const Text(
+                  Levels.title,
+                  style: TextStyle(fontSize: 50, color: Colors.white),
+                  textAlign: TextAlign.center,
+                )
+            ),
           ),
           Container(
             width: double.infinity,

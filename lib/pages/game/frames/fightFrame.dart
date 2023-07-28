@@ -3,11 +3,10 @@ import 'package:guerra_dos_numeros/imagesLoader.dart';
 import 'package:guerra_dos_numeros/levels.dart';
 
 class FightFrame extends StatefulWidget {
-  const FightFrame(this.state, this.images, this.skinNumber,{super.key});
+  const FightFrame(this.state, this.images,{super.key});
 
   final FightState state;
   final ImagesLoader images;
-  final int skinNumber;
 
   @override
   State<FightFrame> createState() => state;

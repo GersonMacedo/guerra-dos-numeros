@@ -20,11 +20,10 @@ import 'package:guerra_dos_numeros/pages/game/frames/topFrame.dart';
 
 
 class Game extends StatefulWidget {
-  const Game(this.changePage, this.level, this.skinNumber, {super.key});
+  const Game(this.changePage, this.level, {super.key});
 
   final LevelData level;
   final void Function(Widget?) changePage;
-  final int skinNumber;
 
   @override
   State<Game> createState() => GameState();
@@ -134,7 +133,7 @@ class GameState extends State<Game>{
     String mainQuestion = level.question == "" ? "Quanto é | $operation | ?" : level.question;
     if(first){
       topGameFrame = TopGameFrame(TopGameState(), mainQuestion, numbers, level.question == "" ? 1 : 0, totalStages, widget.changePage);
-      fightFrame = FightFrame(FightState(), images, widget.skinNumber);
+      fightFrame = FightFrame(FightState(), images);
       numbersGridFrame = NumbersGridFrame(NumbersGridState(), successDrag, operation, x, y, r, maxSize);
       mathQuestionFrame = MathQuestionFrame(MathQuestionState(), respond);
       dragQuestionFrame = DragQuestionFrame(DragQuestionState());
@@ -421,10 +420,12 @@ class GameState extends State<Game>{
               children: [
                 GestureDetector(
                   onDoubleTap: (){
-                    print("Skiped");
-                    stage = totalStages;
-                    finished = true;
-                    Levels.finish(false);
+                    if(Levels.devMode){
+                      print("Skiped");
+                      stage = totalStages;
+                      finished = true;
+                      Levels.finish(false);
+                    }
                   },
                   child: fightFrame,
                 ),
@@ -474,6 +475,8 @@ class GameState extends State<Game>{
       );
     }
 
+    bool next = Levels.hasNextLevel() && (Levels.type == -1 || stage == totalStages || Levels.next[Levels.type] > Levels.actual + 1);
+
     return Container(
       padding: const EdgeInsets.all(10),
       height: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height ? 115 : 175,
@@ -511,9 +514,9 @@ class GameState extends State<Game>{
                   width: width,
                   height: height,
                   child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: Levels.hasNextLevel() ? const Color(0xFF828DF4) : Colors.black),
+                      style: ElevatedButton.styleFrom(backgroundColor: next ? const Color(0xFF828DF4) : Colors.black),
                       onPressed: (){
-                        if(Levels.hasNextLevel()){
+                        if(next){
                           level = Levels.getNextLevel();
                           startLevel(false);
                         }
