@@ -1,16 +1,34 @@
 # guerra_dos_numeros
 
-Um jogo educativo para aprender as operações basicas de matemática
+-> logo do jogo aqui
 
-## Getting Started
+**Guerra dos Números** é um jogo educativo desenvolvido para tornar o aprendizado das operações básicas de matemática uma experiência divertida e envolvente.
 
-This project is a starting point for a Flutter application.
+## Sobre o jogo
 
-A few resources to get you started if this is your first Flutter project:
+Adentre em um universo fictício onde uma emocionante batalha é travada entre dois personagens peculiares: um hambúrguer e um robô. À medida que o jogador responde às questões matemáticas, a batalha avança e o destino dos personagens está nas mãos do usuário, que determinará o vencedor dessa empolgante disputa.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Instalação
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Para baixar e instalar o nosso aplicativo, siga os passos abaixo:
+
+<ol>
+  <li> Aponte a câmera para o QRcode abaixo ou clique aqui para acessar o link diretamente.</li>
+</ol>
+  <img src="https://avatars.githubusercontent.com/u/59461895?v=4" alt="QR code" style="width:300px;"/>
+- Caso o QR Code não funcione, você pode tentar acessar pelo <a href="www.google.com" target="_BLANK">link direto</a> ou tente acessar pelo link: www.algumlink.com
+
+
+## Desenvolvimento
+
+**O jogo foi desenvolvido por alunos de engenharia da computação, unindo habilidades e paixões em busca de uma experiência única:** 
+- Carlos Lamark de Barros Alencar - Programador
+- Gerson Vinicius Rodrigues de Macedo - Programador
+- Maria Clara Mendes da Silva - Designer e Product Owner (PO)
+- Luiz Fernando Barbosa da Silva - Programador
+- Richard Lima ribeiro - Programador e Scrum Master
+
+## Contato
+Se você tiver alguma dúvida, sugestão ou precisa relatar algum problema, entre em contato conosco pelo email: contato@guerradosnumeros.com
+
+Divirta-se e bons estudos!
